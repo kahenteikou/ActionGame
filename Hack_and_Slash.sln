@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hack_and_Slash", "Hack_and_Slash\Hack_and_Slash.vcxproj", "{975E500A-34E2-4BD1-ADD1-32441C1216A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{975E500A-34E2-4BD1-ADD1-32441C1216A5}.Debug|x64.ActiveCfg = Debug|x64
+		{975E500A-34E2-4BD1-ADD1-32441C1216A5}.Debug|x64.Build.0 = Debug|x64
+		{975E500A-34E2-4BD1-ADD1-32441C1216A5}.Debug|x86.ActiveCfg = Debug|Win32
+		{975E500A-34E2-4BD1-ADD1-32441C1216A5}.Debug|x86.Build.0 = Debug|Win32
+		{975E500A-34E2-4BD1-ADD1-32441C1216A5}.Release|x64.ActiveCfg = Release|x64
+		{975E500A-34E2-4BD1-ADD1-32441C1216A5}.Release|x64.Build.0 = Release|x64
+		{975E500A-34E2-4BD1-ADD1-32441C1216A5}.Release|x86.ActiveCfg = Release|Win32
+		{975E500A-34E2-4BD1-ADD1-32441C1216A5}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C89F836-CF50-419E-8DFD-3D7DA672602B}
+	EndGlobalSection
+EndGlobal

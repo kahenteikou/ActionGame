@@ -1,0 +1,35 @@
+#ifndef ___SCENE_BASE_HPP_
+#define ___SCENE_BASE_HPP_
+
+#include <iostream>
+
+
+
+
+
+/*####################################################
+* シーンの基底クラス
+* 
+* 説明
+* 全てのシーンクラスはこのクラスを継承する。
+######################################################*/
+
+enum class Scene_Type;
+class Scene_base
+{
+public:
+	Scene_base(Scene_Type t);	//コンストラクタ
+	~Scene_base();				//デストラクタ
+
+	virtual void Update() = 0;	//更新
+	virtual void Draw() = 0;	//描画
+
+	Scene_Type getSceneType();	//シーンタイプを取得
+protected:
+
+	Scene_Type Type;	//シーンタイプ
+
+};
+
+
+#endif
