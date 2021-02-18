@@ -4,6 +4,7 @@
 #include "Scene_base.hpp"
 #include "Player.hpp"
 #include "Stage.hpp"
+#include "Shop.hpp"
 
 #include <iostream>
 
@@ -11,7 +12,7 @@
 //前方宣言
 class Player;
 class Stage;
-
+class Shop;
 /*####################################################
 * メインゲーム　シーン
 *
@@ -32,7 +33,11 @@ private:
 
 	std::shared_ptr<Player> player;	//プレイヤー
 	std::shared_ptr<Stage> stage;	//ステージ
+	std::shared_ptr<Shop> shop;	//ショップ
 	
+	bool flag;	//ショップかどうかのフラグ
+
+
 };
 
 #endif

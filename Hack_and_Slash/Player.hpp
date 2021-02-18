@@ -37,7 +37,13 @@ public:
 	void Player_Update();	//更新
 	void Player_Draw();		//描画
 
-	Box_Collision mCol;
+
+	bool getIsMenu();						//ショップ画面を開いているかどうか？	
+	void setIsMenu(bool b);					// メニューを開くかどうか設定
+	void FixPos(glm::ivec2 pos);	//当たり判定で座標を修正
+
+
+	Box_Collision mCol;	//当たり判定
 private:
 
 	int mSprite;		//プレイヤー　スプライト
@@ -48,6 +54,7 @@ private:
 	std::shared_ptr<Input> mInput;	//キー入力
 	std::vector<Bullet> mBullet;	//バレット
 
+	bool mMenu;	//ショップ画面を開くかどうか？
 
 
 

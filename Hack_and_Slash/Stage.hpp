@@ -34,6 +34,7 @@ private:
 	std::vector<MapChip> mStage;	//マップデータ
 	glm::ivec2 mStageSize;			//画面に描画するセル数
 	
+	bool mIsShop;	//ショップが終わったかどうか？
 
 
 };

@@ -6,6 +6,9 @@ Stage::Stage()
 	//printf("X: %d", SCREEN_WIDTH / CELL);
 	//printf("Y: %d",SCREEN_HEIGHT / CELL);
 
+	mIsShop = false;	//ショップ中かどうか？
+
+
 	//画面に描画するセル数
 	mStageSize.x = SCREEN_WIDTH / CELL;
 	mStageSize.y = SCREEN_HEIGHT / CELL;
@@ -37,7 +40,7 @@ Stage::Stage()
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -103,7 +106,40 @@ void Stage::ColPlayer(Player &player)
 	{
 		if (Box_Collision::Intersect(itr->mCol,player.mCol) == true)
 		{
-			//printf("交差 ! \n");
+
+			switch (itr->mCol.getObjectType())
+			{
+
+				//ショップ
+				case StageObjectType::Shop :
+				{
+				
+					player.setIsMenu(true);
+				
+					player.FixPos(itr->mCol.getPosition());
+				}
+				break;
+
+
+
+
+				//レンガとの当たり判定
+				case StageObjectType::Brick:
+				{
+					
+					player.FixPos(itr->mCol.getPosition());
+				}
+				break;
+
+
+			}
+
+
+
+
+
+
+
 
 		}
 	}

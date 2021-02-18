@@ -22,11 +22,35 @@ Player::Player() : Actor()
 	mVector = VECTOR_UP;	//初期方向
 
 
-	//当たり判定
+	mMenu = false;	//ショップを開くかどうか？
 
 
 
 }
+
+//座標を修正
+void Player::FixPos(glm::ivec2 pos)
+{
+	if (mVector == VECTOR_UP)
+	{
+		mPosition.y = pos.y + CELL + CELL / 2;
+	}else if (mVector == VECTOR_DOWN)
+	{
+		mPosition.y = pos.y - (CELL / 2);
+	}
+	else if (mVector == VECTOR_LEFT)
+	{
+		mPosition.x = pos.x + (CELL + CELL / 2);
+	}
+	else if (mVector == VECTOR_RIGHT)
+	{
+		mPosition.x = pos.x - (CELL / 2);
+	}
+
+
+}
+
+
 
 //バレット　更新
 void Player::Bullet_Update()
@@ -57,17 +81,7 @@ void Player::Player_Update()
 {
 	//printf("いいいい\n");
 
-	//当たり判定
-
-	//スプライトの中心からのため修正
-	glm::ivec2 pos = mPosition;
-	pos.x += -(CELL / 2);
-	pos.y += -(CELL / 2);
-	mCol.setPosition(pos);
-	mCol.setSize(mSize);
-	mCol.setTrigger(false);
-	mCol.setVector(mVector);
-
+	
 
 	//キー入力
 	if (mInput->getKeyDownHold(KEY_INPUT_LEFT) > 0)
@@ -100,8 +114,20 @@ void Player::Player_Update()
 	else {
 		mSpeed = 0;
 	}
-}
 
+	//当たり判定
+
+	//スプライトの中心からのため修正
+	glm::ivec2 pos = mPosition;
+	pos.x += -(CELL / 2);
+	pos.y += -(CELL / 2);
+	mCol.setPosition(pos);
+	mCol.setSize(mSize);
+	mCol.setTrigger(false);
+	mCol.setVector(mVector);
+
+
+}
 
 //描画
 void Player::Draw()
@@ -144,6 +170,22 @@ void Player::Bullet_Draw()
 		itr->Draw();
 	}
 }
+
+
+
+//ショップ画面を開くかどうか？
+bool Player::getIsMenu()
+{
+	return mMenu;
+}
+
+//ショップ画面を開くかどうか？
+void Player::setIsMenu(bool b)
+{
+	mMenu = b;
+}
+
+
 
 
 

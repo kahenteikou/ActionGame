@@ -162,7 +162,10 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="Scene_base.cpp" />
+    <ClCompile Include="Shop.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.hpp" />
@@ -175,7 +178,10 @@
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Entry.hpp" />
     <ClInclude Include="Scene_base.hpp" />
+    <ClInclude Include="Shop.hpp" />
     <ClInclude Include="Stage.hpp" />
+    <ClInclude Include="UI.hpp" />
+    <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

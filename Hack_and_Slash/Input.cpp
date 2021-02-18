@@ -42,6 +42,7 @@ bool Input::getKeyDown(unsigned char KeyCode)
 //ƒL[‚ğ‰Ÿ‚µ‚Ä‚¢‚é
 int Input::getKeyDownHold(unsigned char KeyCode)
 {
+    //printf("‚ ‚ ‚ \n");
     return Key[KeyCode];
 }
 
