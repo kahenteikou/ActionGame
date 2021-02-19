@@ -9,20 +9,16 @@
 
 #include "Entry.hpp"
 #include "Input.hpp"
+#include "ItemID.hpp"
 #include "UI.hpp"
 
-
-
-
-
 // メニュー推移
-enum class MenuMove
+enum class Window_Scene
 {
-	Main,//最初の画面
-
+	Main,	//最初の画面
 	Item,	//アイテム
 
-	//メインメニュー
+	//メニュー
 	Buy_Menu,
 	Sell_Menu,
 
@@ -30,39 +26,37 @@ enum class MenuMove
 	Buy_Conf,
 	Sell_Conf,
 
+
 	Check,
+	Yes,
+	No,
+
+
 
 
 	//戻る　終了
 	End,
-
 	Back,
-
-
 	Invalid,
-
 };
 
 //ウインドウの項目
-typedef struct Window_Item
+typedef struct List_Item
 {
-	glm::ivec2 pos;		//座標
-	std::string name;	//名前
-	MenuMove menu;		//メニュー推移
+	glm::ivec2 pos;			// 座標
+	glm::ivec2 size;		//サイズ
+	std::string name;		// 名前
+	Window_Scene winScene;	// メニュー推移
+	unsigned char ID;		// アイテムID
+	unsigned int Color;		//描画色
 
-}Window_Item;
+
+}List_Item;
 
 
-// ゲームアイテム
-typedef struct ItemData
-{
-	int HP;		//体力
-	int Diff;	//防御
-	int Attak;	//攻撃
-	glm::ivec2 pos;		//座標
-	std::string name;	//アイテム名
 
-}ItemData;
+//前方宣言
+enum class Item_ID;
 
 /*####################################################
 * ウインドウ画面
@@ -70,18 +64,33 @@ typedef struct ItemData
 * 説明
 * 十字選択するメニュー画面
 ######################################################*/
-class Window
+class Window : public Actor
 {
 public:
 
-	Window(MenuMove m,glm::ivec2 pos,glm::ivec2 size, std::string str);	//コンストラクタ
-	~Window();															//デストラクタ
 
-	void AddItem(MenuMove m, std::string name);				//ウインドウに項目を追加
-	void AddItem_Parameter(ItemData);						//アイテムを表示
+	Window(Entry* e,Window_Scene s,glm::ivec2 pos ,glm::ivec2 size);	//コンストラクタ
+	~Window();							//デストラクタ
 
-	MenuMove getChange();						//シーン繰り替え
-	void setChange(MenuMove m);					//シーン指定
+
+
+
+
+	// ################## 設定　関係
+	void setTitle(std::string name, unsigned int c);	//タイトル
+	void setPosition(glm::ivec2 pos);					//座標
+	void setSize(glm::ivec2 size);						//サイズ
+	void setBackColor(unsigned int c);					//背景色
+
+	void AddList_Down(Window_Scene s, std::string name, unsigned char num, unsigned int c); //ウインドウに項目を追加
+
+	void Reset();
+	unsigned char getItem();
+
+
+	
+	Window_Scene getChangeScene();									//シーン推移を取得
+	ItemData getItemParameter();									//アイテムのパラメータを返す。
 
 
 	void Update();	//計算
@@ -90,27 +99,29 @@ public:
 private:
 
 	RectangleData window;			//画面サイズ
-	std::shared_ptr<Input> mInput;	//キー入力
 
-	glm::ivec2 mPosition;	//座標
-	glm::ivec2 mSize;		//サイズ
+	std::string Title;					//タイトル
+	unsigned int TitleColor;			//タイトル色
 
-	std::string WindowTitle;			//タイトル
-	std::vector<Window_Item> Item;		//メニュー項目
-	std::vector<ItemData> Game_Item;	//アイテムを取得
+
+
+
+
+	unsigned int BackGroundColor;		//背景色
+
+
+
+	std::vector<List_Item> lists;		//メニュー項目
+	
 	int Cursor;		//カーソル移動
 
-	MenuMove Menu;	//メニュジャンル
-	MenuMove Move;	//メニュ推移
 
+	Window_Scene Scene;			//このウインドウのシーン
+	Window_Scene Move_Scene;	//移動するシーン
+	unsigned char ID;			//アイテムを選択
+	
 
-
-
-
-
-	//一時変数　関係
-	glm::ivec2 ItemPos;	//項目の座標
-
+	glm::ivec2 ItemPos;	//項目の座標を調整
 
 
 

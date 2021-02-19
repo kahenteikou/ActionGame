@@ -5,6 +5,7 @@
 #include "Player.hpp"
 #include "Stage.hpp"
 #include "Shop.hpp"
+//#include "Entry.hpp"
 
 #include <iostream>
 
@@ -13,6 +14,9 @@
 class Player;
 class Stage;
 class Shop;
+class Entry;
+enum class Scene_Type;
+//class Scene_base;
 /*####################################################
 * メインゲーム　シーン
 *
@@ -22,8 +26,8 @@ class Shop;
 class Game_Scene : public Scene_base
 {
 public:
-	Game_Scene(Scene_Type t);	//コンストラクタ
-	~Game_Scene();				//デストラクタ
+	Game_Scene(Scene_Type t,Entry* e);	//コンストラクタ
+	~Game_Scene();						//デストラクタ
 
 	void Update();	//更新
 	void Draw();	//描画
@@ -36,7 +40,7 @@ private:
 	std::shared_ptr<Shop> shop;	//ショップ
 	
 	bool flag;	//ショップかどうかのフラグ
-
+	Entry* Owner;
 
 };
 

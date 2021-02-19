@@ -1,11 +1,12 @@
 #include "Actor.hpp"
 
 //コンストラクタ
-Actor::Actor(glm::ivec2 pos ,glm::ivec2 vec )
+Actor::Actor(Entry* e,glm::ivec2 pos ,glm::ivec2 vec )
 {
 	mVector = vec;
 	mPosition = pos;
 	mSize = glm::ivec2(0,0);
+	Owner = e;
 }
 
 //方向を取得

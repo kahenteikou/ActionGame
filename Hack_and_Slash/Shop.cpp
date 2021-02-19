@@ -3,38 +3,45 @@
 
 
 //コンストラクタ
-Shop::Shop()
+Shop::Shop(Entry* e)
 {
 
+	Owner = e;	//Entry クラス
+
+#define ITEM_COLOR GetColor(0, 0, 0)			//項目の色
+#define TITLE_COLOR GetColor(255, 0, 0)			//タイトルの色
+#define BACK_COLOR GetColor(255, 255, 255)	//ウインドウの背景色
+
 	//メインメニュー
-	MainMenu = std::make_shared<Window>(MenuMove::Main,glm::ivec2(100, 100), glm::ivec2(500, 200), "ショップ　メニュー");
-	MainMenu->AddItem(MenuMove::Buy_Menu,"買う");
-	MainMenu->AddItem(MenuMove::Sell_Menu, "売る");
-	MainMenu->AddItem(MenuMove::End,"戻る");
+	MainMenu = std::make_shared<Window>(Owner,Window_Scene::Main,glm::ivec2(100,100),glm::ivec2(200,200));
+	MainMenu->setBackColor(BACK_COLOR);
+	MainMenu->setTitle("ショップメニュー", TITLE_COLOR);
+	MainMenu->AddList_Down(Window_Scene::Buy_Menu, "Buy", 0, ITEM_COLOR);
+	MainMenu->AddList_Down(Window_Scene::Sell_Menu, "Sell", 0, ITEM_COLOR);
+	MainMenu->AddList_Down(Window_Scene::End, "もどる", 0, ITEM_COLOR);
 
-	//購入メニュー
-	BuyMenu = std::make_shared<Window>(MenuMove::Buy_Menu,glm::ivec2(120,120),glm::ivec2(520,220),"購入　メニュー");
-	BuyMenu->AddItem_Parameter(ItemData{ 1,0,0,  "回復" });
-	BuyMenu->AddItem_Parameter(ItemData{ 0,1,0,  "防御" });
-	BuyMenu->AddItem_Parameter(ItemData{0,0,1,  "攻撃" });
-	
+	//買うメニュー
+	BuyMenu = std::make_shared<Window>(Owner, Window_Scene::Buy_Menu, glm::ivec2(120, 120), glm::ivec2(220, 220));
+	BuyMenu->setBackColor(BACK_COLOR);
+	BuyMenu->setTitle("かう", TITLE_COLOR);
+	BuyMenu->AddList_Down(Window_Scene::Buy_Conf, "Item_A", 1, ITEM_COLOR);
+	BuyMenu->AddList_Down(Window_Scene::Buy_Conf, "Item_B", 2, ITEM_COLOR);
+	BuyMenu->AddList_Down(Window_Scene::Main, "もどる", 0, ITEM_COLOR);
+
 	//売るメニュー
-	SellMenu = std::make_shared<Window>(MenuMove::Sell_Menu, glm::ivec2(120, 120), glm::ivec2(520, 220), "売る　メニュー");
-	SellMenu->AddItem_Parameter(ItemData{ 1,0,0,  "回" });
-	SellMenu->AddItem_Parameter(ItemData{ 1,0,0,  "回" });
-	SellMenu->AddItem_Parameter(ItemData{ 1,0,0,  "回" });
-	
-	//ダイヤログ
-	Dialogue = std::make_shared<Window>(MenuMove::Check, glm::ivec2(140, 140), glm::ivec2(540, 240), "確認");
+	SellMenu = std::make_shared<Window>(Owner, Window_Scene::Sell_Menu, glm::ivec2(120, 120), glm::ivec2(220, 220));
+	SellMenu->setBackColor(BACK_COLOR);
+
+	//買う確認
+	CheckMenu_Buy = std::make_shared<Window>(Owner, Window_Scene::Buy_Conf, glm::ivec2(140, 140), glm::ivec2(240, 240));
+	CheckMenu_Buy->setBackColor(BACK_COLOR);
+	CheckMenu_Buy->AddList_Down(Window_Scene::Yes, "Yes", 1, ITEM_COLOR);
+	CheckMenu_Buy->AddList_Down(Window_Scene::Buy_Menu,"No", 1, ITEM_COLOR);
 
 
 
-
-
-
-	menu = MenuMove::Main;		//現在選択中のメニュー
-	DrawMenu.push_back(menu);	//メニュー描画
 	mIsNowShop = true;			//ウインドウを開いているかどうか？
+	Scene = Window_Scene::Main;	//最初のシーン
 }
 
 //現在ショップ中かどうか？
@@ -44,87 +51,76 @@ bool Shop::getState()
 }
 
 //更新
-void Shop::Update(Player &player)
+void Shop::Update(Player& player)
 {
-	switch (menu)
+	if (b == false)
 	{
-		//メインメニュー
-	case MenuMove::Main:
-	{
-		MainMenu->Update();	//更新
-
-		//前のメニュー
-		if (MainMenu->getChange() == MenuMove::End)
-		{
-			DrawMenu.erase(DrawMenu.begin() + DrawMenu.size() - 1);		//最後を削除
-			menu = MainMenu->getChange();								//メニュー選択
-			MainMenu->setChange(MenuMove::Invalid);						//選択を再初期化
-		}
-		else if (MainMenu->getChange() != MenuMove::Invalid)
-		{
-			menu = MainMenu->getChange();							//メニューを選択
-			DrawMenu.push_back(MainMenu->getChange());				//描画メニューを設定
-			MainMenu->setChange(MenuMove::Invalid);					//選択を再初期化
-		}
-	}break;
-
-	//買うメニュー
-	case MenuMove::Buy_Menu:
-	{
-		BuyMenu->Update();	//更新
-
-		//前のメニュー
-		if (BuyMenu->getChange() == MenuMove::Main)
-		{
-			DrawMenu.erase(DrawMenu.begin() + DrawMenu.size() - 1);	//最後を削除
-			menu = BuyMenu->getChange();							//メニュー選択
-			BuyMenu->setChange(MenuMove::Invalid);					//選択を再初期化
-		}
-		else if (BuyMenu->getChange() != MenuMove::Invalid)
-		{
-			menu = BuyMenu->getChange();							//メニュー選択
-		}
-	}break;
-
-	//売るメニュー
-	case MenuMove::Sell_Menu:
-	{
-		SellMenu->Update();	//更新
-
-		//前のメニュー
-		if (SellMenu->getChange() == MenuMove::Main)
-		{
-			DrawMenu.erase(DrawMenu.begin() + DrawMenu.size() - 1);	//最後を削除
-			menu = SellMenu->getChange();							//メニュー選択
-			SellMenu->setChange(MenuMove::Invalid);					//選択を再初期化
-		}
-		else if (SellMenu->getChange() != MenuMove::Invalid)
-		{			
-			menu = SellMenu->getChange();							//メニュー選択
-		}
-	}break;
-
-
-		
-
-
-
-
-
-
-
-
-
-
-
-
 
 	}
 
-	//メニューを抜ける
-	if (menu == MenuMove::End)
+
+
+
+	switch (Scene)
 	{
-		printf("あああ\n");
+
+		//メインシーン
+	case Window_Scene::Main:
+	{
+		MainMenu->Update();	//更新
+		if (MainMenu->getChangeScene() != Window_Scene::Invalid)
+		{
+			Scene = MainMenu->getChangeScene();	//
+			MainMenu->Reset();	//シーン選択をリセット
+		}
+	}break;
+
+	//買うシーン
+	case Window_Scene::Buy_Menu:
+	{
+		BuyMenu->Update();	//更新
+		if (BuyMenu->getChangeScene() != Window_Scene::Invalid)
+		{
+			Item_ID = BuyMenu->getItem();		//
+			Scene = BuyMenu->getChangeScene();	//
+			BuyMenu->Reset();	//シーン選択をリセット
+		}
+	}break;
+
+	//買う確認
+	case Window_Scene::Buy_Conf:
+	{
+	 	CheckMenu_Buy->Update();	//更新
+		if (CheckMenu_Buy->getChangeScene() != Window_Scene::Invalid)
+		{
+			if (CheckMenu_Buy->getChangeScene() == Window_Scene::Yes)
+			{
+
+				//player.setItem_Bulid(3);
+
+
+
+				Scene = Window_Scene::Buy_Menu;
+				CheckMenu_Buy->Reset();	//シーン選択をリセット
+
+
+				WaitTimer(1000);
+			}
+			else {
+
+
+				Item_ID = CheckMenu_Buy->getItem();			//
+				Scene = CheckMenu_Buy->getChangeScene();	//
+				CheckMenu_Buy->Reset();	//シーン選択をリセット
+			}
+		}
+	}break;
+	}
+
+
+	//ショップ終了
+	if (Scene == Window_Scene::End)
+	{
 		mIsNowShop = false;
 	}
 }
@@ -132,54 +128,54 @@ void Shop::Update(Player &player)
 //描画
 void Shop::Draw()
 {	
-
-
-	for (std::vector<MenuMove>::iterator itr = DrawMenu.begin(); itr != DrawMenu.end(); itr++)
+	
+	switch (Scene)
 	{
-		switch (*itr)
+		//メインシーン
+		case Window_Scene::Main:
 		{
-			//メインメニュー
-		case MenuMove::Main:
-		{
-//			printf("メインメニュー\n");
 			MainMenu->Draw();
+		}break;
 
-		}
-		break;
-
-		//購入メニュー
-		case MenuMove::Buy_Menu:
+		//買うシーン
+		case Window_Scene::Buy_Menu:
 		{
-//			printf("購入メニュー\n");
-			BuyMenu->Draw();
-		}
-		break;
+			BuyMenu->Draw();	
+		}break;
 
-
-		//売るメニュー
-		case MenuMove::Sell_Menu:
+		//売るシーン
+		case Window_Scene::Sell_Menu:
 		{
-			//printf("売るメニュー\n");
 			SellMenu->Draw();
-		}
-		break;
-		};
+		}break;
+
+
+		//売る確認
+		case Window_Scene::Buy_Conf:
+		{
+			CheckMenu_Buy->Draw();
+		}break;
+
+		//売る確認
+		case Window_Scene::Sell_Conf:
+		{
+			CheckMenu_Sell->Draw();
+		}break;
+
+
+
+
+
+
 	}
 
+	
 
 
 
 
 
 
-	/*
-	switch (menu)
-	{
-		
-
-
-	}
-	*/
 }
 
 //デストラクタ

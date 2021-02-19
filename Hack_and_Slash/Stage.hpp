@@ -5,14 +5,15 @@
 #include "dxlib.h"
 
 #include "MapChip.hpp"
-#include "Entry.hpp"
+//#include "Entry.hpp"
 #include "Player.hpp"
 #include <iostream>
 #include <vector>
 
 //前方宣言
 class Player;
-
+class MapChip;
+class Bullet;
 /*####################################################
 * ステージ描画
 *
@@ -28,7 +29,8 @@ public:
 	void Update();	//更新
 	void Draw();	//描画
 
-	void ColPlayer(Player &player);	//プレイヤーとの当たり判定
+	void ColPlayer(Player &player);									//プレイヤーとの当たり判定
+	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);	//バレットとの当たり判定
 private:
 
 	std::vector<MapChip> mStage;	//マップデータ

@@ -2,13 +2,11 @@
 #define ___MAPCHIP_HPP_
 
 #include "glm/glm.hpp"
-#include "Actor.hpp"
-#include "Collision.hpp"
 #include "dxlib.h"
 
-
-
-
+#include "Entry.hpp"
+#include "Actor.hpp"
+#include "Collision.hpp"
 
 /*####################################################
 * マップチップクラス
@@ -33,8 +31,6 @@ enum class StageObjectType
 	Shop,
 
 };
-
-class Box_Collision;
 
 class MapChip : public Actor
 {

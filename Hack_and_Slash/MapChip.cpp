@@ -1,7 +1,7 @@
 #include "MapChip.hpp"
 
 //コンストラクタ
-MapChip::MapChip(StageObjectType t, glm::ivec2 pos, glm::ivec2 size,int handle) : Actor()
+MapChip::MapChip(StageObjectType t, glm::ivec2 pos, glm::ivec2 size,int handle) : Actor(nullptr)
 {
 
 

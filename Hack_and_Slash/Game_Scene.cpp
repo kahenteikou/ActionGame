@@ -1,12 +1,15 @@
 #include "Game_Scene.hpp"
 
 //コンストラクタ
-Game_Scene::Game_Scene(Scene_Type t) : Scene_base(t)
+Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 {
-	flag = false;
-	player = std::make_shared<Player>();	//プレイヤー
+	Owner = e;
+
+
+	flag = false;	//ショップ中かどうか？
+	player = std::make_shared<Player>(e);	//プレイヤー
 	stage = std::make_shared<Stage>();		//ステージ
-	shop = std::make_shared<Shop>();		//ショップメニュー
+	shop = std::make_shared<Shop>(e);		//ショップメニュー
 }
 
 //更新
@@ -17,7 +20,9 @@ void Game_Scene::Update()
 	{
 		player->Update();			//プレイヤー更新
 		stage->Update();			//ステージ更新
-		stage->ColPlayer(*player);	//プレイヤーとマップとの当たり判定			
+		stage->ColPlayer(*player);	//プレイヤーとマップとの当たり判定
+		stage->ColBullet(player->getBullet());	//バレットとマップとの当たり判定
+
 	}
 	else
 	{
@@ -28,7 +33,7 @@ void Game_Scene::Update()
 		}
 		else {
 			player->setIsMenu(false);
-			shop = std::make_shared <Shop>();
+			shop = std::make_shared <Shop>(Owner);
 		}
 	}
 

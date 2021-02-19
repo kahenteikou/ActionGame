@@ -1,19 +1,20 @@
 #include "Player.hpp"
 
 //コンストラクタ
-Player::Player() : Actor()
+Player::Player(Entry* e) : Actor(e)
 {
 	mSprite = LoadGraph("Assets/Player.png");			//プレイヤースプライト
 	mBullet_Sprite = LoadGraph("Assets/Bullet.png");	//バレットスプライト
+	mBullet = std::make_shared<std::vector<Bullet>>();
 
 	GetGraphSize(mSprite, &mSize.x, &mSize.y);	//サイズを設定
 	//printf("size X: %d\n", mSize.x);
 	//printf("size Y: %d\n", mSize.y);
 
+	mSpeed = 0;
+	mSpeed_Max = 10;
 
 
-
-	mInput = std::make_shared<Input>();	//キー入力
 	
 	//初期座標
 	mPosition.x = SCREEN_WIDTH / 2;
@@ -46,8 +47,6 @@ void Player::FixPos(glm::ivec2 pos)
 	{
 		mPosition.x = pos.x - (CELL / 2);
 	}
-
-
 }
 
 
@@ -56,13 +55,13 @@ void Player::FixPos(glm::ivec2 pos)
 void Player::Bullet_Update()
 {
 	// 攻撃　バレット
-	if (mInput->getKeyDown(KEY_INPUT_SPACE) == true)
+	if (Owner->InputKey->getKeyDown(KEY_INPUT_SPACE) == true)
 	{
-		mBullet.push_back(Bullet(mPosition, mVector, mBullet_Sprite));
+		mBullet->push_back(Bullet(mPosition, mVector, mBullet_Sprite));
 	}
 
 	//バレットを更新
-	for (std::vector<Bullet>::iterator itr = mBullet.begin(); itr != mBullet.end(); itr++)
+	for (std::vector<Bullet>::iterator itr = mBullet->begin(); itr != mBullet->end(); itr++)
 	{
 		itr->Update();
 	}
@@ -71,10 +70,30 @@ void Player::Bullet_Update()
 //更新
 void Player::Update()
 {
+	//printf("%d\n",mSpeed_Max);
 	Bullet_Update();	//バレットを更新
-	mInput->Update();	//キー入力を更新
-	Player_Update();	//プレイヤー更新	
+	Player_Update();	//プレイヤー更新
 }
+
+//ステータスを設定
+void Player::set_Bulid(ItemData data)
+{
+
+	mSpeed_Max += data.mSpeed_Max;
+
+	HP_Max += data.HP_Max;
+	HP += data.HP_Rec;			
+	HP_autoRec += data.HP_autoRec;
+
+	Attack += data.Attack;
+
+	Coin += data.Coin;
+
+}
+
+
+
+
 
 //プレイヤー　更新
 void Player::Player_Update()
@@ -82,33 +101,33 @@ void Player::Player_Update()
 	//printf("いいいい\n");
 
 	
-
+	mSpeed = mSpeed_Max;
 	//キー入力
-	if (mInput->getKeyDownHold(KEY_INPUT_LEFT) > 0)
+	if (Owner->InputKey->getKeyDownHold(KEY_INPUT_LEFT) > 0)
 	{
 		mVector = VECTOR_LEFT;	//方向
-		mSpeed = SPEED;
+		
 		mPosition.x += -mSpeed;
 
 	}
-	else if (mInput->getKeyDownHold(KEY_INPUT_RIGHT) > 0)
+	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_RIGHT) > 0)
 	{
 		mVector = VECTOR_RIGHT;	//方向
-		mSpeed = SPEED;
+		
 		mPosition.x += mSpeed;
 
 	}
-	else if (mInput->getKeyDownHold(KEY_INPUT_UP) > 0)
+	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_UP) > 0)
 	{
 		mVector = VECTOR_UP;	//方向
-		mSpeed = SPEED;
+		
 		mPosition.y += -mSpeed;
 
 	}
-	else if (mInput->getKeyDownHold(KEY_INPUT_DOWN) > 0)
+	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_DOWN) > 0)
 	{
 		mVector = VECTOR_DOWN;	//方向
-		mSpeed = SPEED;
+		
 		mPosition.y += mSpeed;
 	}
 	else {
@@ -165,8 +184,9 @@ void Player::Player_Draw()
 //バレット　描画
 void Player::Bullet_Draw()
 {
-	for (std::vector<Bullet>::iterator itr = mBullet.begin(); itr != mBullet.end(); itr++)
+	for (std::vector<Bullet>::iterator itr = mBullet->begin(); itr != mBullet->end(); itr++)
 	{
+
 		itr->Draw();
 	}
 }
@@ -185,7 +205,11 @@ void Player::setIsMenu(bool b)
 	mMenu = b;
 }
 
-
+//バレットを取得
+std::shared_ptr<std::vector<Bullet>> Player::getBullet()
+{
+	return mBullet;
+}
 
 
 

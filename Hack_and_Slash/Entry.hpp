@@ -3,6 +3,7 @@
 
 
 #include "Game_Scene.hpp"
+#include "Input.hpp"
 #include <iostream>
 
 
@@ -52,9 +53,12 @@ public:
 	void Update();	//ŒvŽZ
 	void Draw();	//•`‰æ
 
+	std::shared_ptr<Input> InputKey;
+
 private:
 
 	std::shared_ptr<Game_Scene> game;
+
 	Scene_Type type;
 
 };

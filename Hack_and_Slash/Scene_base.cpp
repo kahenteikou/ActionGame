@@ -2,9 +2,10 @@
 
 
 //コンストラクタ
-Scene_base::Scene_base(Scene_Type t)
+Scene_base::Scene_base(Scene_Type t, Entry* e)
 {
 	Type = t;	//シーンにタイプを設定
+	Owner = e;	//Entry クラス
 }
 
 //シーンタイプを取得

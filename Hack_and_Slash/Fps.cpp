@@ -1,5 +1,7 @@
 #include "Fps.hpp"
 
+int Fps::mCount = 0;
+
 //コンストラクタ
 Fps::Fps() {
 	mStartTime = 0;
@@ -22,11 +24,18 @@ bool Fps::Update() {
 	return true;
 }
 
+//現在のフレームを取得
+int Fps::getFrame() {
+	return mCount;
+}
+
+
 //待機
 void Fps::Wait() {
 	int tookTime = GetNowCount() - mStartTime;	//かかった時間
 	int waitTime = mCount * 1000 / FPS - tookTime;	//待つべき時間
 	if (waitTime > 0) {
+
 		Sleep(waitTime);	//待機
 	}
 }

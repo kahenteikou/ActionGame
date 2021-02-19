@@ -99,7 +99,7 @@ void Stage::Draw()
 
 }
 
-//当たり判定
+//プレイヤーとの当たり判定
 void Stage::ColPlayer(Player &player)
 {
 	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
@@ -120,9 +120,6 @@ void Stage::ColPlayer(Player &player)
 				}
 				break;
 
-
-
-
 				//レンガとの当たり判定
 				case StageObjectType::Brick:
 				{
@@ -130,21 +127,40 @@ void Stage::ColPlayer(Player &player)
 					player.FixPos(itr->mCol.getPosition());
 				}
 				break;
-
-
 			}
-
-
-
-
-
-
-
-
 		}
 	}
-
 }
+
+
+//バレットとの当たり判定
+void Stage::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
+{
+	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+	{
+		MapChip chip = *itr;
+		for (std::vector<Bullet>::iterator b = bullet->begin(); b != bullet->end(); b++)
+		{
+			if (Box_Collision::Intersect(chip.mCol, b->mCol) == true)
+			{
+
+				switch (chip.mCol.getObjectType())
+				{
+
+					//レンガとの当たり判定
+				case StageObjectType::Brick:
+				{
+					
+				}
+				break;
+				}
+			}
+		}
+	}
+}
+
+
+
 
 
 

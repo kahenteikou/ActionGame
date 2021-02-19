@@ -2,6 +2,7 @@
 #define ___SCENE_BASE_HPP_
 
 #include <iostream>
+//#include "Entry.hpp"
 
 
 
@@ -13,13 +14,13 @@
 * 説明
 * 全てのシーンクラスはこのクラスを継承する。
 ######################################################*/
-
+class Entry;
 enum class Scene_Type;
 class Scene_base
 {
 public:
-	Scene_base(Scene_Type t);	//コンストラクタ
-	~Scene_base();				//デストラクタ
+	Scene_base(Scene_Type t,Entry* e);	//コンストラクタ
+	~Scene_base();						//デストラクタ
 
 	virtual void Update() = 0;	//更新
 	virtual void Draw() = 0;	//描画
@@ -28,6 +29,7 @@ public:
 protected:
 
 	Scene_Type Type;	//シーンタイプ
+	Entry* Owner;		//Entry クラス
 
 };
 

@@ -4,6 +4,8 @@
 #include "glm/glm.hpp"
 #include "dxlib.h"
 
+//#include "Entry.hpp"
+class Entry;
 /*####################################################
 * アクター
 * 
@@ -14,7 +16,7 @@
 class Actor
 {
 public:
-	Actor(glm::ivec2 pos = glm::ivec2(0, 0), glm::ivec2 vec = glm::ivec2(0, 0));	//コンストラクタ
+	Actor(Entry* e,glm::ivec2 pos = glm::ivec2(0, 0), glm::ivec2 vec = glm::ivec2(0, 0));	//コンストラクタ
 	~Actor();	//デストラクタ
 
 	void virtual Update() = 0;	//計算
@@ -29,6 +31,7 @@ protected:
 	glm::ivec2 mVector;		//方向
 	glm::ivec2 mSize;		//スプライトのサイズ
 
+	Entry* Owner;			//Entry クラス
 
 };
 
