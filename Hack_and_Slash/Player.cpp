@@ -5,6 +5,9 @@ Player::Player(Entry* e) : Actor(e)
 {
 	mSprite = LoadGraph("Assets/Player.png");			//プレイヤースプライト
 	mBullet_Sprite = LoadGraph("Assets/Bullet.png");	//バレットスプライト
+
+	int t = LoadDivGraph("Assets/Explosion.png",3,3,1,CELL * 3,CELL,mBulletEffect_Sprite);
+	printf("ああああああ　%d\n",t);
 	mBullet = std::make_shared<std::vector<Bullet>>();
 
 	GetGraphSize(mSprite, &mSize.x, &mSize.y);	//サイズを設定
@@ -47,6 +50,7 @@ void Player::FixPos(glm::ivec2 pos)
 	{
 		mPosition.x = pos.x - (CELL / 2);
 	}
+
 }
 
 
@@ -57,7 +61,7 @@ void Player::Bullet_Update()
 	// 攻撃　バレット
 	if (Owner->InputKey->getKeyDown(KEY_INPUT_SPACE) == true)
 	{
-		mBullet->push_back(Bullet(mPosition, mVector, mBullet_Sprite));
+		mBullet->push_back(Bullet(mPosition, mVector, mBullet_Sprite,mBulletEffect_Sprite));
 	}
 
 	//バレットを更新
@@ -185,9 +189,8 @@ void Player::Player_Draw()
 void Player::Bullet_Draw()
 {
 	for (std::vector<Bullet>::iterator itr = mBullet->begin(); itr != mBullet->end(); itr++)
-	{
-
-		itr->Draw();
+	{		
+		itr->Draw();	//バレット描画		
 	}
 }
 

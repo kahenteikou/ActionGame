@@ -33,6 +33,17 @@ int Animation::getClip(int speed)
 		nextFrame += speed;
 		nextFrame -= 60;
 
+		Clip++;
+		if (Clip > max_Clip)
+		{
+			Clip = 0;
+		}
+
+		return Clip;
 	}
+	else {
+		return Clip;
+	}
+
 
 }

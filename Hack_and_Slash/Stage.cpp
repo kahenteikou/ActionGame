@@ -146,11 +146,14 @@ void Stage::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
 
 				switch (chip.mCol.getObjectType())
 				{
-
 					//ƒŒƒ“ƒK‚Æ‚Ì“–‚½‚è”»’è
 				case StageObjectType::Brick:
 				{
-					
+					itr = mStage.erase(itr);
+
+					b->mIsHit = true;
+					b->FixPos(chip.mCol.getPosition());
+
 				}
 				break;
 				}
