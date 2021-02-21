@@ -9,6 +9,9 @@
 
 #include "Animation.hpp"
 
+
+#define BULLET_EFFECT_SPEED  30//ヒットエフェクトの再生速度
+
 /*####################################################
 * バレット(弾)
 *
@@ -22,7 +25,7 @@ class Bullet : public Actor
 {
 public:
 	Bullet(glm::ivec2 pos, glm::ivec2 vec, int handle,int effectHandle[3]);	//コンストラクタ
-	~Bullet();											//デストラクタ
+	~Bullet();																//デストラクタ
 
 	void Update();	//更新
 	void Draw();	//描画
@@ -31,13 +34,13 @@ public:
 
 	Box_Collision mCol;	//当たり判定
 	bool mIsHit;	//ヒットしたかどうか？
-	
+	bool isDelete;	//削除するかどうか？
+
 private:
 	Animation anim;			//アニメーションクラス
 	int mSprite;			//スプライト
 	int mEffectSprite[3];	// エフェクトスプライト
-
-	int mSpeed;		//バレットの速度
+	int mSpeed;				//バレットの速度
 	
 };
 

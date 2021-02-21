@@ -21,6 +21,15 @@ glm::ivec2 Actor::getPosition()
 	return mPosition;
 }
 
+//座標を取得
+void Actor::setPosition(glm::ivec2 pos)
+{
+	mPosition = pos;
+}
+
+
+
+
 //デストラクタ
 Actor::~Actor()
 {

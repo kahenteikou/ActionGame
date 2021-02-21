@@ -1,14 +1,13 @@
 #include "Bullet.hpp"
 
 //コンストラクタ
-Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int effectHandle[3]) : Actor(nullptr,pos,vec)
-	,anim(2)
+Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int effectHandle[3]) : Actor(nullptr,pos,vec),anim(2)
 {
 	GetGraphSize(handle,&mSize.x, &mSize.y);	//スプライトの大きさ
 
 	mSpeed = 10;		//バレットの速度
 	mSprite = handle;	//スプライト
-
+	isDelete = false;	//削除するかどうか？
 	mEffectSprite[0] = effectHandle[0];
 	mEffectSprite[1] = effectHandle[1];
 	mEffectSprite[2] = effectHandle[2];
@@ -133,9 +132,17 @@ void Bullet::Draw()
 		}
 	}
 	else {
-		printf("あああ %d\n", mEffectSprite[0]);
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mEffectSprite[0], true, false);
-	//	DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mEffectSprite[anim.getClip(60)], true, false);
+
+		//ヒットエフェクト
+		int num = 0;
+		if (anim.getClip(num, BULLET_EFFECT_SPEED) == false) {
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mEffectSprite[num], true, false);
+		}
+		else {
+			isDelete = true;
+
+	//		printf("false\n");
+		}
 
 	}
 

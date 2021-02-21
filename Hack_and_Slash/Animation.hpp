@@ -2,14 +2,11 @@
 #define ___ANIMATION_HPP_
 #include "Fps.hpp"
 
-
-
-
 /*####################################################
 * アニメーション
 *
 * 説明
-* アニメーションの数値を走査する。
+* アニメーションの番号を管理
 ######################################################*/
 class Animation
 {
@@ -18,14 +15,19 @@ public:
 	Animation(int c);	//コンストラクタ
 	~Animation();		//デストラクタ
 
-	int getClip(int speed);	//アニメーションを取得
+	//アニメーション番号を取得
+
+	int getClip_loop(int speed);		//ループで取得
+	bool getClip(int &num,int speed);	//1回だけ取得
 
 private:
 
+
 	bool first;
-	int Clip;		//現在のクリップ
-	int max_Clip;	//クリップ数
-	int nextFrame;	//次のクリップのフレーム
+	int Clip;		//現在の番号
+	int max_Clip;	//番号の数
+	int nextFrame;	//次の番号までのフレーム
+	bool isAnim;	//一回だけ再生したかどうか？
 };
 
 

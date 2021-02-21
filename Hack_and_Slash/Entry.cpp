@@ -20,13 +20,11 @@ void Entry::Update()
 	{
 		//ƒƒCƒ“ƒQ[ƒ€
 	case Scene_Type::Game:
-		{
-			game->Update();
-			type = game->getSceneType();
-		}
+	{
+		game->Update();
+		type = game->getSceneType();
+	}
 	};
-
-
 }
 
 //•`‰æ

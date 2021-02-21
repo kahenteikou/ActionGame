@@ -14,6 +14,7 @@
 class Player;
 class MapChip;
 class Bullet;
+class Entry;
 /*####################################################
 * ステージ描画
 *
@@ -23,21 +24,27 @@ class Bullet;
 class Stage
 {
 public:
-	Stage();	//コンストラクタ
-	~Stage();	//デストラクタ
+	Stage(Entry *e);	//コンストラクタ
+	~Stage();			//デストラクタ
 
 	void Update();	//更新
 	void Draw();	//描画
 
 	void ColPlayer(Player &player);									//プレイヤーとの当たり判定
 	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);	//バレットとの当たり判定
+	void ScrollMap(Player& player);									//画面スクロール
+
+
+
+
+
 private:
 
 	std::vector<MapChip> mStage;	//マップデータ
 	glm::ivec2 mStageSize;			//画面に描画するセル数
 	
 	bool mIsShop;	//ショップが終わったかどうか？
-
+	Entry* Owner;	//Entryクラス
 
 };
 

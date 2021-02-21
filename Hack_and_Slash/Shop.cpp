@@ -1,15 +1,13 @@
 #include "Shop.hpp"
 
-
-
 //コンストラクタ
 Shop::Shop(Entry* e)
 {
 
 	Owner = e;	//Entry クラス
 
-#define ITEM_COLOR GetColor(0, 0, 0)			//項目の色
-#define TITLE_COLOR GetColor(255, 0, 0)			//タイトルの色
+#define ITEM_COLOR GetColor(0, 0, 0)		//項目の色
+#define TITLE_COLOR GetColor(255, 0, 0)		//タイトルの色
 #define BACK_COLOR GetColor(255, 255, 255)	//ウインドウの背景色
 
 	//メインメニュー
@@ -57,9 +55,6 @@ void Shop::Update(Player& player)
 	{
 
 	}
-
-
-
 
 	switch (Scene)
 	{
@@ -161,21 +156,7 @@ void Shop::Draw()
 		{
 			CheckMenu_Sell->Draw();
 		}break;
-
-
-
-
-
-
 	}
-
-	
-
-
-
-
-
-
 }
 
 //デストラクタ

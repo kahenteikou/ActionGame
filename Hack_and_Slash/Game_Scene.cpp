@@ -8,7 +8,7 @@ Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 
 	flag = false;	//ショップ中かどうか？
 	player = std::make_shared<Player>(e);	//プレイヤー
-	stage = std::make_shared<Stage>();		//ステージ
+	stage = std::make_shared<Stage>(e);		//ステージ
 	shop = std::make_shared<Shop>(e);		//ショップメニュー
 }
 
@@ -18,10 +18,11 @@ void Game_Scene::Update()
 	//バトル
 	if (player->getIsMenu() == false)
 	{
-		player->Update();			//プレイヤー更新
-		stage->Update();			//ステージ更新
-		stage->ColPlayer(*player);	//プレイヤーとマップとの当たり判定
+		stage->ScrollMap(*player);				//画面スクロール
+		player->Update();						//プレイヤー更新
+		stage->Update();						//ステージ更新
 		stage->ColBullet(player->getBullet());	//バレットとマップとの当たり判定
+		stage->ColPlayer(*player);				//プレイヤーとマップとの当たり判定
 
 	}
 	else

@@ -42,7 +42,7 @@ public:
 	void Draw();	//描画
 	
 
-
+	int HP;
 	Box_Collision mCol;
 private:
 	int mSprite;			//スプライト

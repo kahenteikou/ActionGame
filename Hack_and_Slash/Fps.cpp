@@ -1,6 +1,7 @@
 #include "Fps.hpp"
 
 int Fps::mCount = 0;
+int Fps::mStartCount = 0;
 
 //コンストラクタ
 Fps::Fps() {
@@ -11,6 +12,7 @@ Fps::Fps() {
 
 //更新
 bool Fps::Update() {
+	mStartCount++;
 	if (mCount == 0) { //1フレーム目なら時刻を記憶
 		mStartTime = GetNowCount();
 	}
@@ -29,6 +31,13 @@ int Fps::getFrame() {
 	return mCount;
 }
 
+//経過フレームを取得
+int Fps::getElapsed()
+{
+	return mStartCount;
+}
+
+
 
 //待機
 void Fps::Wait() {
@@ -37,5 +46,10 @@ void Fps::Wait() {
 	if (waitTime > 0) {
 
 		Sleep(waitTime);	//待機
+	}
+
+	//経過フレーム
+	if (mStartCount > 60000) {
+		mStartCount = 0;
 	}
 }

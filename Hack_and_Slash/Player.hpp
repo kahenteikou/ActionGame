@@ -48,6 +48,7 @@ public:
 
 	bool getIsMenu();	//ショップ画面を開いているかどうか？	
 	std::shared_ptr<std::vector<Bullet>> getBullet();	//バレット
+	int getSpeed();		//速度を取得
 
 	// ####################　設定　関係
 

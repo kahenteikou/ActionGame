@@ -6,8 +6,8 @@ Player::Player(Entry* e) : Actor(e)
 	mSprite = LoadGraph("Assets/Player.png");			//プレイヤースプライト
 	mBullet_Sprite = LoadGraph("Assets/Bullet.png");	//バレットスプライト
 
-	int t = LoadDivGraph("Assets/Explosion.png",3,3,1,CELL * 3,CELL,mBulletEffect_Sprite);
-	printf("ああああああ　%d\n",t);
+	int t = LoadDivGraph("Assets/Explosion.png",3,3,1,CELL,CELL,mBulletEffect_Sprite);
+
 	mBullet = std::make_shared<std::vector<Bullet>>();
 
 	GetGraphSize(mSprite, &mSize.x, &mSize.y);	//サイズを設定
@@ -15,28 +15,21 @@ Player::Player(Entry* e) : Actor(e)
 	//printf("size Y: %d\n", mSize.y);
 
 	mSpeed = 0;
-	mSpeed_Max = 10;
-
-
+	mSpeed_Max = 5;	//最大速度
 	
 	//初期座標
 	mPosition.x = SCREEN_WIDTH / 2;
 	mPosition.y = SCREEN_HEIGHT / 2;
 
 	mVector = VECTOR_UP;	//初期方向
-
-
-	mMenu = false;	//ショップを開くかどうか？
-
-
-
+	mMenu = false;			//ショップを開くかどうか？
 }
 
 //座標を修正
 void Player::FixPos(glm::ivec2 pos)
 {
 	if (mVector == VECTOR_UP)
-	{
+	{	
 		mPosition.y = pos.y + CELL + CELL / 2;
 	}else if (mVector == VECTOR_DOWN)
 	{
@@ -71,9 +64,19 @@ void Player::Bullet_Update()
 	}
 }
 
+
+int Player::getSpeed()
+{
+	return mSpeed;
+}
+
 //更新
 void Player::Update()
 {
+	DrawFormatString(0,0,GetColor(0,255,0),"Position: %d , %d ",mPosition.x,mPosition.y);
+
+
+
 	//printf("%d\n",mSpeed_Max);
 	Bullet_Update();	//バレットを更新
 	Player_Update();	//プレイヤー更新
@@ -110,33 +113,27 @@ void Player::Player_Update()
 	if (Owner->InputKey->getKeyDownHold(KEY_INPUT_LEFT) > 0)
 	{
 		mVector = VECTOR_LEFT;	//方向
-		
-		mPosition.x += -mSpeed;
-
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_RIGHT) > 0)
 	{
 		mVector = VECTOR_RIGHT;	//方向
-		
-		mPosition.x += mSpeed;
-
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_UP) > 0)
 	{
 		mVector = VECTOR_UP;	//方向
-		
-		mPosition.y += -mSpeed;
-
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_DOWN) > 0)
 	{
 		mVector = VECTOR_DOWN;	//方向
-		
-		mPosition.y += mSpeed;
 	}
 	else {
 		mSpeed = 0;
 	}
+
+
+
+
+
 
 	//当たり判定
 

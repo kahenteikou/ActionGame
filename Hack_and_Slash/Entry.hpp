@@ -13,6 +13,12 @@
 #define SCREEN_WIDTH ((int)16 * 70)
 #define SCREEN_HEIGHT ((int)9 * 70)
 
+//ステージ
+#define STAGE_WIDTH ((int)25 * CELL)
+#define STAGE_HEIGHT ((int)25 * CELL)
+
+
+
 //方向
 #define VECTOR_UP glm::ivec2(0,-1)
 #define VECTOR_DOWN glm::ivec2(0,1)

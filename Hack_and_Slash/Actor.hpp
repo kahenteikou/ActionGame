@@ -22,9 +22,13 @@ public:
 	void virtual Update() = 0;	//ŒvZ
 	void virtual Draw() = 0;	//•`‰æ
 
-	//æ“¾ŠÖŒW
+	//æ“¾@ŠÖŒW
 	glm::ivec2 getVector();		//•ûŒü
 	glm::ivec2 getPosition();	//À•W
+
+	//İ’è@ŠÖŒW
+	void setPosition(glm::ivec2 pos);
+
 protected:
 
 	glm::ivec2 mPosition;	//À•W
