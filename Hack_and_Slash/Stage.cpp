@@ -113,7 +113,7 @@ void Stage::Draw()
 		itr->Draw();
 	}
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //プレイヤーとの当たり判定
 void Stage::ColPlayer(Player &player)
 {
@@ -152,7 +152,7 @@ void Stage::ColPlayer(Player &player)
 		}
 	}
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //バレットとの当たり判定
 void Stage::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
@@ -212,7 +212,7 @@ void Stage::ScrollMap(Player& player)
 {
 	//左右移動
 	if (player.getPosition().x > (SCREEN_WIDTH - 100) + player.getSpeed() && player.getVector() == VECTOR_RIGHT) {
-		printf("Right\n");
+		//printf("Right\n");
 
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 		{
@@ -226,7 +226,7 @@ void Stage::ScrollMap(Player& player)
 	}
 	else if (player.getPosition().x < ( 100 ) + player.getSpeed() && player.getVector() == VECTOR_LEFT)
 	{
-		printf("Left\n");
+		//printf("Left\n");
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 		{
 			glm::ivec2 pos;
@@ -238,7 +238,7 @@ void Stage::ScrollMap(Player& player)
 
 		//上下移動
 	}else if (player.getPosition().y > (SCREEN_HEIGHT - 100) + player.getSpeed() && player.getVector() == VECTOR_DOWN) {
-		printf("Dwon\n");
+		//printf("Dwon\n");
 
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 		{
@@ -252,7 +252,7 @@ void Stage::ScrollMap(Player& player)
 	}
 	else if (player.getPosition().y < (100) + player.getSpeed() && player.getVector() == VECTOR_UP)
 	{
-		printf("Up\n");
+		//printf("Up\n");
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 		{
 			glm::ivec2 pos;

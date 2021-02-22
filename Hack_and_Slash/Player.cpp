@@ -30,29 +30,29 @@ void Player::FixPos(glm::ivec2 pos)
 {
 	if (mVector == VECTOR_UP)
 	{
-		printf("UP\n");
+//		printf("UP\n");
 		mPosition.y = pos.y + CELL + CELL / 2;
 	}
 	else if (mVector == VECTOR_DOWN)
 	{
-		printf("DOWN\n");
+//		printf("DOWN\n");
 
 		mPosition.y = pos.y - (CELL / 2);
 	}
 	else if (mVector == VECTOR_LEFT)
 	{
-		printf("LEFT\n");
+//		printf("LEFT\n");
 
 		mPosition.x = pos.x + (CELL + CELL / 2);
 	}
 	else if (mVector == VECTOR_RIGHT)
 	{
-		printf("RIGHT\n");
+//		printf("RIGHT\n");
 
 		mPosition.x = pos.x - (CELL / 2);
 	}
 	else {
-		printf("None\n");
+//		printf("None\n");
 	}
 
 }
@@ -123,18 +123,22 @@ void Player::Player_Update()
 	//ƒL[“ü—Í
 	if (Owner->InputKey->getKeyDownHold(KEY_INPUT_LEFT) > 0)
 	{
+		printf("LEFT\n");
 		mVector = VECTOR_LEFT;	//•ûŒü
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_RIGHT) > 0)
 	{
+		printf("RIGHT\n");
 		mVector = VECTOR_RIGHT;	//•ûŒü
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_UP) > 0)
 	{
+		printf("UP\n");
 		mVector = VECTOR_UP;	//•ûŒü
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_DOWN) > 0)
 	{
+		printf("DOWN\n");
 		mVector = VECTOR_DOWN;	//•ûŒü
 	}
 	else {
@@ -153,7 +157,7 @@ void Player::Player_Update()
 	pos.x += -(CELL / 2);
 	pos.y += -(CELL / 2);
 	mCol.setPosition(pos);
-	mCol.setSize(mSize);
+	mCol.setSize(mSize - 1);
 	mCol.setTrigger(false);
 	mCol.setVector(mVector);
 

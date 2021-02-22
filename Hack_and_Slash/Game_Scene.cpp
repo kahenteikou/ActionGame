@@ -24,10 +24,11 @@ void Game_Scene::Update()
 	{	
 
 		stage->ScrollMap(*player);				//画面スクロール
+		stage->Update();						//ステージ更新
+
 		player->Update();						//プレイヤー更新
 		stage->ColPlayer(*player);				//プレイヤーとマップとの当たり判定
 
-		stage->Update();						//ステージ更新
 		enemy_mng->Update();					//エネミー更新
 
 		stage->ColBullet(player->getBullet());	//バレットとマップとの当たり判定
