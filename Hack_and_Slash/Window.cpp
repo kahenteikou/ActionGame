@@ -87,7 +87,7 @@ void Window::AddList_Down(Window_Scene s,std::string name,unsigned char num,unsi
 	
 
 	//”wŒiF‚Ì•`‰æ‚Ì‘å‚«‚³
-	item.size.x = GetDrawStringWidth(name.c_str(), strlen(name.c_str())) + ItemPos.x + 50;
+	item.size.x = GetDrawStringWidth(name.c_str(), (int)strlen(name.c_str())) + ItemPos.x + 50;
 	item.size.y = ItemPos.y;
 
 

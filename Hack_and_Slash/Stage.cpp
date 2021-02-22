@@ -48,7 +48,7 @@ Stage::Stage(Entry* e)
 		{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,1,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0},
@@ -99,7 +99,6 @@ Stage::Stage(Entry* e)
 //更新
 void Stage::Update()
 {
-
 	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 	{
 		itr->Update();
@@ -113,7 +112,6 @@ void Stage::Draw()
 	{
 		itr->Draw();
 	}
-
 }
 
 //プレイヤーとの当たり判定
@@ -123,29 +121,22 @@ void Stage::ColPlayer(Player &player)
 	{
 		if (Box_Collision::Intersect(itr->mCol,player.mCol) == true)
 		{
-
 			switch (itr->mCol.getObjectType())
 			{
-
 				//ショップ
-			case StageObjectType::Shop:
-			{
-				if (Owner->InputKey->getKeyDown(KEY_INPUT_P) == true)
+				case StageObjectType::Shop:
 				{
-					player.setIsMenu(true);
-					player.FixPos(itr->mCol.getPosition());
-				}
-			
-
-
-
+					if (Owner->InputKey->getKeyDown(KEY_INPUT_P) == true)
+					{
+						player.setIsMenu(true);
+						player.FixPos(itr->mCol.getPosition());
+					}
 				}
 				break;
 
 				//レンガとの当たり判定
 				case StageObjectType::Brick:
-				{
-					
+				{					
 					player.FixPos(itr->mCol.getPosition());
 				}
 				break;
@@ -153,12 +144,10 @@ void Stage::ColPlayer(Player &player)
 				//ブロックとの当たり判定
 				case StageObjectType::Block:
 				{
-
+					
 					player.FixPos(itr->mCol.getPosition());
 				}
 				break;
-
-
 			}
 		}
 	}
@@ -286,6 +275,36 @@ void Stage::ScrollMap(Player& player)
 		player.setPosition(pos);
 	}
 }
+
+//エネミーとの当たり判定
+void Stage::ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy)
+{
+	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+	{
+		MapChip chip = *itr;
+		for (std::vector<Enemy>::iterator itr = enemy->begin(); itr != enemy->end(); itr++)
+		{
+			//交差判定
+			if (Box_Collision::Intersect(chip.mCol, itr->mCol) == true )
+			{
+				switch (chip.mCol.getObjectType())
+				{
+
+					//ブロック
+				case StageObjectType::Block:
+				{
+					itr->FixPos(chip.mCol.getPosition());
+					itr->setMove_Rand();
+				}
+
+
+				}
+			}
+		}
+	}
+
+}
+
 
 
 

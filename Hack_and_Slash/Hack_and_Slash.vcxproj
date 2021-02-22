@@ -155,6 +155,8 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Enemy_Mng.cpp" />
     <ClCompile Include="Fps.cpp" />
     <ClCompile Include="Game_Scene.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -174,6 +176,8 @@
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Bullet.hpp" />
     <ClInclude Include="Collision.hpp" />
+    <ClInclude Include="Enemy.hpp" />
+    <ClInclude Include="Enemy_Mng.hpp" />
     <ClInclude Include="Fps.hpp" />
     <ClInclude Include="Game_Scene.hpp" />
     <ClInclude Include="Input.hpp" />

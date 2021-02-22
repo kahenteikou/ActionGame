@@ -5,6 +5,8 @@
 #include "Game_Scene.hpp"
 #include "Input.hpp"
 #include <iostream>
+#include <locale.h>
+#include <Random>
 
 
 #define CELL ((int)48)	//ƒZƒ‹
@@ -58,6 +60,7 @@ public:
 
 	void Update();	//ŒvZ
 	void Draw();	//•`‰æ
+	int GetRand(int start, int end);	//—”‚ğæ“¾
 
 	std::shared_ptr<Input> InputKey;
 

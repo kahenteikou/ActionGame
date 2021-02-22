@@ -17,7 +17,7 @@ MapChip::MapChip(StageObjectType t, glm::ivec2 pos, glm::ivec2 size,int handle) 
 
 	//“–‚½‚è”»’è
 	mCol.setPosition(mPosition);
-	mCol.setSize(mSize - 1);
+	mCol.setSize(mSize);
 	mCol.setTrigger(true);
 	mCol.setStageObjectType(t);
 
@@ -30,7 +30,7 @@ void MapChip::Update()
 {
 	//“–‚½‚è”»’è
 	mCol.setPosition(mPosition);
-	//mCol.setSize(mSize - 1);
+	mCol.setSize(mSize);
 	mCol.setTrigger(true);
 	
 

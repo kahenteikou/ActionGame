@@ -29,19 +29,30 @@ Player::Player(Entry* e) : Actor(e)
 void Player::FixPos(glm::ivec2 pos)
 {
 	if (mVector == VECTOR_UP)
-	{	
-		mPosition.y = pos.y + CELL + CELL / 2;
-	}else if (mVector == VECTOR_DOWN)
 	{
+		printf("UP\n");
+		mPosition.y = pos.y + CELL + CELL / 2;
+	}
+	else if (mVector == VECTOR_DOWN)
+	{
+		printf("DOWN\n");
+
 		mPosition.y = pos.y - (CELL / 2);
 	}
 	else if (mVector == VECTOR_LEFT)
 	{
+		printf("LEFT\n");
+
 		mPosition.x = pos.x + (CELL + CELL / 2);
 	}
 	else if (mVector == VECTOR_RIGHT)
 	{
+		printf("RIGHT\n");
+
 		mPosition.x = pos.x - (CELL / 2);
+	}
+	else {
+		printf("None\n");
 	}
 
 }

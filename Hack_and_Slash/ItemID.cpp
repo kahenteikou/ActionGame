@@ -10,7 +10,7 @@ ItemData GetItemData(unsigned char ID)
 		//攻撃
 	case 0x0001:
 	{
-		item = ItemData{5, 0,0,0, 0,0  };	//パラメータを設定
+		item = ItemData{ 1, 0,0,0, 0,0  };	//パラメータを設定
 
 		return item;
 

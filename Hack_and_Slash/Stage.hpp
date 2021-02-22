@@ -5,7 +5,7 @@
 #include "dxlib.h"
 
 #include "MapChip.hpp"
-//#include "Entry.hpp"
+#include "Collision.hpp"
 #include "Player.hpp"
 #include <iostream>
 #include <vector>
@@ -15,6 +15,7 @@ class Player;
 class MapChip;
 class Bullet;
 class Entry;
+class Enemy;
 /*####################################################
 * ステージ描画
 *
@@ -33,7 +34,7 @@ public:
 	void ColPlayer(Player &player);									//プレイヤーとの当たり判定
 	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);	//バレットとの当たり判定
 	void ScrollMap(Player& player);									//画面スクロール
-
+	void ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy);		//エネミーとの当たり判定
 
 
 

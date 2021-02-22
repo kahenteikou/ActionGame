@@ -5,9 +5,10 @@
 #include "Player.hpp"
 #include "Stage.hpp"
 #include "Shop.hpp"
-//#include "Entry.hpp"
+#include "Enemy_Mng.hpp"
 
 #include <iostream>
+#include <vector>
 
 
 //前方宣言
@@ -15,8 +16,9 @@ class Player;
 class Stage;
 class Shop;
 class Entry;
+class Enemy_Mng;
 enum class Scene_Type;
-//class Scene_base;
+
 /*####################################################
 * メインゲーム　シーン
 *
@@ -35,12 +37,14 @@ public:
 
 private:
 
-	std::shared_ptr<Player> player;	//プレイヤー
-	std::shared_ptr<Stage> stage;	//ステージ
-	std::shared_ptr<Shop> shop;	//ショップ
-	
+	std::shared_ptr<Player> player;			//プレイヤー
+	std::shared_ptr<Stage> stage;			//ステージ
+	std::shared_ptr<Shop> shop;				//ショップ
+	std::shared_ptr<Enemy_Mng> enemy_mng;	//エネミー
+
+
 	bool flag;	//ショップかどうかのフラグ
-	Entry* Owner;
+	Entry* Owner;	//Entry クラス
 
 };
 
