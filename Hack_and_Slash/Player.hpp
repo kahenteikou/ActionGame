@@ -55,7 +55,7 @@ public:
 	void set_Bulid(ItemData data);	//ステータスを設定
 	void FixPos(glm::ivec2 pos);	//当たり判定で座標を修正
 	void setIsMenu(bool b);			//メニューを開くかどうか設定
-
+	void setSpeed(int speed);		//速度を設定
 
 
 

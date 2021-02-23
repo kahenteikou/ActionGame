@@ -113,7 +113,7 @@ void Stage::Draw()
 		itr->Draw();
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //プレイヤーとの当たり判定
 void Stage::ColPlayer(Player &player)
 {
@@ -152,7 +152,6 @@ void Stage::ColPlayer(Player &player)
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //バレットとの当たり判定
 void Stage::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
@@ -182,7 +181,7 @@ void Stage::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
 				break;
 
 
-				//レンガとの当たり判定
+				//ブロックとの当たり判定
 				case StageObjectType::Block:
 				{
 					b->mIsHit = true;	//ヒットエフェクトを再生
@@ -211,69 +210,67 @@ void Stage::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
 void Stage::ScrollMap(Player& player)
 {
 	//左右移動
-	if (player.getPosition().x > (SCREEN_WIDTH - 100) + player.getSpeed() && player.getVector() == VECTOR_RIGHT) {
-		//printf("Right\n");
-
+	if (player.getPosition().x > (SCREEN_WIDTH - 100) + player.getSpeed() && player.getVector() == VECTOR_RIGHT) 
+	{
+		//マップオブジェクトを移動
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 		{
-		
 			glm::ivec2 pos;
 			pos = itr->getPosition();
 			pos.x += -player.getSpeed();
-
 			itr->setPosition(pos);
 		}
+
+		glm::ivec2 pos = player.getPosition();
+		pos.x = player.getPosition().x - player.getSpeed();
+		player.setPosition(pos);
 	}
 	else if (player.getPosition().x < ( 100 ) + player.getSpeed() && player.getVector() == VECTOR_LEFT)
 	{
-		//printf("Left\n");
+		//マップオブジェクトを移動
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 		{
 			glm::ivec2 pos;
 			pos = itr->getPosition();
 			pos.x += player.getSpeed();
-
 			itr->setPosition(pos);
 		}
 
+		glm::ivec2 pos = player.getPosition();
+		pos.x = player.getPosition().x + player.getSpeed();
+		player.setPosition(pos);
+
 		//上下移動
-	}else if (player.getPosition().y > (SCREEN_HEIGHT - 100) + player.getSpeed() && player.getVector() == VECTOR_DOWN) {
-		//printf("Dwon\n");
-
+	}else if (player.getPosition().y > (SCREEN_HEIGHT - 100) + player.getSpeed() && player.getVector() == VECTOR_DOWN) 
+	{
+		//マップオブジェクトを移動
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
-		{
-
+		{	
 			glm::ivec2 pos;
 			pos = itr->getPosition();
 			pos.y += -player.getSpeed();
-
 			itr->setPosition(pos);
 		}
+		
+		glm::ivec2 pos = player.getPosition();
+		pos.y = player.getPosition().y - player.getSpeed();
+		player.setPosition(pos);
 	}
 	else if (player.getPosition().y < (100) + player.getSpeed() && player.getVector() == VECTOR_UP)
 	{
-		//printf("Up\n");
+		//マップオブジェクトを移動
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
-		{
+		{	
 			glm::ivec2 pos;
 			pos = itr->getPosition();
 			pos.y += player.getSpeed();
-
 			itr->setPosition(pos);
 		}
-	}
-	else {
 
-
-		//移動
-		int speed = player.getSpeed();
-		glm::ivec2 vec = player.getVector();
 		glm::ivec2 pos = player.getPosition();
-		pos.x += vec.x * speed;
-		pos.y += vec.y * speed;
-
+		pos.y = player.getPosition().y + player.getSpeed();
 		player.setPosition(pos);
-	}
+	}	
 }
 
 //エネミーとの当たり判定
@@ -293,9 +290,16 @@ void Stage::ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy)
 					//ブロック
 				case StageObjectType::Block:
 				{
-					itr->FixPos(chip.mCol.getPosition());
-					itr->setMove_Rand();
-				}
+					itr->FixPos(chip.mCol.getPosition());	//座標を修正
+					itr->setMove_Rand();					//乱数を再設定
+				}break;
+
+					//レンガ
+				case StageObjectType::Brick:
+				{
+					itr->FixPos(chip.mCol.getPosition());	//座標を修正
+					itr->setMove_Rand();					//乱数を再設定
+				}break;
 
 
 				}

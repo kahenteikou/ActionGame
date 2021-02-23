@@ -31,8 +31,11 @@ void Game_Scene::Update()
 
 		enemy_mng->Update();					//エネミー更新
 
-		stage->ColBullet(player->getBullet());	//バレットとマップとの当たり判定
-		stage->ColEnemy(enemy_mng->getEnemy());
+		stage->ColBullet(player->getBullet());		//バレットとマップとの当たり判定
+		stage->ColEnemy(enemy_mng->getEnemy());		//エネミーとマップとの当たり判定
+		enemy_mng->ColBullet(player->getBullet());	//エネミーとバレットの当たり判定
+		enemy_mng->ColPlayer(*player);				//エネミーとプレイヤーとの当たり判定
+
 	}
 	else
 	{
@@ -57,7 +60,7 @@ void Game_Scene::Draw()
 
 	player->Draw();	//プレイヤー描画
 	stage->Draw();	//ステージ描画
-	//enemy_mng->Draw();
+	enemy_mng->Draw();
 
 	//ショップ画面
 	if (player->getIsMenu() == true)

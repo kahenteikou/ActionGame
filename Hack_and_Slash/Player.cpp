@@ -123,22 +123,22 @@ void Player::Player_Update()
 	//キー入力
 	if (Owner->InputKey->getKeyDownHold(KEY_INPUT_LEFT) > 0)
 	{
-		printf("LEFT\n");
+	//	printf("LEFT\n");
 		mVector = VECTOR_LEFT;	//方向
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_RIGHT) > 0)
 	{
-		printf("RIGHT\n");
+	//	printf("RIGHT\n");
 		mVector = VECTOR_RIGHT;	//方向
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_UP) > 0)
 	{
-		printf("UP\n");
+	//	printf("UP\n");
 		mVector = VECTOR_UP;	//方向
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_DOWN) > 0)
 	{
-		printf("DOWN\n");
+	//	printf("DOWN\n");
 		mVector = VECTOR_DOWN;	//方向
 	}
 	else {
@@ -147,7 +147,7 @@ void Player::Player_Update()
 
 
 
-
+	mPosition += mVector * mSpeed;
 
 
 	//当たり判定
@@ -170,6 +170,13 @@ void Player::Draw()
 	Bullet_Draw();	//バレット描画
 	Player_Draw();	//プレイヤー描画
 }
+
+//速度を設定
+void Player::setSpeed(int speed)
+{
+	mSpeed = speed;
+}
+
 
 
 //プレイヤー　描画

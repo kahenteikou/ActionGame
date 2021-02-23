@@ -7,6 +7,7 @@ Enemy::Enemy(int handle) : Actor(nullptr)
 	mSprite = handle;
 	//Rand_Action = GetRand(3);
 	Rand_Action = 2;
+	Prev_Rand_Action = 2;
 
 	mPosition.x = SCREEN_WIDTH / 2;
 	mPosition.y = SCREEN_HEIGHT / 2;
@@ -21,14 +22,11 @@ Enemy::Enemy(int handle) : Actor(nullptr)
 //更新
 void Enemy::Update()
 {
-	//移動
-	mPosition.x += mVector.x * mSpeed;
-	mPosition.y += mVector.y * mSpeed;
-
+	
 	//当たり判定
 	glm::ivec2 pos = mPosition;
-	pos.y += -(CELL / 2);
-	pos.x += -(CELL / 2);
+	pos.y += -(CELL / 2 - 1);
+	pos.x += -(CELL / 2 - 1);
 	mCol.setPosition(pos);
 	mCol.setSize(glm::ivec2(CELL - 1, CELL - 1));
 
@@ -48,14 +46,30 @@ void Enemy::Update()
 	else if (Rand_Action == 3)
 	{
 		mVector = VECTOR_LEFT;
-	}
-	
+	}	
+
+	//移動
+	mPosition.x += mVector.x * mSpeed;
+	mPosition.y += mVector.y * mSpeed;
+
+
 }
 
 //移動乱数を再設定
 void Enemy::setMove_Rand()
 {
-	Rand_Action = GetRand(3);
+	//違う乱数を引くまで無限ループ
+	while (true) {
+		Rand_Action = GetRand(1);
+
+		//同じ乱数を引いてない時
+		if (Prev_Rand_Action != Rand_Action) {
+			Prev_Rand_Action = Rand_Action;
+
+			break;
+		}
+	}
+
 }
 
 
@@ -63,21 +77,22 @@ void Enemy::setMove_Rand()
 //座標を修正
 void Enemy::FixPos(glm::ivec2 pos)
 {
+	
 	if (mVector == VECTOR_UP)
 	{
-		mPosition.y = pos.y + CELL + CELL / 2 - 1;
+		mPosition.y = pos.y + CELL + CELL / 2;
 	}
 	else if (mVector == VECTOR_DOWN)
 	{
-		mPosition.y = pos.y - (CELL / 2) + 1;
+		mPosition.y = pos.y - (CELL / 2);
 	}
 	else if (mVector == VECTOR_LEFT)
 	{
-		mPosition.x = pos.x + (CELL + CELL / 2) - 1;
+		mPosition.x = pos.x + (CELL + CELL / 2);
 	}
 	else if (mVector == VECTOR_RIGHT)
 	{
-		mPosition.x = pos.x - (CELL / 2) + 1;
+		mPosition.x = pos.x - (CELL / 2);
 	}
 
 }
