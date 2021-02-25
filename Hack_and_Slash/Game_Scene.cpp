@@ -3,7 +3,18 @@
 //コンストラクタ
 Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 {
-	Owner = e;
+	Owner = e;	//Entry クラス
+
+
+	//　スプライトをロード
+
+
+
+
+
+
+
+
 
 
 	flag = false;	//ショップ中かどうか？
@@ -23,18 +34,19 @@ void Game_Scene::Update()
 	if (player->getIsMenu() == false)
 	{	
 
-		stage->ScrollMap(*player);				//画面スクロール
-		stage->Update();						//ステージ更新
+		stage->Scroll(player, enemy_mng->getEnemy(), player->getBullet());	//画面スクロール
 
-		player->Update();						//プレイヤー更新
-		stage->ColPlayer(*player);				//プレイヤーとマップとの当たり判定
 
-		enemy_mng->Update();					//エネミー更新
+		enemy_mng->Update();												//エネミー更新
+		stage->Update();													//ステージ更新
+		player->Update();													//プレイヤー更新
 
-		stage->ColBullet(player->getBullet());		//バレットとマップとの当たり判定
-		stage->ColEnemy(enemy_mng->getEnemy());		//エネミーとマップとの当たり判定
-		enemy_mng->ColBullet(player->getBullet());	//エネミーとバレットの当たり判定
-		enemy_mng->ColPlayer(*player);				//エネミーとプレイヤーとの当たり判定
+
+		stage->ColEnemy(enemy_mng->getEnemy());								//エネミーとマップとの当たり判定
+		stage->ColPlayer(player);											//プレイヤーとマップとの当たり判定
+		stage->ColBullet(player->getBullet());								//バレットとマップとの当たり判定
+		enemy_mng->ColPlayer(player);										//エネミーとプレイヤーとの当たり判定
+		enemy_mng->ColBullet(player->getBullet());							//エネミーとバレットの当たり判定
 
 	}
 	else

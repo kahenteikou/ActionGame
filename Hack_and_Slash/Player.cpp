@@ -3,10 +3,12 @@
 //コンストラクタ
 Player::Player(Entry* e) : Actor(e)
 {
+
+	//スプライトロード
 	mSprite = LoadGraph("Assets/Player.png");			//プレイヤースプライト
 	mBullet_Sprite = LoadGraph("Assets/Bullet.png");	//バレットスプライト
-
-	int t = LoadDivGraph("Assets/Explosion.png",3,3,1,CELL,CELL,mBulletEffect_Sprite);
+	LoadDivGraph("Assets/Enemy_Explosion.png", 3, 3, 1, CELL, CELL, mHitEffect_Enemy_Sprite);	//エネミーとのエフェクト
+	LoadDivGraph("Assets/Stage_Explosion.png", 3, 3, 1, CELL, CELL, mHitEffect_Map_Sprite);		//マップとのエフェクト
 
 	mBullet = std::make_shared<std::vector<Bullet>>();
 
@@ -15,7 +17,7 @@ Player::Player(Entry* e) : Actor(e)
 	//printf("size Y: %d\n", mSize.y);
 
 	mSpeed = 0;
-	mSpeed_Max = 5;	//最大速度
+	mSpeed_Max = 10;	//最大速度
 	
 	//初期座標
 	mPosition.x = SCREEN_WIDTH / 2;
@@ -65,7 +67,7 @@ void Player::Bullet_Update()
 	// 攻撃　バレット
 	if (Owner->InputKey->getKeyDown(KEY_INPUT_SPACE) == true)
 	{
-		mBullet->push_back(Bullet(mPosition, mVector, mBullet_Sprite,mBulletEffect_Sprite));
+		mBullet->push_back(Bullet(mPosition, mVector, mBullet_Sprite, mHitEffect_Map_Sprite, mHitEffect_Enemy_Sprite));
 	}
 
 	//バレットを更新

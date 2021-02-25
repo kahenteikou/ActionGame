@@ -1,19 +1,28 @@
 #include "Bullet.hpp"
 
 //コンストラクタ
-Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int effectHandle[3]) : Actor(nullptr,pos,vec),anim(2)
+Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int MapEffect_Handle[3], int EnemyEffect_Handle[3]) : Actor(nullptr,pos,vec),anim(2)
 {
 	GetGraphSize(handle,&mSize.x, &mSize.y);	//スプライトの大きさ
 
-	mSpeed = 10;		//バレットの速度
+	mSpeed = 2;		//バレットの速度
 	mSprite = handle;	//スプライト
 	isDelete = false;	//削除するかどうか？
-	mEffectSprite[0] = effectHandle[0];
-	mEffectSprite[1] = effectHandle[1];
-	mEffectSprite[2] = effectHandle[2];
+
+	//マップとヒットした時のエフェクト
+	mMapEffect_Sprite[0] = MapEffect_Handle[0];
+	mMapEffect_Sprite[1] = MapEffect_Handle[1];
+	mMapEffect_Sprite[2] = MapEffect_Handle[2];
+
+	//エネミーとヒットした時のエフェクト
+	mEnemyEffect_Sprite[0] = EnemyEffect_Handle[0];
+	mEnemyEffect_Sprite[1] = EnemyEffect_Handle[1];
+	mEnemyEffect_Sprite[2] = EnemyEffect_Handle[2];
 
 
-	mIsHit = false; //ヒットしたかどうか？
+
+	mIsHit = false;			//マップとヒットしたかどうか？
+	mIsEnemyHit = false;	//エネミーとヒットしたかどうか？
 }
 
 
@@ -46,7 +55,7 @@ void Bullet::FixPos(glm::ivec2 pos)
 void Bullet::Update()
 {
 	//バレットの弾道
-	if (mIsHit == false) {
+	if (mIsHit == false && mIsEnemyHit == false) {
 		//　移動
 		if (mVector == VECTOR_UP)
 		{
@@ -112,7 +121,7 @@ void Bullet::Update()
 void Bullet::Draw()
 {
 	//バレットを移動
-	if (mIsHit == false) {
+	if (mIsHit == false && mIsEnemyHit == false) {
 		//描画向き
 		if (mVector == VECTOR_UP)
 		{
@@ -131,20 +140,37 @@ void Bullet::Draw()
 			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, (PI * 2) / 4, mSprite, true, true);
 		}
 	}
-	else {
 
+	//マップとヒット
+	else if(mIsHit == true) 
+	{
 		//ヒットエフェクト
 		int num = 0;
 		if (anim.getClip(num, BULLET_EFFECT_SPEED) == false) {
-			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mEffectSprite[num], true, false);
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mMapEffect_Sprite[num], true, false);
 		}
-		else {
+		else 
+		{
 			isDelete = true;
-
-	//		printf("false\n");
 		}
-
 	}
+
+
+	//エネミーとヒット
+	else if (mIsEnemyHit == true)
+	{
+		//printf("あああ\n");
+		//ヒットエフェクト
+		int num = 0;
+		if (anim.getClip(num, BULLET_EFFECT_SPEED) == false) {
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mEnemyEffect_Sprite[num], true, false);
+		}
+		else
+		{
+			isDelete = true;
+		}
+	}
+
 
 
 

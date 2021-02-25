@@ -65,7 +65,11 @@ private:
 
 	int mSprite;		//プレイヤー　スプライト
 	int mBullet_Sprite;	//バレット　スプライト
-	int mBulletEffect_Sprite[3];	//バレットエフェクト　スプライト
+
+
+
+	int mHitEffect_Enemy_Sprite[3];	//エネミーエフェクト　スプライト 
+	int mHitEffect_Map_Sprite[3];	//マップエフェクト　スプライト
 
 
 

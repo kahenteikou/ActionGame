@@ -27,11 +27,13 @@ public:
 	void Draw();	//描画
 
 	std::shared_ptr<std::vector<Enemy>> getEnemy();					//エネミー情報
-	void ColPlayer(Player& player);									//プレイヤーとの当たり判定
+	void ColPlayer(std::shared_ptr<Player> player);					//プレイヤーとの当たり判定
 	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);	//バレットとの当たり判定
 
 private:
-	int Handle;	//スプライト
+	int Handle;	//敵スプライト
+	int Bullet_Handle;	//バレットスプライト
+
 	std::shared_ptr<std::vector<Enemy>> enemy;	//エネミー　クラス
 
 

@@ -24,8 +24,19 @@
 class Bullet : public Actor
 {
 public:
-	Bullet(glm::ivec2 pos, glm::ivec2 vec, int handle,int effectHandle[3]);	//コンストラクタ
-	~Bullet();																//デストラクタ
+
+	/*コンストラクタ引数
+	* 
+	*　座標
+	* 方向
+	* バレットのハンドル
+	* マップにヒットしたときのエフェクト
+	* エネミーとヒットした時のエフェクト 
+	*/
+
+
+	Bullet(glm::ivec2 pos, glm::ivec2 vec, int handle, int MapEffect_Handle[3], int EnemyEffect_Handle[3]);	//コンストラクタ
+	~Bullet();																								//デストラクタ
 
 	void Update();	//更新
 	void Draw();	//描画
@@ -33,13 +44,18 @@ public:
 	void FixPos(glm::ivec2 pos);	//座標を修正
 
 	Box_Collision mCol;	//当たり判定
-	bool mIsHit;	//ヒットしたかどうか？
-	bool isDelete;	//削除するかどうか？
+
+	bool mIsHit;		//ヒットしたかどうか？
+	bool mIsEnemyHit;	//エネミーとヒットしたかどうか？
+	bool isDelete;		//削除するかどうか？
 
 private:
 	Animation anim;			//アニメーションクラス
 	int mSprite;			//スプライト
-	int mEffectSprite[3];	// エフェクトスプライト
+
+	int mMapEffect_Sprite[3];	// マップヒットのエフェクトスプライト
+	int mEnemyEffect_Sprite[3];	// エネミーヒットのエフェクトスプライト
+
 	int mSpeed;				//バレットの速度
 	
 };

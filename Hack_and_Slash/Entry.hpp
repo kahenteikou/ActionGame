@@ -16,8 +16,8 @@
 #define SCREEN_HEIGHT ((int)9 * 70)
 
 //ステージ
-#define STAGE_WIDTH ((int)25 * CELL)
-#define STAGE_HEIGHT ((int)25 * CELL)
+#define STAGE_WIDTH ((int)50 * CELL)
+#define STAGE_HEIGHT ((int)50 * CELL)
 
 
 

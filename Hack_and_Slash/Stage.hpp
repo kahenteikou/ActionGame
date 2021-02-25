@@ -16,6 +16,7 @@ class MapChip;
 class Bullet;
 class Entry;
 class Enemy;
+
 /*####################################################
 * ステージ描画
 *
@@ -31,19 +32,20 @@ public:
 	void Update();	//更新
 	void Draw();	//描画
 
-	void ColPlayer(Player &player);									//プレイヤーとの当たり判定
-	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);	//バレットとの当たり判定
-	void ScrollMap(Player& player);									//画面スクロール
-	void ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy);		//エネミーとの当たり判定
-
-
+	void ColPlayer(std::shared_ptr<Player> player);										//プレイヤーとの当たり判定
+	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);		//バレットとの当たり判定
+	void Scroll(std::shared_ptr<Player> player, std::shared_ptr<std::vector<Enemy>> enemey, std::shared_ptr<std::vector<Bullet>> bullet);	//画面スクロール
+	void ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy);			//エネミーとの当たり判定
+	
 
 
 private:
 
 	std::vector<MapChip> mStage;	//マップデータ
 	glm::ivec2 mStageSize;			//画面に描画するセル数
-	
+	glm::ivec2 mScroll_Vec;			//スクロールしている向き
+
+
 	bool mIsShop;	//ショップが終わったかどうか？
 	Entry* Owner;	//Entryクラス
 
