@@ -1,18 +1,32 @@
 #include "Player.hpp"
 
 //コンストラクタ
-Player::Player(Entry* e) : Actor(e)
+Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_HitEffect_Handle[3], int Stage_HitEffect_Handle[3]) : Actor(e)
 {
 
-	//スプライトロード
-	mSprite = LoadGraph("Assets/Player.png");			//プレイヤースプライト
-	mBullet_Sprite = LoadGraph("Assets/Bullet.png");	//バレットスプライト
-	LoadDivGraph("Assets/Enemy_Explosion.png", 3, 3, 1, CELL, CELL, mHitEffect_Enemy_Sprite);	//エネミーとのエフェクト
-	LoadDivGraph("Assets/Stage_Explosion.png", 3, 3, 1, CELL, CELL, mHitEffect_Map_Sprite);		//マップとのエフェクト
 
+	mPlayer_sprite = Player_Handle;
+
+	mPlayer_Bullet_sprite = Player_Bullet_Handle;
+	
+
+	mEnemy_HitEffect_sprite[0] = Enemy_HitEffect_Handle[0];
+	mEnemy_HitEffect_sprite[1] = Enemy_HitEffect_Handle[1];
+	mEnemy_HitEffect_sprite[2] = Enemy_HitEffect_Handle[2];
+
+
+	mStage_HitEffect_sprite[0] = Stage_HitEffect_Handle[0];
+	mStage_HitEffect_sprite[1] = Stage_HitEffect_Handle[1];
+	mStage_HitEffect_sprite[2] = Stage_HitEffect_Handle[2];
+
+
+
+
+
+	
 	mBullet = std::make_shared<std::vector<Bullet>>();
 
-	GetGraphSize(mSprite, &mSize.x, &mSize.y);	//サイズを設定
+	GetGraphSize(mPlayer_sprite, &mSize.x, &mSize.y);	//サイズを設定
 	//printf("size X: %d\n", mSize.x);
 	//printf("size Y: %d\n", mSize.y);
 
@@ -20,8 +34,16 @@ Player::Player(Entry* e) : Actor(e)
 	mSpeed_Max = 10;	//最大速度
 	
 	//初期座標
-	mPosition.x = SCREEN_WIDTH / 2;
+	
+	//スクリーン座標
+	mPosition.x = SCREEN_WIDTH / 2;		
 	mPosition.y = SCREEN_HEIGHT / 2;
+
+	//ステージ座標
+	mStagePosition.x = STAGE_WIDTH / 2;
+	mStagePosition.y = STAGE_HEIGHT / 50 *20 ;
+
+
 
 	mVector = VECTOR_UP;	//初期方向
 	mMenu = false;			//ショップを開くかどうか？
@@ -59,6 +81,29 @@ void Player::FixPos(glm::ivec2 pos)
 
 }
 
+//エネミーのバレットとの当たり判定
+void Player::ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> Enemy_Bullet)
+{
+	//エネミー
+	for (std::vector<Enemy>::iterator itr = Enemy_Bullet->begin(); itr != Enemy_Bullet->end(); itr++)
+	{
+		
+		//バレット
+		for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
+		{
+			
+			if (Box_Collision::Intersect(mCol, it->mCol) == true)
+			{
+
+				it->FixPos(mCol.getPosition());
+				it->mIsHit = true;
+			}
+
+		}
+	}
+}
+
+
 
 
 //バレット　更新
@@ -67,7 +112,7 @@ void Player::Bullet_Update()
 	// 攻撃　バレット
 	if (Owner->InputKey->getKeyDown(KEY_INPUT_SPACE) == true)
 	{
-		mBullet->push_back(Bullet(mPosition, mVector, mBullet_Sprite, mHitEffect_Map_Sprite, mHitEffect_Enemy_Sprite));
+		mBullet->push_back(Bullet(mPosition, mVector, mPlayer_Bullet_sprite, mStage_HitEffect_sprite, mEnemy_HitEffect_sprite));
 	}
 
 	//バレットを更新
@@ -187,19 +232,19 @@ void Player::Player_Draw()
 	//方向
 	if (mVector == VECTOR_UP)
 	{
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mSprite, true, false);
+		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite, true, false);
 	}
 	else if (mVector == VECTOR_DOWN)
 	{
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, PI, mSprite, true, false);
+		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, PI, mPlayer_sprite, true, false);
 	}
 	else if (mVector == VECTOR_LEFT)
 	{
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, -(PI * 2) / 4, mSprite, true, false);
+		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, -(PI * 2) / 4, mPlayer_sprite, true, false);
 	}
 	else if (mVector == VECTOR_RIGHT)
 	{
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, (PI * 2) / 4, mSprite, true, false);
+		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, (PI * 2) / 4, mPlayer_sprite, true, false);
 	}
 
 	DrawPixel(mPosition.x, mPosition.y,GetColor(0,255,0));

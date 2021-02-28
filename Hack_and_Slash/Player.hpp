@@ -24,11 +24,11 @@
 
 //前方宣言
 class Bullet;
-
+class Enemy;
 class Player : public Actor
 {
 public:
-	Player(Entry* e);	//コンストラクタ
+	Player(Entry* e,int Player_Handle, int Player_Bullet_Handle,int Enemy_HitEffect_Handle[3], int Stage_HitEffect_Handle[3]);	//コンストラクタ
 	~Player();	//デストラクタ
 
 	
@@ -57,21 +57,23 @@ public:
 	void setIsMenu(bool b);			//メニューを開くかどうか設定
 	void setSpeed(int speed);		//速度を設定
 
+	void ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> Enemy_Bullet);	//エネミーのバレットとの当たり判定
 
+
+
+	glm::ivec2 mStagePosition;
 
 
 	Box_Collision mCol;	//当たり判定
 private:
 
-	int mSprite;		//プレイヤー　スプライト
-	int mBullet_Sprite;	//バレット　スプライト
+	
 
-
-
-	int mHitEffect_Enemy_Sprite[3];	//エネミーエフェクト　スプライト 
-	int mHitEffect_Map_Sprite[3];	//マップエフェクト　スプライト
-
-
+	//スプライト
+	int mPlayer_sprite;
+	int mEnemy_HitEffect_sprite[3];
+	int mStage_HitEffect_sprite[3];
+	int mPlayer_Bullet_sprite;
 
 
 
@@ -81,7 +83,6 @@ private:
 	std::shared_ptr<std::vector<Bullet>> mBullet;	//バレット
 
 	bool mMenu;	//ショップ画面を開くかどうか？
-
 
 
 

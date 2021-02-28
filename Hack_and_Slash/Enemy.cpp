@@ -2,21 +2,39 @@
 
 
 //コンストラクタ
-Enemy::Enemy(int handle, int Bullet_handle) : Actor(nullptr)
+Enemy::Enemy(int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_sprite[3], int Player_HitEffect_sprite[3]) : Actor(nullptr)
 {
-	//スプライト
-	mSprite = handle;					//エネミーハンドル
-	mBullet_Sprite = Bullet_handle;		//バレットハンドル
+
+
+	mEnemy_sprite = Enemy_sprite;	//エネミー
+	mEnemy_Bullet_sprite = Enemy_Bullet_sprite;	//バレット
+
+	//ステージ　ヒットエフェクト
+	mStage_HitEffect_sprite[0] = Stage_HitEffect_sprite[0];
+	mStage_HitEffect_sprite[1] = Stage_HitEffect_sprite[1];
+	mStage_HitEffect_sprite[2] = Stage_HitEffect_sprite[2];
+	
+	//プレイヤー　ヒットフェクト
+	mPlayer_HitEffect_sprite[0] = Player_HitEffect_sprite[0];
+	mPlayer_HitEffect_sprite[1] = Player_HitEffect_sprite[1];
+	mPlayer_HitEffect_sprite[2] = Player_HitEffect_sprite[2];
+
+
+
+
 
 	Rand_Action = GetRand(3);		//乱数
+	//Rand_Action = 3; //GetRand(3);//乱数
+
 	Prev_Rand_Action = Rand_Action;	//前の乱数
-	MovePixel = 0;					//移動量
+	MovePixel = 0;					//移動した量
 
 	// 初期座標
 	mPosition.x = SCREEN_WIDTH / 2;
-	mPosition.y = SCREEN_HEIGHT / 2 - CELL * 4;
+	mPosition.y = SCREEN_HEIGHT / 2 - CELL * 2;
 
-	mSpeed = 10; //スピード
+//	mSpeed = 10; //スピード
+	mSpeed = 2; //スピード
 
 	//当たり判定
 	mCol.setStageObjectType(StageObjectType::Enemy);
@@ -25,6 +43,16 @@ Enemy::Enemy(int handle, int Bullet_handle) : Actor(nullptr)
 	bullet = std::make_shared<std::vector<Bullet>>();
 
 }
+
+//バレットを取得
+std::shared_ptr<std::vector<Bullet>> Enemy::getBullet()
+{
+	return bullet;
+}
+
+
+
+
 
 //更新
 void Enemy::Update()
@@ -37,7 +65,6 @@ void Enemy::Update()
 	mCol.setPosition(pos);
 	mCol.setSize(glm::ivec2(CELL - 1, CELL - 1));
 
-	Rand_Attack = GetRand(5);
 
 	//方向
 	if (Rand_Action == 0)
@@ -57,10 +84,13 @@ void Enemy::Update()
 		mVector = VECTOR_LEFT;
 	}
 	
+	Rand_Attack = GetRand(50); //攻撃頻度
+
 	//攻撃
 	if (Rand_Attack == 1)
 	{
-	//	bullet->push_back(Bullet(mPosition,mVector,mBullet_sprite,mEffect_sprite));
+	//	printf("エネミー攻撃\n");
+		bullet->push_back(Bullet(mPosition,mVector,mEnemy_Bullet_sprite,mStage_HitEffect_sprite, mPlayer_HitEffect_sprite));
 	}
 
 
@@ -78,6 +108,22 @@ void Enemy::Update()
 	//移動
 	mPosition.x += mVector.x * mSpeed;
 	mPosition.y += mVector.y * mSpeed;
+
+
+
+	for (std::vector<Bullet>::iterator itr = bullet->begin(); itr != bullet->end();)
+	{
+
+		if (itr->isDelete == true)
+		{
+			//printf("バレット要素削除\n");
+			itr = bullet->erase(itr);
+		}
+		else {
+			itr->Update();
+			itr++;
+		}
+	}
 
 
 }
@@ -132,7 +178,13 @@ void Enemy::FixPos(glm::ivec2 pos)
 //描画
 void Enemy::Draw()
 {
-	DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mSprite, true, false);
+	DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mEnemy_sprite, true, false);
+
+	for (std::vector<Bullet>::iterator itr = bullet->begin(); itr != bullet->end(); itr++)
+	{
+		itr->Draw();
+	}
+
 
 }
 

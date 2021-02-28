@@ -19,7 +19,7 @@ class Enemy_Mng {
 
 public:
 
-	Enemy_Mng();	//コンストラクタ
+	Enemy_Mng(int Enemy_Handle, int Enemy_Bullet_Hanlde, int Stage_HitEffect_Handle[3], int Player_HitEffect_Handle[3]);	//コンストラクタ
 	~Enemy_Mng();	//デストラクタ
 
 
@@ -31,8 +31,14 @@ public:
 	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);	//バレットとの当たり判定
 
 private:
-	int Handle;	//敵スプライト
-	int Bullet_Handle;	//バレットスプライト
+	
+
+	int mEnemy_sprite;
+	int mEnemy_Bullet_sprite;
+	int mStage_HitEffect_sprite[3];
+	int mPlayer_HitEffect_sprite[3];
+
+
 
 	std::shared_ptr<std::vector<Enemy>> enemy;	//エネミー　クラス
 

@@ -26,17 +26,18 @@ class Enemy;
 class Stage
 {
 public:
-	Stage(Entry *e);	//コンストラクタ
+	Stage(Entry *e,int Block_Handle, int Brick_Handle, int Shop_Handle);	//コンストラクタ
 	~Stage();			//デストラクタ
 
 	void Update();	//更新
 	void Draw();	//描画
 
+	//当たり判定各種
 	void ColPlayer(std::shared_ptr<Player> player);										//プレイヤーとの当たり判定
-	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);		//バレットとの当たり判定
+	void ColPlayer_Bullet(std::shared_ptr<std::vector<Bullet>> bullet);		//プレイヤーのバレットとの当たり判定
 	void Scroll(std::shared_ptr<Player> player, std::shared_ptr<std::vector<Enemy>> enemey, std::shared_ptr<std::vector<Bullet>> bullet);	//画面スクロール
 	void ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy);			//エネミーとの当たり判定
-	
+	void ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> enemy);	//エネミーのバレットとの当たり判定
 
 
 private:
@@ -46,6 +47,7 @@ private:
 	glm::ivec2 mScroll_Vec;			//スクロールしている向き
 
 
+	bool mGameStart;	//ゲームが始まって最初のフレームかかどうか？
 	bool mIsShop;	//ショップが終わったかどうか？
 	Entry* Owner;	//Entryクラス
 

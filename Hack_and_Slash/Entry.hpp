@@ -61,6 +61,9 @@ public:
 	void Update();	//計算
 	void Draw();	//描画
 	int GetRand(int start, int end);	//乱数を取得
+	
+	int LoadSprite(const char* FileName);				//スプライトをロード
+
 
 	std::shared_ptr<Input> InputKey;
 

@@ -18,7 +18,17 @@ class Entry;
 class Enemy :public Actor
 {
 public:
-	Enemy(int handle,int Bullet_handle);	//コンストラクタ
+
+	/*コンストラクタ引数
+	* 
+	* エネミースプライト
+	* バレットスプライト
+	* ステージヒットエフェクト
+	* プレイヤーヒットエフェクト 
+	*/
+
+
+	Enemy(int Enemy_sprite,int Enemy_Bullet_sprite,int Stage_HitEffect_sprite[3],int Player_HitEffect_sprite[3]);	//コンストラクタ
 	~Enemy();			//デストラクタ
 
 	void Update();	//更新
@@ -28,13 +38,19 @@ public:
 	void FixPos(glm::ivec2 pos);	//座標を修正
 	void setMove_Rand();			//移動乱数を再設定
 	void setMovePixel();			//移動量をリセット
+	std::shared_ptr<std::vector<Bullet>> getBullet();
 
 
 	Box_Collision mCol;	//当たり判定
 private:
 
-	int mSprite;			//画像ハンドル
-	int mBullet_Sprite;		//バレットハンドル
+	//スプライト
+	int mEnemy_sprite;					//エネミー
+	int mEnemy_Bullet_sprite;			//バレット
+	int mStage_HitEffect_sprite[3];		//ステージ　ヒットエフェクト
+	int mPlayer_HitEffect_sprite[3];	//プレイヤー　ヒットエフェクト
+
+
 
 
 	int Rand_Action;		//行動の乱数

@@ -17,10 +17,25 @@ int Entry::GetRand(int start,int end) {
 	std::mt19937 mt(rnd());								//  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
 	std::uniform_int_distribution<> Rand(start,end);    // [start,end] 範囲の一様乱数
 
-
-
 	return Rand(mt);
 }
+
+//スプライトをロード
+int Entry::LoadSprite(const char* FileName)
+{
+	int a = LoadGraph(FileName);
+
+	if (a == -1)
+	{
+		printf("ファイルが存在しません。%s \n",FileName);
+		return -1;
+	}
+	else {
+		return a;
+	}
+}
+
+
 
 
 

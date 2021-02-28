@@ -2,18 +2,26 @@
 
 
 //コンストラクタ
-Enemy_Mng::Enemy_Mng()
+Enemy_Mng::Enemy_Mng(int Enemy_Handle, int Enemy_Bullet_Hanlde, int Stage_HitEffect_Handle[3], int Player_HitEffect_Handle[3])
 {
 	enemy = std::make_shared<std::vector<Enemy>>();	//ベクター変数
 
-	//スプライトをロード
-	Handle = LoadGraph("Assets/Enemy.png");					//エネミー
-	Bullet_Handle = LoadGraph("Assets/Enemy_Bullet.png");	//バレット
+
+	mEnemy_sprite = Enemy_Handle;
+	mEnemy_Bullet_sprite = Enemy_Bullet_Hanlde;
+
+	mStage_HitEffect_sprite[0] = Stage_HitEffect_Handle[0];
+	mStage_HitEffect_sprite[1] = Stage_HitEffect_Handle[1];
+	mStage_HitEffect_sprite[2] = Stage_HitEffect_Handle[2];
+
+	mPlayer_HitEffect_sprite[0] = Player_HitEffect_Handle[0];
+	mPlayer_HitEffect_sprite[1] = Player_HitEffect_Handle[1];
+	mPlayer_HitEffect_sprite[2] = Player_HitEffect_Handle[2];
 
 
 
 
-	enemy->push_back(Enemy(Handle,Bullet_Handle));	//追加
+	enemy->push_back(Enemy(mEnemy_sprite, mEnemy_Bullet_sprite, mStage_HitEffect_sprite, mPlayer_HitEffect_sprite));	//追加
 }
 
 

@@ -5,7 +5,7 @@ Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int MapEffect_Handle[
 {
 	GetGraphSize(handle,&mSize.x, &mSize.y);	//スプライトの大きさ
 
-	mSpeed = 2;		//バレットの速度
+	mSpeed = 8;		//バレットの速度
 	mSprite = handle;	//スプライト
 	isDelete = false;	//削除するかどうか？
 

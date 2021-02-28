@@ -1,17 +1,17 @@
 #include "Stage.hpp"
 
 //コンストラクタ
-Stage::Stage(Entry* e)
+Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 {
 	Owner = e;
 //	printf("screen X: %d\n", SCREEN_WIDTH / CELL);
 //	printf("screen Y: %d\n",SCREEN_HEIGHT / CELL);
 
-	printf("stage X: %d\n", STAGE_WIDTH / CELL);
-	printf("stage Y: %d\n",STAGE_HEIGHT / CELL);
+//	printf("stage X: %d\n", STAGE_WIDTH / CELL);
+//	printf("stage Y: %d\n",STAGE_HEIGHT / CELL);
 
 	mIsShop = false;	//ショップ中かどうか？
-
+	mGameStart = false;
 
 	//画面に描画するセル数
 	mStageSize.x = STAGE_WIDTH / CELL;
@@ -20,38 +20,73 @@ Stage::Stage(Entry* e)
 	// ###### スプライトをロード
 
 	//ブロック
-	int Block_sprite = LoadGraph("Assets/Block.png");
+	int Block_sprite = Block_Handle;
 	glm::ivec2 BlockSize;	
 	GetGraphSize(Block_sprite,&BlockSize.x, &BlockSize.y);	//サイズを取得
 
 	//レンガ
-	int Brick_sprite = LoadGraph("Assets/Brick.png");
+	int Brick_sprite = Brick_Handle;
 	glm::ivec2 BrickSize;	
 	GetGraphSize(Brick_sprite, &BrickSize.x, &BrickSize.y);	//サイズを取得
 
 	//ショップ
-	int Shop_sprite = LoadGraph("Assets/Shop.png");
+	int Shop_sprite = Shop_Handle;
 	glm::ivec2 ShopSize;
-	GetGraphSize(Brick_sprite, &ShopSize.x, &ShopSize.y);	//サイズを取得
+	GetGraphSize(Shop_sprite, &ShopSize.x, &ShopSize.y);	//サイズを取得
 
-	//ステージ
+
+
+
+
+	// *** ステージロード ***
+	glm::ivec2 StageSize;	//画面サイズ
+	FILE* fp = NULL;		//ファイルポインタ
+
+	fopen_s(&fp,"sample.bin","rb");	//読み込みモードでファイルを開く
+	byte Stage_Grid[STAGE_HEIGHT / CELL][STAGE_WIDTH / CELL];	//ステージ
+	if (fp != NULL) {
+		//ステージサイズを読み込む(先頭８バイト)
+		fread(&StageSize.x, sizeof(int), 1, fp);
+		fread(&StageSize.y, sizeof(int), 1, fp);
+
+		for (int y = 0; y < (int)(STAGE_HEIGHT / CELL); y++)
+		{
+			for (int x = 0; x < (int)(STAGE_WIDTH / CELL); x++)
+			{
+				byte b = 0;
+				fread(&b, sizeof(byte), 1, fp);
+				if (b == 1)
+				{
+					Stage_Grid[y][x] = b;
+				}
+			}
+
+		}
+		fclose(fp);
+
+	}
+	else {
+		printf("ファイルを読み込めません。\n");
+	}
+
+	/*
 	unsigned char Stage_Grid[STAGE_HEIGHT / CELL][STAGE_WIDTH / CELL] =
 	{
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 		{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,},
+		{0,1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
+		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
-		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
-		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
-		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
+		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
 		{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,},
@@ -88,6 +123,7 @@ Stage::Stage(Entry* e)
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 	};
+	*/
 
 	//マップオブジェクトを設定
 	for (int y = 0; y < mStageSize.y; y++)
@@ -180,7 +216,7 @@ void Stage::ColPlayer(std::shared_ptr<Player> player)
 
 
 //バレットとの当たり判定
-void Stage::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
+void Stage::ColPlayer_Bullet(std::shared_ptr<std::vector<Bullet>> bullet)
 {
 	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 	{
@@ -235,8 +271,50 @@ void Stage::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
 //画面スクロール
 void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<std::vector<Enemy>> enemy, std::shared_ptr<std::vector<Bullet>> bullet)
 {
+
+#define SCROLL_OFFSET_X ((int)200)
+#define SCROLL_OFFSET_Y ((int)200)
+
+
+	//最初のフレームの時
+	if (mGameStart == false)
+	{
+		//X 補正
+		if (player->mStagePosition.x > (SCREEN_WIDTH - SCROLL_OFFSET_X))
+		{
+			int p = player->mStagePosition.x - (SCREEN_WIDTH - SCROLL_OFFSET_X);
+
+			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.x += -p;
+				itr->setPosition(pos);
+			}	
+		}
+
+		//Y 補正
+		if (player->mStagePosition.y > (SCREEN_HEIGHT - SCROLL_OFFSET_Y))
+		{
+			int p = player->mStagePosition.y - (SCREEN_HEIGHT - SCROLL_OFFSET_Y);
+			//printf("%d\n",p);
+
+			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.y += -p;
+				itr->setPosition(pos);
+			}
+		}
+		mGameStart = true;
+	}
+
+
+
+
 	//左右移動
-	if (player->getPosition().x > (SCREEN_WIDTH - 100) + player->getSpeed() && player->getVector() == VECTOR_RIGHT) 
+	if (player->getPosition().x > (SCREEN_WIDTH - SCROLL_OFFSET_X) + player->getSpeed() && player->getVector() == VECTOR_RIGHT)
 	{
 
 		//マップオブジェクトを移動
@@ -271,7 +349,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<std::vector<E
 		pos.x = player->getPosition().x - player->getSpeed();
 		player->setPosition(pos);
 	}
-	else if (player->getPosition().x < ( 100 ) + player->getSpeed() && player->getVector() == VECTOR_LEFT)
+	else if (player->getPosition().x < (SCROLL_OFFSET_X) + player->getSpeed() && player->getVector() == VECTOR_LEFT)
 	{
 
 		//マップオブジェクトを移動
@@ -309,7 +387,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<std::vector<E
 		player->setPosition(pos);
 
 		//上下移動
-	}else if (player->getPosition().y > (SCREEN_HEIGHT - 100) + player->getSpeed() && player->getVector() == VECTOR_DOWN) 
+	}else if (player->getPosition().y > (SCREEN_HEIGHT - SCROLL_OFFSET_Y) + player->getSpeed() && player->getVector() == VECTOR_DOWN)
 	{
 		//マップオブジェクトを移動
 		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
@@ -344,7 +422,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<std::vector<E
 		pos.y = player->getPosition().y - player->getSpeed();
 		player->setPosition(pos);
 	}
-	else if (player->getPosition().y < (100) + player->getSpeed() && player->getVector() == VECTOR_UP)
+	else if (player->getPosition().y < (SCROLL_OFFSET_Y) + player->getSpeed() && player->getVector() == VECTOR_UP)
 	{
 
 		//マップオブジェクトを移動
@@ -383,8 +461,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<std::vector<E
 		player->setPosition(pos);
 	}
 	else {
-		mScroll_Vec = glm::ivec2(0,0);	//移動している方向
-
+		
 	}
 
 
@@ -427,6 +504,35 @@ void Stage::ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy)
 	}
 }
 
+
+
+
+//エネミーのバレットとの当たり判定
+void Stage::ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> enemy)
+{
+	//エネミー
+	for (std::vector<Enemy>::iterator itr = enemy->begin(); itr != enemy->end(); itr++)
+	{
+		Enemy ene = *itr;
+
+		//バレット
+		for (std::vector<Bullet>::iterator it = ene.getBullet()->begin(); it != ene.getBullet()->end(); it++)
+		{
+			Bullet b = *it;
+
+			//マップチップ
+			for (std::vector<MapChip>::iterator i = mStage.begin(); i != mStage.end(); i++)
+			{
+				if (Box_Collision::Intersect(b.mCol, i->mCol) == true)
+				{
+					
+					it->FixPos(i->mCol.getPosition());
+					it->mIsHit = true;
+				}
+			}
+		}
+	}
+}
 
 
 

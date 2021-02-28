@@ -43,6 +43,10 @@ private:
 	std::shared_ptr<Enemy_Mng> enemy_mng;	//エネミー
 
 
+
+
+
+
 	bool flag;	//ショップかどうかのフラグ
 	Entry* Owner;	//Entry クラス
 
