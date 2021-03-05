@@ -46,6 +46,8 @@ private:
 	glm::ivec2 mStageSize;			//画面に描画するセル数
 	glm::ivec2 mScroll_Vec;			//スクロールしている向き
 
+	
+	std::vector<std::vector<byte>> Stage_Grid;	//ステージ
 
 	bool mGameStart;	//ゲームが始まって最初のフレームかかどうか？
 	bool mIsShop;	//ショップが終わったかどうか？

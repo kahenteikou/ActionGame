@@ -96,7 +96,7 @@ void Player::ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> Enemy_Bullet)
 			{
 
 				it->FixPos(mCol.getPosition());
-				it->mIsHit = true;
+				it->mIsEnemyHit = true;
 			}
 
 		}
@@ -112,12 +112,15 @@ void Player::Bullet_Update()
 	// 攻撃　バレット
 	if (Owner->InputKey->getKeyDown(KEY_INPUT_SPACE) == true)
 	{
+		//printf("攻撃\n");
 		mBullet->push_back(Bullet(mPosition, mVector, mPlayer_Bullet_sprite, mStage_HitEffect_sprite, mEnemy_HitEffect_sprite));
 	}
 
 	//バレットを更新
 	for (std::vector<Bullet>::iterator itr = mBullet->begin(); itr != mBullet->end(); itr++)
 	{
+		//printf("バレット更新\n");
+
 		itr->Update();
 	}
 }
@@ -247,7 +250,7 @@ void Player::Player_Draw()
 		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, (PI * 2) / 4, mPlayer_sprite, true, false);
 	}
 
-	DrawPixel(mPosition.x, mPosition.y,GetColor(0,255,0));
+	//DrawPixel(mPosition.x, mPosition.y,GetColor(0,255,0));
 }
 
 
@@ -256,6 +259,7 @@ void Player::Bullet_Draw()
 {
 	for (std::vector<Bullet>::iterator itr = mBullet->begin(); itr != mBullet->end(); itr++)
 	{		
+		//printf("バレット更新\n");
 		itr->Draw();	//バレット描画		
 	}
 }

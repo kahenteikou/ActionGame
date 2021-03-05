@@ -9,22 +9,13 @@ Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 	// #####　スプライトをロード #####
 
 	int Player_Handle = Owner->LoadSprite("Assets/Player/Player_0.png");	//プレイヤー
-	
+	int Enemy_Handle = Owner->LoadSprite("Assets/Enemy.png");				//エネミー		
 
-	int Enemy_Handle = Owner->LoadSprite("Assets/Enemy.png");				//エネミー	
-	
 	int Player_Bullet_Handle = Owner->LoadSprite("Assets/Player_Bullet.png");	//プレイヤーのバレット
-	
-
 	int Enemy_Bullet_Handle = Owner->LoadSprite("Assets/Enemy_Bullet.png");		//エネミーのバレット
-	
 
 	int Block_Handle = Owner->LoadSprite("Assets/Block.png");	//ブロック	
-	
-
 	int Brick_Handle = Owner->LoadSprite("Assets/Brick.png");	//レンガ
-	
-
 	int Shop_Handle = Owner->LoadSprite("Assets/Shop.png");		//ショップ
 	
 
@@ -109,7 +100,7 @@ void Game_Scene::Draw()
 
 	player->Draw();	//プレイヤー描画
 	stage->Draw();	//ステージ描画
-	enemy_mng->Draw();
+	enemy_mng->Draw();	//エネミー描画
 
 	//ショップ画面
 	if (player->getIsMenu() == true)

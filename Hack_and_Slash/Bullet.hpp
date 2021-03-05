@@ -45,9 +45,9 @@ public:
 
 	Box_Collision mCol;	//当たり判定
 
-	bool mIsHit;		//ヒットしたかどうか？
+	bool mIsMapHit;		//マップとヒットしたかどうか？
 	bool mIsEnemyHit;	//エネミーとヒットしたかどうか？
-	bool isDelete;		//削除するかどうか？
+	bool mIsDelete;		//削除するかどうか？
 
 private:
 	Animation anim;			//アニメーションクラス

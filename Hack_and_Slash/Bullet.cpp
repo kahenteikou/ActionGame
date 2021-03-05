@@ -7,8 +7,7 @@ Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int MapEffect_Handle[
 
 	mSpeed = 8;		//バレットの速度
 	mSprite = handle;	//スプライト
-	isDelete = false;	//削除するかどうか？
-
+	
 	//マップとヒットした時のエフェクト
 	mMapEffect_Sprite[0] = MapEffect_Handle[0];
 	mMapEffect_Sprite[1] = MapEffect_Handle[1];
@@ -18,11 +17,15 @@ Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int MapEffect_Handle[
 	mEnemyEffect_Sprite[0] = EnemyEffect_Handle[0];
 	mEnemyEffect_Sprite[1] = EnemyEffect_Handle[1];
 	mEnemyEffect_Sprite[2] = EnemyEffect_Handle[2];
+	
+
+	//判定関係を初期化
+	mIsMapHit = false;
+	mIsEnemyHit = false;
+	mIsDelete = false;
 
 
 
-	mIsHit = false;			//マップとヒットしたかどうか？
-	mIsEnemyHit = false;	//エネミーとヒットしたかどうか？
 }
 
 
@@ -55,7 +58,7 @@ void Bullet::FixPos(glm::ivec2 pos)
 void Bullet::Update()
 {
 	//バレットの弾道
-	if (mIsHit == false && mIsEnemyHit == false) {
+	if (mIsMapHit == false && mIsEnemyHit == false) {
 		//　移動
 		if (mVector == VECTOR_UP)
 		{
@@ -121,7 +124,9 @@ void Bullet::Update()
 void Bullet::Draw()
 {
 	//バレットを移動
-	if (mIsHit == false && mIsEnemyHit == false) {
+	
+	if (mIsMapHit == false && mIsEnemyHit == false) 
+	{
 		//描画向き
 		if (mVector == VECTOR_UP)
 		{
@@ -139,35 +144,32 @@ void Bullet::Draw()
 		{
 			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, (PI * 2) / 4, mSprite, true, true);
 		}
-	}
 
-	//マップとヒット
-	else if(mIsHit == true) 
+	}
+	else if (mIsMapHit == true) 
 	{
-		//ヒットエフェクト
+		//マップ　ヒットエフェクト
+
 		int num = 0;
 		if (anim.getClip(num, BULLET_EFFECT_SPEED) == false) {
 			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mMapEffect_Sprite[num], true, false);
 		}
-		else 
+		else
 		{
-			isDelete = true;
+			mIsDelete = true;
 		}
 	}
-
-
-	//エネミーとヒット
 	else if (mIsEnemyHit == true)
 	{
-		//printf("あああ\n");
-		//ヒットエフェクト
+		//エネミー　ヒットエフェクト
+
 		int num = 0;
 		if (anim.getClip(num, BULLET_EFFECT_SPEED) == false) {
 			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mEnemyEffect_Sprite[num], true, false);
 		}
 		else
 		{
-			isDelete = true;
+			mIsDelete = true;
 		}
 	}
 

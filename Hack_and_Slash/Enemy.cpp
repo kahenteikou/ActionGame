@@ -23,18 +23,19 @@ Enemy::Enemy(int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_spri
 
 
 
-	Rand_Action = GetRand(3);		//乱数
+//	Rand_Action = GetRand(3);		//乱数
+	Rand_Action = 0;		//乱数
 	//Rand_Action = 3; //GetRand(3);//乱数
 
-	Prev_Rand_Action = Rand_Action;	//前の乱数
+	//Prev_Rand_Action = Rand_Action;	//前の乱数
 	MovePixel = 0;					//移動した量
 
 	// 初期座標
 	mPosition.x = SCREEN_WIDTH / 2;
-	mPosition.y = SCREEN_HEIGHT / 2 - CELL * 2;
+	mPosition.y = SCREEN_HEIGHT / 2 - CELL;
 
 //	mSpeed = 10; //スピード
-	mSpeed = 2; //スピード
+//	mSpeed = 2; //スピード
 
 	//当たり判定
 	mCol.setStageObjectType(StageObjectType::Enemy);
@@ -84,7 +85,8 @@ void Enemy::Update()
 		mVector = VECTOR_LEFT;
 	}
 	
-	Rand_Attack = GetRand(50); //攻撃頻度
+	//Rand_Attack = GetRand(50); //攻撃頻度
+	Rand_Attack = GetRand(10); //攻撃頻度
 
 	//攻撃
 	if (Rand_Attack == 1)
@@ -95,42 +97,42 @@ void Enemy::Update()
 
 
 
-
-	MovePixel += mSpeed;	//移動量に加算
+	/*
+	//MovePixel += mSpeed;	//移動量に加算
 	if (MovePixel > CELL * 2)
 	{
 		setMove_Rand();
 		MovePixel = 0;	//移動量をリセット
 	}
-
+	*/
 
 
 	//移動
-	mPosition.x += mVector.x * mSpeed;
-	mPosition.y += mVector.y * mSpeed;
+//	mPosition.x += mVector.x * mSpeed;
+//	mPosition.y += mVector.y * mSpeed;
 
 
-
+	//バレット削除
 	for (std::vector<Bullet>::iterator itr = bullet->begin(); itr != bullet->end();)
 	{
-
-		if (itr->isDelete == true)
+		if (itr->mIsDelete == true)
 		{
-			//printf("バレット要素削除\n");
 			itr = bullet->erase(itr);
 		}
-		else {
+		else 
+		{
 			itr->Update();
 			itr++;
 		}
 	}
-
-
 }
 
 //移動乱数を再設定
 void Enemy::setMove_Rand()
 {
+	Rand_Action = 0;
+
+	/*
 	//違う乱数を引くまで無限ループ
 	while (true) {
 		Rand_Action = GetRand(3);
@@ -142,7 +144,7 @@ void Enemy::setMove_Rand()
 			break;
 		}
 	}
-
+	*/
 }
 
 //移動量をリセット

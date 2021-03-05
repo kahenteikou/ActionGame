@@ -12,8 +12,8 @@
 #define CELL ((int)48)	//セル
 
 //画面サイズ
-#define SCREEN_WIDTH ((int)16 * 70)
-#define SCREEN_HEIGHT ((int)9 * 70)
+#define SCREEN_WIDTH ((int)16 * 80)
+#define SCREEN_HEIGHT ((int)9 * 80)
 
 //ステージ
 #define STAGE_WIDTH ((int)50 * CELL)
