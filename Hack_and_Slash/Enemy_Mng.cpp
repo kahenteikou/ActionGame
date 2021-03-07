@@ -21,7 +21,7 @@ Enemy_Mng::Enemy_Mng(int Enemy_Handle, int Enemy_Bullet_Hanlde, int Stage_HitEff
 
 
 
-	enemy->push_back(Enemy(mEnemy_sprite, mEnemy_Bullet_sprite, mStage_HitEffect_sprite, mPlayer_HitEffect_sprite));	//追加
+	//enemy->push_back(Enemy(mEnemy_sprite, mEnemy_Bullet_sprite, mStage_HitEffect_sprite, mPlayer_HitEffect_sprite));	//追加
 }
 
 
@@ -39,7 +39,7 @@ void Enemy_Mng::ColPlayer(std::shared_ptr<Player> player)
 		//交差判定
 		if (Box_Collision::Intersect(itr->mCol, player->mCol) == true)
 		{
-			//player->FixPos(itr->mCol.getPosition());
+			player->FixPos(itr->mCol.getPosition());
 		}
 	}
 }
@@ -56,12 +56,13 @@ void Enemy_Mng::ColBullet(std::shared_ptr<std::vector<Bullet>> bullet)
 			//交差
 			if (Box_Collision::Intersect(e.mCol, it->mCol) == true)
 			{
-				it->mIsEnemyHit = true;		//エネミーとバレットがヒット
-				itr = enemy->erase(itr);	//敵を削除
+			//	it->mIsEnemyHit = true;		//エネミーとバレットがヒット
+			//	itr = enemy->erase(itr);	//敵を削除
 			}
 			else {
 				itr++;
 			}
+
 		}
 	}
 }

@@ -31,7 +31,7 @@ Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_
 	//printf("size Y: %d\n", mSize.y);
 
 	mSpeed = 0;
-	mSpeed_Max = 10;	//最大速度
+	mSpeed_Max = 3;	//最大速度
 	
 	//初期座標
 	
@@ -54,7 +54,7 @@ void Player::FixPos(glm::ivec2 pos)
 {
 	if (mVector == VECTOR_UP)
 	{
-//		printf("UP\n");
+//		printf("UP\n"); 
 		mPosition.y = pos.y + CELL + CELL / 2;
 	}
 	else if (mVector == VECTOR_DOWN)
@@ -78,8 +78,92 @@ void Player::FixPos(glm::ivec2 pos)
 	else {
 //		printf("None\n");
 	}
-
 }
+
+
+//位置のオフセット座標を修正
+void Player::OffsetFixPos(glm::ivec2 pos)
+{
+#define OFFSET 20
+
+	//　上、下
+	if (mVector == VECTOR_UP || mVector == VECTOR_DOWN)
+	{
+//
+		printf("VECTOR_UP , VECTOR_DOWN\n");
+		//		printf("player: %d\n",mPosition.x);
+		//		printf("block: %d\n",pos.x);
+
+		int PB = (mPosition.x - (CELL / 2)) - pos.x;	//どっち側居るか？
+
+		if (PB > 0)
+		{
+//			printf("Right: %d\n", PB);
+
+			int cp = CELL - PB; // めり込み量
+//			printf("めりこみ量　cp: %d\n", cp);
+
+			if (cp < OFFSET)
+			{
+//				printf("Right 修正\n");
+				mPosition.x = pos.x + CELL + (CELL / 2);
+			}
+		}
+		else if (PB < 0)
+		{
+//			printf("Left: %d\n", PB);
+
+			int cp = CELL - std::abs(PB); // めり込み量
+//			printf("めりこみ量　cp: %d\n", cp);
+
+			if (cp < OFFSET)
+			{
+//				printf("Left 修正\n");
+				mPosition.x = pos.x - CELL + (CELL / 2);
+			}
+		}
+	}	
+	else if (mVector == VECTOR_LEFT || mVector == VECTOR_RIGHT)
+	{
+		//左右
+
+//		printf("VECTOR_LEFT , VECTOR_RIGHT\n");
+		//		printf("player: %d\n",mPosition.x);
+		//		printf("block: %d\n",pos.x);
+
+		int PB = (mPosition.y - (CELL / 2)) - pos.y;	//どっち側居るか？
+
+		if (PB > 0)
+		{
+//			printf("down: %d\n", PB);
+
+			int cp = CELL - PB; // めり込み量
+//			printf("めりこみ量　cp: %d\n", cp);
+
+			if (cp < OFFSET)
+			{
+//				printf("down 修正\n");
+				mPosition.y = pos.y + CELL + (CELL / 2);
+			}
+		}
+		else if (PB < 0)
+		{
+//			printf("Up: %d\n", PB);
+
+			int cp = CELL - std::abs(PB); // めり込み量
+//			printf("めりこみ量　cp: %d\n", cp);
+
+			if (cp < OFFSET)
+			{
+//				printf("Up 修正\n");
+				mPosition.y = pos.y - CELL + (CELL / 2);
+			}
+		}
+	}
+#undef OFFSET
+}
+
+
 
 //エネミーのバレットとの当たり判定
 void Player::ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> Enemy_Bullet)
