@@ -9,6 +9,7 @@
 #include "Bullet.hpp"
 #include "ItemID.hpp"
 #include "Collision.hpp"
+#include "Animation.hpp"
 
 
 
@@ -25,13 +26,13 @@ class Enemy;
 class Enemy_Mng;
 class Actor;
 class Box_Collision;
-
+class Animaiton;
 
 
 class Player : public Actor
 {
 public:
-	Player(Entry* e,int Player_Handle, int Player_Bullet_Handle,int Enemy_HitEffect_Handle[3], int Stage_HitEffect_Handle[3]);	//コンストラクタ
+	Player(Entry* e,int Player_Handle[8], int Player_Bullet_Handle,int Enemy_HitEffect_Handle[3], int Stage_HitEffect_Handle[3]);	//コンストラクタ
 	~Player();	//デストラクタ
 
 	
@@ -78,7 +79,11 @@ private:
 	
 
 	//スプライト
-	int mPlayer_sprite;
+	int mPlayer_sprite_Up[2];
+	int mPlayer_sprite_Left[2];
+	int mPlayer_sprite_Down[2];
+	int mPlayer_sprite_Right[2];
+
 	int mEnemy_HitEffect_sprite[3];
 	int mStage_HitEffect_sprite[3];
 	int mPlayer_Bullet_sprite;
@@ -92,7 +97,7 @@ private:
 
 	bool mMenu;	//ショップ画面を開くかどうか？
 
-
+	Animation anim;
 
 
 // ステータス

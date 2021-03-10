@@ -15,11 +15,23 @@
 
 
 //コンストラクタ
-Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_HitEffect_Handle[3], int Stage_HitEffect_Handle[3]) : Actor(e)
+Player::Player(Entry* e, int Player_Handle[8], int Player_Bullet_Handle, int Enemy_HitEffect_Handle[3], int Stage_HitEffect_Handle[3]) : Actor(e),anim(1)
 {
 
+	//プレイヤー自機のスプライト
+	mPlayer_sprite_Up[0] = Player_Handle[0];
+	mPlayer_sprite_Up[1] = Player_Handle[1];
 
-	mPlayer_sprite = Player_Handle;
+	mPlayer_sprite_Left[0] = Player_Handle[2];
+	mPlayer_sprite_Left[1] = Player_Handle[3];
+
+	mPlayer_sprite_Down[0] = Player_Handle[4];
+	mPlayer_sprite_Down[1] = Player_Handle[5];
+
+	mPlayer_sprite_Right[0] = Player_Handle[6];
+	mPlayer_sprite_Right[1] = Player_Handle[7];
+
+
 
 	mPlayer_Bullet_sprite = Player_Bullet_Handle;
 	
@@ -35,7 +47,7 @@ Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_
 	
 	mBullet = std::make_shared<std::vector<Bullet>>();
 
-	GetGraphSize(mPlayer_sprite, &mSize.x, &mSize.y);	//サイズを設定
+	GetGraphSize(mPlayer_sprite_Up[0], &mSize.x, &mSize.y);	//サイズを設定
 	//printf("size X: %d\n", mSize.x);
 	//printf("size Y: %d\n", mSize.y);
 
@@ -350,25 +362,73 @@ void Player::setSpeed(int speed)
 //プレイヤー　描画
 void Player::Player_Draw()
 {
+#define ANIMETION_SPEED 5
+
+	printf("%d\n",anim.getClip_loop(ANIMETION_SPEED));
+
 	//方向
 	if (mVector == VECTOR_UP)
 	{
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite, true, false);
+		if (mSpeed != 0)
+		{
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite_Up[anim.getClip_loop(ANIMETION_SPEED)], true, false);
+		}
+		else {
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite_Up[0], true, false);
+
+		}
 	}
 	else if (mVector == VECTOR_DOWN)
 	{
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, PI, mPlayer_sprite, true, false);
+		if (mSpeed != 0)
+		{
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite_Down[anim.getClip_loop(ANIMETION_SPEED)], true, false);
+		}
+		else {
+			DrawRotaGraph(mPosition.x, mPosition.y,1.0, 0, mPlayer_sprite_Down[0], true, false);
+
+		}
+
+		//DrawRotaGraph(mPosition.x, mPosition.y, 1.0, PI, mPlayer_sprite, true, false);
 	}
 	else if (mVector == VECTOR_LEFT)
 	{
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, -(PI * 2) / 4, mPlayer_sprite, true, false);
+		
+
+		if (mSpeed != 0)
+		{
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite_Left[anim.getClip_loop(ANIMETION_SPEED)], true, false);
+		}
+		else {
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite_Left[0], true, false);
+
+		}
+
+
+
+		//DrawRotaGraph(mPosition.x, mPosition.y, 1.0, -(PI * 2) / 4, mPlayer_sprite, true, false);
 	}
 	else if (mVector == VECTOR_RIGHT)
 	{
-		DrawRotaGraph(mPosition.x, mPosition.y, 1.0, (PI * 2) / 4, mPlayer_sprite, true, false);
+
+		if (mSpeed != 0)
+		{
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite_Right[anim.getClip_loop(ANIMETION_SPEED)], true, false);
+		}
+		else {
+			DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mPlayer_sprite_Right[0], true, false);
+
+		}
+
+
+
+
+		//DrawRotaGraph(mPosition.x, mPosition.y, 1.0, (PI * 2) / 4, mPlayer_sprite, true, false);
 	}
 
 	//DrawPixel(mPosition.x, mPosition.y,GetColor(0,255,0));
+
+#undef ANIMETION_SPEED
 }
 
 

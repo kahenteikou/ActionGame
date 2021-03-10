@@ -137,11 +137,12 @@ void Enemy_Mng::Update()
 	}
 
 	if (newStage == true) {
-		printf("  true  \n");
+	//	printf("  true  \n");
 	}
 	else {
-		printf("false  \n");
+	//	printf("false  \n");
 	}
+
 	for (std::vector<Enemy>::iterator itr = enemy->begin(); itr != enemy->end(); itr++)
 	{
 		itr->Update();

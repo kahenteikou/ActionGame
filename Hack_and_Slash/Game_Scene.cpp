@@ -8,7 +8,11 @@ Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 
 	// #####　スプライトをロード #####
 
-	int Player_Handle = Owner->LoadSprite("Assets/Player/Player_0.png");	//プレイヤー
+//	int Player_Handle = Owner->LoadSprite("Assets/Player/Player_0.png");	//プレイヤー
+
+	int Player_Handle[8];
+	LoadDivGraph("Sprite_Data/Player.png", 8, 8, 1, CELL, CELL, Player_Handle);	//プレイヤー
+
 	int Enemy_Handle = Owner->LoadSprite("Assets/Enemy.png");				//エネミー		
 
 	int Player_Bullet_Handle = Owner->LoadSprite("Assets/Player_Bullet.png");	//プレイヤーのバレット
