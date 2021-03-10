@@ -126,7 +126,10 @@ void Enemy_Mng::setEnemy(std::shared_ptr<Stage> stage)
 //XV
 void Enemy_Mng::Update()
 {
-
+	if (getEnemyNum() == 0)
+	{
+		newStage = true;
+	}
 
 	//printf("enemey->size(): %d\n",enemy->size());
 
