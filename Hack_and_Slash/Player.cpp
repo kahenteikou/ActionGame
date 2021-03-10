@@ -39,7 +39,6 @@ Player::Player(Entry* e, int Player_Handle[8], int Player_Bullet_Handle, int Ene
 	mEnemy_HitEffect_sprite[1] = Enemy_HitEffect_Handle[1];
 	mEnemy_HitEffect_sprite[2] = Enemy_HitEffect_Handle[2];
 
-
 	mStage_HitEffect_sprite[0] = Stage_HitEffect_Handle[0];
 	mStage_HitEffect_sprite[1] = Stage_HitEffect_Handle[1];
 	mStage_HitEffect_sprite[2] = Stage_HitEffect_Handle[2];
@@ -257,8 +256,9 @@ void Player::Update()
 
 
 	//printf("%d\n",mSpeed_Max);
-	Bullet_Update();	//バレットを更新
+
 	Player_Update();	//プレイヤー更新
+	Bullet_Update();	//バレットを更新
 }
 
 //ステータスを設定
