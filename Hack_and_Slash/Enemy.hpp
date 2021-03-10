@@ -1,13 +1,22 @@
 #ifndef ___ENEMY_HPP_
 #define ___ENEMY_HPP_
 
+#include <iostream>
+#include <vector>
+
 #include "Actor.hpp"
 #include "Collision.hpp"
 #include "Entry.hpp"
+#include "Entry.hpp"
+#include "Input.hpp"
 #include "Bullet.hpp"
+#include "Collision.hpp"
+#include "ItemID.hpp"
+
 
 
 class Entry;
+class Bullet;
 /*####################################################
 * エネミー
 * 
@@ -28,7 +37,7 @@ public:
 	*/
 
 
-	Enemy(int Enemy_sprite,int Enemy_Bullet_sprite,int Stage_HitEffect_sprite[3],int Player_HitEffect_sprite[3]);	//コンストラクタ
+	Enemy(glm::ivec2 pos, int Enemy_sprite,int Enemy_Bullet_sprite,int Stage_HitEffect_sprite[3],int Player_HitEffect_sprite[3]);	//コンストラクタ
 	~Enemy();			//デストラクタ
 
 	void Update();	//更新
@@ -38,8 +47,11 @@ public:
 	void FixPos(glm::ivec2 pos);	//座標を修正
 	void setMove_Rand();			//移動乱数を再設定
 	void setMovePixel();			//移動量をリセット
-	std::shared_ptr<std::vector<Bullet>> getBullet();
 
+	std::shared_ptr<std::vector<Bullet>> getBullet();
+	
+	void Destroy();		//破壊する。
+	bool getIsDestroy();//破壊されたかどうか？		
 
 	Box_Collision mCol;	//当たり判定
 private:
@@ -59,6 +71,9 @@ private:
 	int Prev_Rand_Action;	//前の行動の乱数
 	int mSpeed;				//移動速度
 	int MovePixel;			//移動量
+
+
+	bool islife; //生きているかどうか？
 
 	std::shared_ptr<std::vector<Bullet>> bullet;	//バレット
 

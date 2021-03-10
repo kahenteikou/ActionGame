@@ -2,9 +2,9 @@
 
 
 //コンストラクタ
-Enemy::Enemy(int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_sprite[3], int Player_HitEffect_sprite[3]) : Actor(nullptr)
+Enemy::Enemy(glm::ivec2 pos ,int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_sprite[3], int Player_HitEffect_sprite[3]) : Actor(nullptr)
 {
-
+	mPosition = pos;	//初期座標
 
 	mEnemy_sprite = Enemy_sprite;	//エネミー
 	mEnemy_Bullet_sprite = Enemy_Bullet_sprite;	//バレット
@@ -20,7 +20,7 @@ Enemy::Enemy(int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_spri
 	mPlayer_HitEffect_sprite[2] = Player_HitEffect_sprite[2];
 
 
-
+	islife = true;	//生きているかどうか？
 
 
 //	Rand_Action = GetRand(3);		//乱数
@@ -30,10 +30,7 @@ Enemy::Enemy(int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_spri
 	//Prev_Rand_Action = Rand_Action;	//前の乱数
 	MovePixel = 0;					//移動した量
 
-	// 初期座標
-	mPosition.x = SCREEN_WIDTH / 2;
-	mPosition.y = SCREEN_HEIGHT / 2 - CELL;
-
+	
 //	mSpeed = 10; //スピード
 //	mSpeed = 2; //スピード
 
@@ -51,8 +48,17 @@ std::shared_ptr<std::vector<Bullet>> Enemy::getBullet()
 	return bullet;
 }
 
+//破壊する。		
+void Enemy::Destroy()
+{
+	islife = false;
+}
 
-
+//破壊されたかどうか？		
+bool Enemy::getIsDestroy()
+{
+	return islife;
+}
 
 
 //更新

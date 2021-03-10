@@ -32,14 +32,23 @@ public:
 
 	void Update();	//更新
 	void Draw();	//描画
+	
+	std::shared_ptr<std::vector<std::vector<byte>>> getStage();
 
-	//当たり判定各種
-	void ColPlayer(std::shared_ptr<Player> player);						//プレイヤーとの当たり判定
-	void ColPlayer_Bullet(std::shared_ptr<std::vector<Bullet>> bullet);	//プレイヤーのバレットとの当たり判定
+	//当たり判定 各種
+
+	void ColPlayer(std::shared_ptr<Player> player);			//プレイヤーとの当たり判定
+	void ColPlayer_Bullet(std::shared_ptr<Player> player);	//プレイヤーのバレットとの当たり判定
+
+	void ColEnemy(std::shared_ptr<Enemy_Mng> enemy);		//エネミーとの当たり判定
+	void ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy);	//エネミーのバレットとの当たり判定
+
+	void setStage(std::shared_ptr<Enemy_Mng> enemy, std::shared_ptr<Player> player);		//ステージを読み込み
+
+
 	void Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> enemy);	//画面スクロール
-	void ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy);			//エネミーとの当たり判定
-	void ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> enemy);	//エネミーのバレットとの当たり判定
 
+	
 
 private:
 
@@ -48,12 +57,26 @@ private:
 	glm::ivec2 mScroll_Vec;			//スクロールしている向き
 
 	
-	std::vector<std::vector<byte>> Stage_Grid;	//ステージ
+
+	void LoadStage();	//ステージを読み込む
+	std::shared_ptr<std::vector<std::vector<byte>>> Stage_Grid;	//ステージ
 	glm::ivec2 offsetCol;
 	int col = 0;
 	bool mGameStart;	//ゲームが始まって最初のフレームかかどうか？
 	bool mIsShop;	//ショップが終わったかどうか？
 	Entry* Owner;	//Entryクラス
+
+	std::vector<std::string> FileNameList;	//ステージファイルのリスト
+
+	//サイズ関係
+	glm::ivec2 BlockSize;
+	glm::ivec2 BrickSize;
+	glm::ivec2 ShopSize;
+
+	//スプライト
+	int Block_sprite;	
+	int Brick_sprite;
+	int Shop_sprite;
 
 };
 

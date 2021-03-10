@@ -8,7 +8,9 @@
 
 //前方宣言
 class Enemy;
-
+class Player;
+class MapChip;
+class Stage;
 /*####################################################
 * エネミー管理
 *
@@ -25,10 +27,15 @@ public:
 
 	void Update();	//更新
 	void Draw();	//描画
+	int getEnemyNum();
+
+	void setEnemy(std::shared_ptr<Stage> stage);	//エネミーを出現
+
 
 	std::shared_ptr<std::vector<Enemy>> getEnemy();					//エネミー情報
-	void ColPlayer(std::shared_ptr<Player> player);					//プレイヤーとの当たり判定
-	void ColBullet(std::shared_ptr<std::vector<Bullet>> bullet);	//バレットとの当たり判定
+	
+	void ColPlayer_Bullet(std::shared_ptr<Player> player);			//プレイヤーとバレットとの当たり判定
+	bool newStage;	//新しいステージかどうか？
 
 private:
 	
@@ -41,7 +48,6 @@ private:
 
 
 	std::shared_ptr<std::vector<Enemy>> enemy;	//エネミー　クラス
-
 
 
 };

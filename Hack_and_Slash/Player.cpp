@@ -1,4 +1,18 @@
 #include "Player.hpp"
+#include "Enemy_Mng.hpp"
+
+#include <iostream>
+#include <vector>
+
+#include "Entry.hpp"
+#include "Entry.hpp"
+#include "Input.hpp"
+#include "Collision.hpp"
+
+
+
+
+
 
 //コンストラクタ
 Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_HitEffect_Handle[3], int Stage_HitEffect_Handle[3]) : Actor(e)
@@ -9,7 +23,6 @@ Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_
 
 	mPlayer_Bullet_sprite = Player_Bullet_Handle;
 	
-
 	mEnemy_HitEffect_sprite[0] = Enemy_HitEffect_Handle[0];
 	mEnemy_HitEffect_sprite[1] = Enemy_HitEffect_Handle[1];
 	mEnemy_HitEffect_sprite[2] = Enemy_HitEffect_Handle[2];
@@ -19,10 +32,6 @@ Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_
 	mStage_HitEffect_sprite[1] = Stage_HitEffect_Handle[1];
 	mStage_HitEffect_sprite[2] = Stage_HitEffect_Handle[2];
 
-
-
-
-
 	
 	mBullet = std::make_shared<std::vector<Bullet>>();
 
@@ -31,8 +40,9 @@ Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_
 	//printf("size Y: %d\n", mSize.y);
 
 	mSpeed = 0;
-	mSpeed_Max = 3;	//最大速度
-	
+	mSpeed_Max = 10;	//最大速度
+
+
 	//初期座標
 	
 	//スクリーン座標
@@ -41,8 +51,9 @@ Player::Player(Entry* e, int Player_Handle, int Player_Bullet_Handle, int Enemy_
 
 	//ステージ座標
 	mStagePosition.x = STAGE_WIDTH / 2;
-	mStagePosition.y = STAGE_HEIGHT / 50 *20 ;
+	mStagePosition.y = STAGE_HEIGHT / 50 * 20;
 
+	stagePosition = mStagePosition;	//ステージ内座標
 
 
 	mVector = VECTOR_UP;	//初期方向
@@ -80,6 +91,19 @@ void Player::FixPos(glm::ivec2 pos)
 	}
 }
 
+//座標を開始地点に戻す。
+void Player::setReset()
+{
+	//スクリーン座標
+	mPosition.x = SCREEN_WIDTH / 2;
+	mPosition.y = SCREEN_HEIGHT / 2;
+
+	//ステージ座標
+	mStagePosition.x = STAGE_WIDTH / 2;
+	mStagePosition.y = STAGE_HEIGHT / 50 * 20;
+
+	stagePosition = mStagePosition;	//ステージ座標と初期座標を一致させる。
+}
 
 //位置のオフセット座標を修正
 void Player::OffsetFixPos(glm::ivec2 pos)
@@ -90,7 +114,7 @@ void Player::OffsetFixPos(glm::ivec2 pos)
 	if (mVector == VECTOR_UP || mVector == VECTOR_DOWN)
 	{
 //
-		printf("VECTOR_UP , VECTOR_DOWN\n");
+		//printf("VECTOR_UP , VECTOR_DOWN\n");
 		//		printf("player: %d\n",mPosition.x);
 		//		printf("block: %d\n",pos.x);
 
@@ -166,23 +190,21 @@ void Player::OffsetFixPos(glm::ivec2 pos)
 
 
 //エネミーのバレットとの当たり判定
-void Player::ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> Enemy_Bullet)
+void Player::ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy)
 {
 	//エネミー
-	for (std::vector<Enemy>::iterator itr = Enemy_Bullet->begin(); itr != Enemy_Bullet->end(); itr++)
-	{
-		
+	for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+	{	
 		//バレット
 		for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
 		{
-			
+			//交差判定	
 			if (Box_Collision::Intersect(mCol, it->mCol) == true)
 			{
 
-				it->FixPos(mCol.getPosition());
-				it->mIsEnemyHit = true;
+				it->FixPos(mCol.getPosition());	//座標修正
+				it->mIsEnemyHit = true;			//エネミーとヒット
 			}
-
 		}
 	}
 }
@@ -259,21 +281,28 @@ void Player::Player_Update()
 	{
 	//	printf("LEFT\n");
 		mVector = VECTOR_LEFT;	//方向
+		stagePosition.x -= mSpeed;
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_RIGHT) > 0)
 	{
 	//	printf("RIGHT\n");
 		mVector = VECTOR_RIGHT;	//方向
+		stagePosition.x += mSpeed;
+
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_UP) > 0)
 	{
 	//	printf("UP\n");
 		mVector = VECTOR_UP;	//方向
+		stagePosition.y -= mSpeed;
+
 	}
 	else if (Owner->InputKey->getKeyDownHold(KEY_INPUT_DOWN) > 0)
 	{
 	//	printf("DOWN\n");
 		mVector = VECTOR_DOWN;	//方向
+		stagePosition.y += mSpeed;
+
 	}
 	else {
 		mSpeed = 0;
@@ -303,6 +332,11 @@ void Player::Draw()
 {
 	Bullet_Draw();	//バレット描画
 	Player_Draw();	//プレイヤー描画
+
+	// デバッグ描画
+	DrawFormatString(0,32,GetColor(255,255,255),"# Position: %d , %d  ",stagePosition.x,stagePosition.y);
+
+
 }
 
 //速度を設定

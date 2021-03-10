@@ -1,5 +1,11 @@
 #include "Stage.hpp"
 #include "Enemy_Mng.hpp"
+#include <filesystem>
+#include <iostream>
+
+namespace fs = std::filesystem;
+
+
 
 //コンストラクタ
 Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
@@ -16,6 +22,7 @@ Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 
 	mScroll_Vec = glm::ivec2(0,0);			//スクロールしている向き
 
+	Stage_Grid = std::make_shared<std::vector<std::vector<byte>>>();
 
 	//画面に描画するセル数
 	mStageSize.x = STAGE_WIDTH / CELL;
@@ -24,31 +31,56 @@ Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 	// ###### スプライトをロード
 
 	//ブロック
-	int Block_sprite = Block_Handle;
-	glm::ivec2 BlockSize;	
+	Block_sprite = Block_Handle;
 	GetGraphSize(Block_sprite,&BlockSize.x, &BlockSize.y);	//サイズを取得
 
 	//レンガ
-	int Brick_sprite = Brick_Handle;
-	glm::ivec2 BrickSize;	
+	Brick_sprite = Brick_Handle;	
 	GetGraphSize(Brick_sprite, &BrickSize.x, &BrickSize.y);	//サイズを取得
 
 	//ショップ
-	int Shop_sprite = Shop_Handle;
-	glm::ivec2 ShopSize;
+	Shop_sprite = Shop_Handle;	
 	GetGraphSize(Shop_sprite, &ShopSize.x, &ShopSize.y);	//サイズを取得
 
 
+	// ##### ステージバイナリファイルをロード ##### 
+	std::string filename = "\\Stage_Data";	//バイナリファイルの格納ディレクトリ
+	std::string path = fs::current_path().string();
+	path = path + filename;
+	if (fs::exists(path) == false)
+	{
+		printf("Stage_Dataフォルダが存在しないため新規作成しました。\n");
+		fs::create_directory(path);
+	}
+	else
+	{
+		printf("バイナリファイルをロード\n");
+		
+		for (fs::directory_iterator itr = fs::directory_iterator(path); itr != fs::directory_iterator(); itr++)
+		{
+			printf("%s\n", itr->path().string().c_str());
+
+			FileNameList.push_back(itr->path().string());	//パスを追加			
+		}
+		printf("\n\n");
+	}
+
+}
 
 
+//ステージを読み込み
+void Stage::LoadStage()
+{
+
+	mStage.clear();	//ステージをクリア
 
 	// *** ステージロード ***
-	glm::ivec2 StageSize = glm::ivec2(0,0);	//画面サイズ
+	glm::ivec2 StageSize = glm::ivec2(0, 0);	//画面サイズ
 	FILE* fp = NULL;		//ファイルポインタ
 
-	fopen_s(&fp,"test.bin","rb");	//読み込みモードでファイルを開く
-	
-	if (fp != NULL) 
+	fopen_s(&fp, "Stage_Data/Debug_Stage.bin", "rb");	//読み込みモードでファイルを開く
+
+	if (fp != NULL)
 	{
 		//ステージサイズを読み込む(先頭８バイト)
 		fread(&StageSize.x, sizeof(int), 1, fp);
@@ -64,9 +96,9 @@ Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 				tmp.push_back(b);
 
 			}
-			
 
-			Stage_Grid.push_back(tmp);
+
+			Stage_Grid->push_back(tmp);
 
 		}
 		fclose(fp);
@@ -80,13 +112,13 @@ Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 	for (int y = 0; y < StageSize.y; y++)
 	{
 		for (int x = 0; x < StageSize.x; x++)
-		{			
-			switch (Stage_Grid.at(y).at(x))
+		{
+			switch (Stage_Grid->at(y).at(x))
 			{
-				//ブロック
+					//ブロック
 				case 1:
 				{
-					mStage.push_back(MapChip(StageObjectType::Block,glm::ivec2(x * CELL, y * CELL), BlockSize, Block_sprite));
+					mStage.push_back(MapChip(StageObjectType::Block, glm::ivec2(x * CELL, y * CELL), BlockSize, Block_sprite));
 				}
 				break;
 
@@ -103,8 +135,32 @@ Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 					mStage.push_back(MapChip(StageObjectType::Shop, glm::ivec2(x * CELL, y * CELL), ShopSize, Shop_sprite));
 				}
 				break;
+
+				default:
+				{
+					mStage.push_back(MapChip(StageObjectType::Shop, glm::ivec2(x * CELL, y * CELL), glm::ivec2(0, 0), -1));
+				}
 			}
 		}
+	}
+
+}
+
+
+
+
+//新しいステージを読み込み
+/*
+* 全てのエネミーを破壊したら新しいステージを読み込み
+*/
+void Stage::setStage(std::shared_ptr<Enemy_Mng> enemy, std::shared_ptr <Player> player)
+{
+	if (enemy->newStage == true)
+	{
+		printf("NewStage \n");
+		LoadStage();		//ステージをロード
+		player->setReset();	//座標をリセット
+		mGameStart = false;	//初期スクロール
 	}
 }
 
@@ -190,13 +246,18 @@ void Stage::ColPlayer(std::shared_ptr<Player> player)
 	}
 }
 
+//ステージを取得
+std::shared_ptr<std::vector<std::vector<byte>>> Stage::getStage()
+{
+	return Stage_Grid;
+}
 
-//バレットとの当たり判定
-void Stage::ColPlayer_Bullet(std::shared_ptr<std::vector<Bullet>> bullet)
+//プレイヤーのバレットとの当たり判定
+void Stage::ColPlayer_Bullet(std::shared_ptr<Player> player)
 {
 	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 	{
-		for (std::vector<Bullet>::iterator b = bullet->begin(); b != bullet->end(); b++)
+		for (std::vector<Bullet>::iterator b = player->getBullet()->begin(); b != player->getBullet()->end(); b++)
 		{
 			//交差判定
 			if (Box_Collision::Intersect(itr->mCol,b->mCol) == true)
@@ -223,13 +284,26 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 		{
 			int p = player->mStagePosition.x - (SCREEN_WIDTH - SCROLL_OFFSET_X);
 
+			//プレイヤー補正
 			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 			{
 				glm::ivec2 pos;
 				pos = itr->getPosition();
 				pos.x += -p;
 				itr->setPosition(pos);
-			}	
+
+			}
+
+			//プレイヤーバレット補正
+			for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.x += -p;
+				itr->setPosition(pos);
+			}
+
+
 		}
 
 		//Y 補正
@@ -248,220 +322,222 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 		}
 		mGameStart = true;
 	}
-
-
-
-
-	//左右移動
-	if (player->getPosition().x > (SCREEN_WIDTH - SCROLL_OFFSET_X) + player->getSpeed() && player->getVector() == VECTOR_RIGHT)
-	{
-
-		//マップオブジェクトを移動
-		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
-		{
-			glm::ivec2 pos;
-			pos = itr->getPosition();
-			pos.x += -player->getSpeed();
-			itr->setPosition(pos);
-		}
-
-		//エネミーのバレット移動
-		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-		{
-			for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
-			{
-				glm::ivec2 pos;
-				pos = it->getPosition();
-				pos.x += -player->getSpeed();
-				it->setPosition(pos);
-			}			
-		}
-
-		//エネミーの移動
-		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-		{
-			glm::ivec2 pos;
-			pos = itr->getPosition();
-			pos.x += -player->getSpeed();
-			itr->setPosition(pos);
-			
-		}
-
-		//プレイヤーバレットを移動
-		for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
-		{
-			glm::ivec2 pos = itr->getPosition();
-			pos.x += -player->getSpeed();
-			itr->setPosition(pos);
-		}
-
-		//プレイヤーを移動しない
-		glm::ivec2 pos = player->getPosition();
-		pos.x = player->getPosition().x - player->getSpeed();
-		player->setPosition(pos);
-	}
-	else if (player->getPosition().x < (SCROLL_OFFSET_X) + player->getSpeed() && player->getVector() == VECTOR_LEFT)
-	{
-		
-
-		//マップオブジェクトを移動
-		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
-		{
-			glm::ivec2 pos;
-			pos = itr->getPosition();
-			pos.x += player->getSpeed();
-			itr->setPosition(pos);
-		}
-
-		//エネミーのバレット移動
-		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-		{
-			for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
-			{
-				glm::ivec2 pos;
-				pos = it->getPosition();
-				pos.x += player->getSpeed();
-				it->setPosition(pos);
-			}
-		}
-
-		//エネミーの移動
-		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-		{
-			glm::ivec2 pos;
-			pos = itr->getPosition();
-			pos.x += player->getSpeed();
-			itr->setPosition(pos);
-
-		}
-
-		//プレイヤーバレットを移動
-		for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
-		{
-			glm::ivec2 pos = itr->getPosition();
-			pos.x += player->getSpeed();
-			itr->setPosition(pos);
-		}
-
-
-
-		//プレイヤーを移動しない
-		glm::ivec2 pos = player->getPosition();
-		pos.x = player->getPosition().x + player->getSpeed();
-		player->setPosition(pos);
-
-		//上下移動
-	}else if (player->getPosition().y > (SCREEN_HEIGHT - SCROLL_OFFSET_Y) + player->getSpeed() && player->getVector() == VECTOR_DOWN)
-	{
-
-
-		//マップオブジェクトを移動
-		for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
-		{
-			glm::ivec2 pos;
-			pos = itr->getPosition();
-			pos.y += -player->getSpeed();
-			itr->setPosition(pos);
-		}
-
-		//エネミーのバレット移動
-		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-		{
-			for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
-			{
-				glm::ivec2 pos;
-				pos = it->getPosition();
-				pos.y += -player->getSpeed();
-				it->setPosition(pos);
-			}
-		}
-
-		//エネミーの移動
-		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-		{
-			glm::ivec2 pos;
-			pos = itr->getPosition();
-			pos.y += -player->getSpeed();
-			itr->setPosition(pos);
-
-		}
-
-		//プレイヤーバレットを移動
-		for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
-		{
-			glm::ivec2 pos = itr->getPosition();
-			pos.y += -player->getSpeed();
-			itr->setPosition(pos);
-		}
-
-		//プレイヤーを移動しない
-		glm::ivec2 pos = player->getPosition();
-		pos.y = player->getPosition().y - player->getSpeed();
-		player->setPosition(pos);
-	}
-	else if (player->getPosition().y < (SCROLL_OFFSET_Y) + player->getSpeed() && player->getVector() == VECTOR_UP)
-	{
-			
-	//マップオブジェクトを移動
-	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
-	{
-		glm::ivec2 pos;
-		pos = itr->getPosition();
-		pos.y += player->getSpeed();
-		itr->setPosition(pos);
-	}
-
-	//エネミーのバレット移動
-	for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-	{
-		for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
-		{
-			glm::ivec2 pos;
-			pos = it->getPosition();
-			pos.y += player->getSpeed();
-			it->setPosition(pos);
-		}
-	}
-
-	//エネミーの移動
-	for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-	{
-		glm::ivec2 pos;
-		pos = itr->getPosition();
-		pos.y += player->getSpeed();
-		itr->setPosition(pos);
-
-	}
-
-	//プレイヤーバレットを移動
-	for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
-	{
-		glm::ivec2 pos = itr->getPosition();
-		pos.y += player->getSpeed();
-		itr->setPosition(pos);
-	}
-
-
-
-		//プレイヤーを移動しない
-		glm::ivec2 pos = player->getPosition();
-		pos.y = player->getPosition().y + player->getSpeed();
-		player->setPosition(pos);
-	}
 	else {
-		
+
+
+
+
+		//左右移動
+		if (player->getPosition().x > (SCREEN_WIDTH - SCROLL_OFFSET_X) + player->getSpeed() && player->getVector() == VECTOR_RIGHT)
+		{
+
+			//マップオブジェクトを移動
+			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.x += -player->getSpeed();
+				itr->setPosition(pos);
+			}
+
+			//エネミーのバレット移動
+			for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+			{
+				for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
+				{
+					glm::ivec2 pos;
+					pos = it->getPosition();
+					pos.x += -player->getSpeed();
+					it->setPosition(pos);
+				}
+			}
+
+			//エネミーの移動
+			for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.x += -player->getSpeed();
+				itr->setPosition(pos);
+
+			}
+
+			//プレイヤーバレットを移動
+			for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
+			{
+				glm::ivec2 pos = itr->getPosition();
+				pos.x += -player->getSpeed();
+				itr->setPosition(pos);
+			}
+
+			//プレイヤーを移動しない
+			glm::ivec2 pos = player->getPosition();
+			pos.x = player->getPosition().x - player->getSpeed();
+			player->setPosition(pos);
+		}
+		else if (player->getPosition().x < (SCROLL_OFFSET_X)+player->getSpeed() && player->getVector() == VECTOR_LEFT)
+		{
+
+
+			//マップオブジェクトを移動
+			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.x += player->getSpeed();
+				itr->setPosition(pos);
+			}
+
+			//エネミーのバレット移動
+			for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+			{
+				for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
+				{
+					glm::ivec2 pos;
+					pos = it->getPosition();
+					pos.x += player->getSpeed();
+					it->setPosition(pos);
+				}
+			}
+
+			//エネミーの移動
+			for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.x += player->getSpeed();
+				itr->setPosition(pos);
+
+			}
+
+			//プレイヤーバレットを移動
+			for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
+			{
+				glm::ivec2 pos = itr->getPosition();
+				pos.x += player->getSpeed();
+				itr->setPosition(pos);
+			}
+
+
+
+			//プレイヤーを移動しない
+			glm::ivec2 pos = player->getPosition();
+			pos.x = player->getPosition().x + player->getSpeed();
+			player->setPosition(pos);
+
+			//上下移動
+		}
+		else if (player->getPosition().y > (SCREEN_HEIGHT - SCROLL_OFFSET_Y) + player->getSpeed() && player->getVector() == VECTOR_DOWN)
+		{
+
+
+			//マップオブジェクトを移動
+			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.y += -player->getSpeed();
+				itr->setPosition(pos);
+			}
+
+			//エネミーのバレット移動
+			for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+			{
+				for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
+				{
+					glm::ivec2 pos;
+					pos = it->getPosition();
+					pos.y += -player->getSpeed();
+					it->setPosition(pos);
+				}
+			}
+
+			//エネミーの移動
+			for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.y += -player->getSpeed();
+				itr->setPosition(pos);
+
+			}
+
+			//プレイヤーバレットを移動
+			for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
+			{
+				glm::ivec2 pos = itr->getPosition();
+				pos.y += -player->getSpeed();
+				itr->setPosition(pos);
+			}
+
+			//プレイヤーを移動しない
+			glm::ivec2 pos = player->getPosition();
+			pos.y = player->getPosition().y - player->getSpeed();
+			player->setPosition(pos);
+		}
+		else if (player->getPosition().y < (SCROLL_OFFSET_Y)+player->getSpeed() && player->getVector() == VECTOR_UP)
+		{
+
+			//マップオブジェクトを移動
+			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.y += player->getSpeed();
+				itr->setPosition(pos);
+			}
+
+			//エネミーのバレット移動
+			for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+			{
+				for (std::vector<Bullet>::iterator it = itr->getBullet()->begin(); it != itr->getBullet()->end(); it++)
+				{
+					glm::ivec2 pos;
+					pos = it->getPosition();
+					pos.y += player->getSpeed();
+					it->setPosition(pos);
+				}
+			}
+
+			//エネミーの移動
+			for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+			{
+				glm::ivec2 pos;
+				pos = itr->getPosition();
+				pos.y += player->getSpeed();
+				itr->setPosition(pos);
+
+			}
+
+			//プレイヤーバレットを移動
+			for (std::vector<Bullet>::iterator itr = player->getBullet()->begin(); itr != player->getBullet()->end(); itr++)
+			{
+				glm::ivec2 pos = itr->getPosition();
+				pos.y += player->getSpeed();
+				itr->setPosition(pos);
+			}
+
+
+
+			//プレイヤーを移動しない
+			glm::ivec2 pos = player->getPosition();
+			pos.y = player->getPosition().y + player->getSpeed();
+			player->setPosition(pos);
+		}
+		else {
+
+		}
+
 	}
-
-
 }
 
 //エネミーとの当たり判定
-void Stage::ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy)
+void Stage::ColEnemy(std::shared_ptr<Enemy_Mng> enemy)
 {
 	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
 	{
 		MapChip chip = *itr;
-		for (std::vector<Enemy>::iterator itr = enemy->begin(); itr != enemy->end(); itr++)
+		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
 		{
 			//交差判定
 			if (Box_Collision::Intersect(chip.mCol, itr->mCol) == true )
@@ -497,26 +573,22 @@ void Stage::ColEnemy(std::shared_ptr<std::vector<Enemy>> enemy)
 
 
 //エネミーのバレットとの当たり判定
-void Stage::ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> enemy)
+void Stage::ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy)
 {
-	//エネミー
-	for (std::vector<Enemy>::iterator itr = enemy->begin(); itr != enemy->end(); itr++)
+	//ステージ
+	for (std::vector<MapChip>::iterator st = mStage.begin(); st != mStage.end(); st++) 
 	{
-		Enemy ene = *itr;
-
-		//バレット
-		for (std::vector<Bullet>::iterator it = ene.getBullet()->begin(); it != ene.getBullet()->end(); it++)
+		//エネミー
+		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
 		{
-			Bullet b = *it;
-
-			//マップチップ
-			for (std::vector<MapChip>::iterator i = mStage.begin(); i != mStage.end(); i++)
+			//バレット
+			for (std::vector<Bullet>::iterator b = itr->getBullet()->begin(); b != itr->getBullet()->end(); b++)
 			{
-				if (Box_Collision::Intersect(b.mCol, i->mCol) == true)
+				//交差判定
+				if (Box_Collision::Intersect(b->mCol, st->mCol) == true)
 				{
-					
-					it->FixPos(i->mCol.getPosition());
-					it->mIsEnemyHit = true;
+					b->setPosition(b->getPosition());
+					b->mIsMapHit = true;
 				}
 			}
 		}

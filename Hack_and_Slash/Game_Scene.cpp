@@ -35,52 +35,40 @@ Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 	shop = std::make_shared<Shop>(Owner);																							//ショップメニュー
 	enemy_mng = std::make_shared<Enemy_Mng>(Enemy_Handle,Enemy_Bullet_Handle,Stage_HitEffect_Handle, Player_HitEffect_Handle);		//エネミー管理
 
-
-
 }
 
 //更新
 void Game_Scene::Update()
 {
-	//バトル
-	if (player->getIsMenu() == false)
-	{	
+
+	stage->setStage(enemy_mng,player);	//ステージを読み込み
+	enemy_mng->setEnemy(stage);			//エネミーを出現
+
+	stage->Scroll(player, enemy_mng);	//画面スクロール
+
+
+	enemy_mng->Update();	//エネミー更新
+	stage->Update();		//ステージ更新
+	player->Update();		//プレイヤー更新
 
 
 
-		enemy_mng->Update();												//エネミー更新
-		stage->Update();													//ステージ更新
-		player->Update();													//プレイヤー更新
-
-		stage->Scroll(player,enemy_mng);									//画面スクロール
 
 
-		stage->ColEnemy(enemy_mng->getEnemy());								//エネミーとの当たり判定
-		stage->ColEnemy_Bullet(enemy_mng->getEnemy());						//エネミーのバレットとのマップのとの当たり判定
-		
+	//　#####　当たり判定 #####
 
-		stage->ColPlayer(player);											//プレイヤーと当たり判定
-		stage->ColPlayer_Bullet(player->getBullet());						//プレイヤーのバレットの当たり判定
+	//エネミーとステージ
+	stage->ColEnemy(enemy_mng);			//　
+	stage->ColEnemy_Bullet(enemy_mng);	//
 
-		player->ColEnemy_Bullet(enemy_mng->getEnemy());						//プレイヤーと敵の弾との当たり判定
+	//プレイヤーとステージ
+	stage->ColPlayer(player);			//
+	stage->ColPlayer_Bullet(player);	//
 
-		
-
-
-
-	}
-	else
-	{
-		//ショップ画面
-		if (shop->getState() == true)
-		{
-			shop->Update(*player);
-		}
-		else {
-			player->setIsMenu(false);
-			shop = std::make_shared <Shop>(Owner);
-		}
-	}
+	//プレイヤーとエネミー
+	player->ColEnemy_Bullet(enemy_mng);		//
+	enemy_mng->ColPlayer_Bullet(player);	//
+	//　##### #####	
 
 
 
@@ -89,18 +77,9 @@ void Game_Scene::Update()
 //描画
 void Game_Scene::Draw()
 {
-	stage->Draw();	//ステージ描画
-	player->Draw();	//プレイヤー描画
+	stage->Draw();		//ステージ描画
+	player->Draw();		//プレイヤー描画
 	enemy_mng->Draw();	//エネミー描画
-
-	//ショップ画面
-	if (player->getIsMenu() == true)
-	{
-		shop->Draw();
-	}
-
-	
-
 }
 
 //デストラクタ

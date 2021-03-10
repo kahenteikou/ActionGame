@@ -5,16 +5,13 @@
 #include <iostream>
 #include <vector>
 
-//#include "Animation.hpp"
-
-
-//#include "Actor.hpp"
-#include "Entry.hpp"
-
-#include "Input.hpp"
+#include "Actor.hpp"
 #include "Bullet.hpp"
-#include "Collision.hpp"
 #include "ItemID.hpp"
+#include "Collision.hpp"
+
+
+
 
 
 
@@ -25,6 +22,12 @@
 //前方宣言
 class Bullet;
 class Enemy;
+class Enemy_Mng;
+class Actor;
+class Box_Collision;
+
+
+
 class Player : public Actor
 {
 public:
@@ -52,13 +55,17 @@ public:
 
 	// ####################　設定　関係
 
-	void set_Bulid(ItemData data);	//ステータスを設定
-	void FixPos(glm::ivec2 pos);	//当たり判定で座標を修正
+	void set_Bulid(ItemData data);		//ステータスを設定
+	void FixPos(glm::ivec2 pos);		//当たり判定で座標を修正
 	void OffsetFixPos(glm::ivec2 pos);	//座標のオフセットを修正
-	void setIsMenu(bool b);			//メニューを開くかどうか設定
-	void setSpeed(int speed);		//速度を設定
+	void setIsMenu(bool b);				//メニューを開くかどうか設定
+	void setSpeed(int speed);			//速度を設定
+	void setReset();					//座標をリセット
 
-	void ColEnemy_Bullet(std::shared_ptr<std::vector<Enemy>> Enemy_Bullet);	//エネミーのバレットとの当たり判定
+
+
+
+	void ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy);	//エネミーのバレットとの当たり判定
 
 
 
@@ -80,7 +87,7 @@ private:
 
 
 
-
+	glm::ivec2 stagePosition;	//ステージ内の座標
 	std::shared_ptr<std::vector<Bullet>> mBullet;	//バレット
 
 	bool mMenu;	//ショップ画面を開くかどうか？
