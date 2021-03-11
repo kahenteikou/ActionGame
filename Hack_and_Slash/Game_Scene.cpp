@@ -13,7 +13,7 @@ Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 	int Player_Handle[8];
 	LoadDivGraph("Sprite_Data/Player.png", 8, 8, 1, CELL, CELL, Player_Handle);	//プレイヤー
 
-	int Enemy_Handle = Owner->LoadSprite("Assets/Enemy.png");				//エネミー		
+	int Enemy_Handle = Owner->LoadSprite("Assets/Enemy.png");					//エネミー		
 
 	int Player_Bullet_Handle = Owner->LoadSprite("Assets/Player_Bullet.png");	//プレイヤーのバレット
 	int Enemy_Bullet_Handle = Owner->LoadSprite("Assets/Enemy_Bullet.png");		//エネミーのバレット
@@ -26,14 +26,11 @@ Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 	int Enemy_HitEffect_Handle[3];	//エネミー
 	int Stage_HitEffect_Handle[3];	//ステージ
 	int Player_HitEffect_Handle[3];	//プレイヤー
-
 	LoadDivGraph("Assets/Enemy_Explosion.png", 3, 3, 1, CELL, CELL, Enemy_HitEffect_Handle);	//エネミー
 	LoadDivGraph("Assets/Stage_Explosion.png", 3, 3, 1, CELL, CELL, Stage_HitEffect_Handle);	//ステージ
 	LoadDivGraph("Assets/Player_Explosion.png", 3, 3, 1, CELL, CELL,Player_HitEffect_Handle);	//プレイヤー
 	
 
-
-	flag = false;	//ショップ中かどうか？
 	player = std::make_shared<Player>(Owner,Player_Handle, Player_Bullet_Handle,Enemy_HitEffect_Handle, Stage_HitEffect_Handle);	//プレイヤー
 	stage = std::make_shared<Stage>(Owner,Block_Handle, Brick_Handle, Shop_Handle);													//ステージ
 	shop = std::make_shared<Shop>(Owner);																							//ショップメニュー
@@ -71,6 +68,8 @@ void Game_Scene::Update()
 
 	//プレイヤーとエネミー
 	player->ColEnemy_Bullet(enemy_mng);		//
+
+	//エネミーとプレイヤー
 	enemy_mng->ColPlayer_Bullet(player);	//
 	//　##### #####	
 

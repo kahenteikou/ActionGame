@@ -98,7 +98,7 @@ void Enemy::Update()
 	if (Rand_Attack == 1)
 	{
 	//	printf("エネミー攻撃\n");
-		bullet->push_back(Bullet(mPosition,mVector,mEnemy_Bullet_sprite,mStage_HitEffect_sprite, mPlayer_HitEffect_sprite));
+	//	bullet->push_back(Bullet(mPosition,mVector,mEnemy_Bullet_sprite,mStage_HitEffect_sprite, mPlayer_HitEffect_sprite));
 	}
 
 

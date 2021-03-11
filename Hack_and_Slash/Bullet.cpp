@@ -23,9 +23,6 @@ Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int MapEffect_Handle[
 	mIsMapHit = false;
 	mIsEnemyHit = false;
 	mIsDelete = false;
-
-
-
 }
 
 

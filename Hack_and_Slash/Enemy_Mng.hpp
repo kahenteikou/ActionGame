@@ -27,7 +27,7 @@ public:
 
 	void Update();	//更新
 	void Draw();	//描画
-	int getEnemyNum();
+	bool getEnemyEmpty();
 
 	void setEnemy(std::shared_ptr<Stage> stage);	//エネミーを出現
 

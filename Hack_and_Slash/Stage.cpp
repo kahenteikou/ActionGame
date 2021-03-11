@@ -153,11 +153,17 @@ void Stage::LoadStage()
 /*
 * 全てのエネミーを破壊したら新しいステージを読み込み
 */
-void Stage::setStage(std::shared_ptr<Enemy_Mng> enemy, std::shared_ptr <Player> player)
+void Stage::setStage(std::shared_ptr<Enemy_Mng> enemy, std::shared_ptr<Player> player)
 {
+	if (enemy->getEnemyEmpty() == true)
+	{
+		printf("新しいステージ\n");
+		enemy->newStage = true;
+	}
+
 	if (enemy->newStage == true)
 	{
-		printf("NewStage \n");
+		//printf("NewStage \n");
 		LoadStage();		//ステージをロード
 		player->setReset();	//座標をリセット
 		mGameStart = false;	//初期スクロール
@@ -201,6 +207,9 @@ void Stage::ColPlayer(std::shared_ptr<Player> player)
 			//レンガとの当たり判定
 			case StageObjectType::Brick:
 			{
+				//printf("レンガと交差\n");
+
+
 				player->FixPos(itr->mCol.getPosition());
 				col += 1;
 				offsetCol = itr->mCol.getPosition();
@@ -214,6 +223,7 @@ void Stage::ColPlayer(std::shared_ptr<Player> player)
 				offsetCol = itr->mCol.getPosition();
 				col += 1;
 
+//				printf("ブロックと交差\n");
 			}
 			break;
 			}
@@ -229,20 +239,11 @@ void Stage::ColPlayer(std::shared_ptr<Player> player)
 			//printf("補正する。\n");
 			player->OffsetFixPos(offsetCol);	//オフセット修正
 			offsetCol = glm::ivec2(0,0);
-
-
-
 		}
 		else {
 			col = 0;
 			//printf("衝突なし。\n");
 		}
-
-			
-
-
-
-
 	}
 }
 

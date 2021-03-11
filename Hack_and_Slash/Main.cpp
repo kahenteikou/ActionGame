@@ -14,7 +14,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	freopen_s(&fp, "CONIN$", "r", stdin);
 	
 	ChangeWindowMode(TRUE);// ウインドウモードで起動	
-	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);//	画面サイズ
+	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);	//画面サイズ
 
 
 	// ＤＸライブラリ初期化処理

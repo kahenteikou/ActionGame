@@ -364,7 +364,7 @@ void Player::Player_Draw()
 {
 #define ANIMETION_SPEED 5
 
-	printf("%d\n",anim.getClip_loop(ANIMETION_SPEED));
+//	printf("%d\n",anim.getClip_loop(ANIMETION_SPEED));
 
 	//•ûŒü
 	if (mVector == VECTOR_UP)
