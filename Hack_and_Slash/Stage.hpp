@@ -52,7 +52,7 @@ public:
 
 private:
 
-	std::vector<MapChip> mStage;	//マップデータ
+	std::shared_ptr<std::vector<MapChip>> mStage;	//マップデータ
 	glm::ivec2 mStageSize;			//画面に描画するセル数
 	glm::ivec2 mScroll_Vec;			//スクロールしている向き
 

@@ -11,6 +11,9 @@ namespace fs = std::filesystem;
 Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 {
 	Owner = e;
+
+	mStage = std::make_shared<std::vector<MapChip>>();
+
 //	printf("screen X: %d\n", SCREEN_WIDTH / CELL);
 //	printf("screen Y: %d\n",SCREEN_HEIGHT / CELL);
 
@@ -72,7 +75,8 @@ Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 void Stage::LoadStage()
 {
 
-	mStage.clear();	//ステージをクリア
+	printf("LoadStage\n");
+	mStage->clear();	//ステージをクリア
 
 	// *** ステージロード ***
 	glm::ivec2 StageSize = glm::ivec2(0, 0);	//画面サイズ
@@ -82,6 +86,7 @@ void Stage::LoadStage()
 
 	if (fp != NULL)
 	{
+		//printf();
 		//ステージサイズを読み込む(先頭８バイト)
 		fread(&StageSize.x, sizeof(int), 1, fp);
 		fread(&StageSize.y, sizeof(int), 1, fp);
@@ -101,48 +106,58 @@ void Stage::LoadStage()
 			Stage_Grid->push_back(tmp);
 
 		}
-		fclose(fp);
 
+		fclose(fp);	//ファイルを閉じる
+		
+		//マップオブジェクトを設定
+		for (int y = 0; y < StageSize.y; y++)
+		{
+			for (int x = 0; x < StageSize.x; x++)
+			{
+				switch (Stage_Grid->at(y).at(x))
+				{
+
+					//ブロック
+					case 0x01:
+					{
+						mStage->push_back(MapChip(StageObjectType::Block, glm::ivec2(x * CELL, y * CELL), BlockSize, Block_sprite));
+					}
+					break;
+
+					//レンガ
+					case 0x02:
+					{
+						mStage->push_back(MapChip(StageObjectType::Brick, glm::ivec2(x * CELL, y * CELL), BrickSize, Brick_sprite));
+					}
+					break;
+
+					//ショップ
+					case 0x03:
+					{
+						mStage->push_back(MapChip(StageObjectType::Shop, glm::ivec2(x * CELL, y * CELL), ShopSize, Shop_sprite));
+					}
+					break;
+
+					//なし
+					default:
+					{
+						mStage->push_back(MapChip(StageObjectType::None, glm::ivec2(x * CELL, y * CELL), glm::ivec2(0, 0), -1));
+					}
+
+				}
+				
+			}
+		}
+
+		
 	}
 	else {
 		printf("ファイルを読み込めません。\n");
 	}
 
-	//マップオブジェクトを設定
-	for (int y = 0; y < StageSize.y; y++)
-	{
-		for (int x = 0; x < StageSize.x; x++)
-		{
-			switch (Stage_Grid->at(y).at(x))
-			{
-					//ブロック
-				case 1:
-				{
-					mStage.push_back(MapChip(StageObjectType::Block, glm::ivec2(x * CELL, y * CELL), BlockSize, Block_sprite));
-				}
-				break;
 
-				//レンガ
-				case 2:
-				{
-					mStage.push_back(MapChip(StageObjectType::Brick, glm::ivec2(x * CELL, y * CELL), BrickSize, Brick_sprite));
-				}
-				break;
 
-				//ショップ
-				case 3:
-				{
-					mStage.push_back(MapChip(StageObjectType::Shop, glm::ivec2(x * CELL, y * CELL), ShopSize, Shop_sprite));
-				}
-				break;
-
-				default:
-				{
-					mStage.push_back(MapChip(StageObjectType::Shop, glm::ivec2(x * CELL, y * CELL), glm::ivec2(0, 0), -1));
-				}
-			}
-		}
-	}
+	//fclose(fp);
 
 }
 
@@ -163,6 +178,7 @@ void Stage::setStage(std::shared_ptr<Enemy_Mng> enemy, std::shared_ptr<Player> p
 
 	if (enemy->newStage == true)
 	{
+		//printf("ううううう\n");
 		//printf("NewStage \n");
 		LoadStage();		//ステージをロード
 		player->setReset();	//座標をリセット
@@ -173,7 +189,7 @@ void Stage::setStage(std::shared_ptr<Enemy_Mng> enemy, std::shared_ptr<Player> p
 //更新
 void Stage::Update()
 {
-	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
 		itr->Update();
 	}
@@ -182,7 +198,7 @@ void Stage::Update()
 //描画
 void Stage::Draw()
 {
-	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
 		itr->Draw();
 	}
@@ -191,7 +207,7 @@ void Stage::Draw()
 //プレイヤーとの当たり判定
 void Stage::ColPlayer(std::shared_ptr<Player> player)
 {
-	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
 		if (Box_Collision::Intersect(itr->mCol, player->mCol) == true)
 		{
@@ -256,7 +272,7 @@ std::shared_ptr<std::vector<std::vector<byte>>> Stage::getStage()
 //プレイヤーのバレットとの当たり判定
 void Stage::ColPlayer_Bullet(std::shared_ptr<Player> player)
 {
-	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
 		for (std::vector<Bullet>::iterator b = player->getBullet()->begin(); b != player->getBullet()->end(); b++)
 		{
@@ -286,7 +302,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 			int p = player->mStagePosition.x - (SCREEN_WIDTH - SCROLL_OFFSET_X);
 
 			//プレイヤー補正
-			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 			{
 				glm::ivec2 pos;
 				pos = itr->getPosition();
@@ -313,7 +329,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 			int p = player->mStagePosition.y - (SCREEN_HEIGHT - SCROLL_OFFSET_Y);
 			//printf("%d\n",p);
 
-			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 			{
 				glm::ivec2 pos;
 				pos = itr->getPosition();
@@ -333,7 +349,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 		{
 
 			//マップオブジェクトを移動
-			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 			{
 				glm::ivec2 pos;
 				pos = itr->getPosition();
@@ -381,7 +397,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 
 
 			//マップオブジェクトを移動
-			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 			{
 				glm::ivec2 pos;
 				pos = itr->getPosition();
@@ -433,7 +449,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 
 
 			//マップオブジェクトを移動
-			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 			{
 				glm::ivec2 pos;
 				pos = itr->getPosition();
@@ -480,7 +496,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 		{
 
 			//マップオブジェクトを移動
-			for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+			for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 			{
 				glm::ivec2 pos;
 				pos = itr->getPosition();
@@ -535,7 +551,7 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 //エネミーとの当たり判定
 void Stage::ColEnemy(std::shared_ptr<Enemy_Mng> enemy)
 {
-	for (std::vector<MapChip>::iterator itr = mStage.begin(); itr != mStage.end(); itr++)
+	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
 		MapChip chip = *itr;
 		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
@@ -577,7 +593,7 @@ void Stage::ColEnemy(std::shared_ptr<Enemy_Mng> enemy)
 void Stage::ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy)
 {
 	//ステージ
-	for (std::vector<MapChip>::iterator st = mStage.begin(); st != mStage.end(); st++) 
+	for (std::vector<MapChip>::iterator st = mStage->begin(); st != mStage->end(); st++) 
 	{
 		//エネミー
 		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)

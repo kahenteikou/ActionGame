@@ -34,7 +34,7 @@ std::shared_ptr<std::vector<Enemy>> Enemy_Mng::getEnemy()
 //プレイヤーとバレットとの当たり判定
 void Enemy_Mng::ColPlayer_Bullet(std::shared_ptr<Player> player)
 {
-	printf("あああ\n");
+	//printf("あああ\n");
 
 	//エネミー
 	for (std::vector<Enemy>::iterator itr = enemy->begin(); itr != enemy->end();)
@@ -62,7 +62,7 @@ void Enemy_Mng::ColPlayer_Bullet(std::shared_ptr<Player> player)
 
 	}
 
-	printf("いいいい");
+	//printf("いいいい");
 
 }
 
