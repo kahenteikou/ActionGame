@@ -11,29 +11,36 @@ MapChip::MapChip(StageObjectType t, glm::ivec2 pos, glm::ivec2 size,int handle) 
 
 	mPosition = pos;	//座標
 	mSize = size;		//サイズ
-	mSprite = handle;	//スプライト
+	mSprite = handle;	//スプライト	
 	HP = 3;				//耐久値
+	
 
+	mCol = std::make_shared<Box_Collision>();
 
 	//当たり判定
-	mCol.setPosition(mPosition);
-	mCol.setSize(mSize);
-	mCol.setTrigger(true);
-	mCol.setStageObjectType(t);
+	mCol->setPosition(mPosition);
+	mCol->setSize(mSize);
+	mCol->setTrigger(true);
+	mCol->setStageObjectType(t);
 
 
 
 }
 
+//デフォルトコンストラクタ
+MapChip::MapChip() : Actor(nullptr)
+{
+
+}
 
 void MapChip::Update()
 {
 	//printf("あああ\n");
 
 	//当たり判定
-	mCol.setPosition(mPosition);
-	mCol.setSize(mSize - 1);
-	mCol.setTrigger(true);
+	mCol->setPosition(mPosition);
+	mCol->setSize(mSize - 1);
+	mCol->setTrigger(true);
 	
 
 }

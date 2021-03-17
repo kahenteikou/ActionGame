@@ -35,15 +35,21 @@ enum class StageObjectType
 class MapChip : public Actor
 {
 public:
-	MapChip(StageObjectType t,glm::ivec2 pos,glm::ivec2 size,int handle);	//コンストラクタ
+	MapChip(StageObjectType t, glm::ivec2 pos, glm::ivec2 size, int handle);	//コンストラクタ
+	MapChip();	//デフォルトコンストラクタ
+
 	~MapChip();																//デストラクタ
 
 	void Update();	//計算
 	void Draw();	//描画
 	
+	void setObjectType(StageObjectType type);	//オブジェクトタイプを設定
+	void setSize(glm::ivec2 size);				//サイズを設定
+	void setHandle(int handle);					//ハンドルを設定
+
 
 	int HP;
-	Box_Collision mCol;
+	std::shared_ptr<Box_Collision> mCol;
 private:
 	int mSprite;			//スプライト
 

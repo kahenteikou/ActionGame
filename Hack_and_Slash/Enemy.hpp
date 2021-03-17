@@ -44,7 +44,7 @@ public:
 	void Draw();	//描画
 
 	// ### 設定　関係
-	void FixPos(glm::ivec2 pos);	//座標を修正
+	void FixPos(glm::ivec2 &pos);	//座標を修正
 	void setMove_Rand();			//移動乱数を再設定
 	void setMovePixel();			//移動量をリセット
 

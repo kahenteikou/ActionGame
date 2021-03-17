@@ -109,6 +109,9 @@ void Stage::LoadStage()
 
 		fclose(fp);	//ファイルを閉じる
 		
+		//mStage->resize(StageSize.x * StageSize.y);
+		
+
 		//マップオブジェクトを設定
 		for (int y = 0; y < StageSize.y; y++)
 		{
@@ -121,6 +124,7 @@ void Stage::LoadStage()
 					case 0x01:
 					{
 						mStage->push_back(MapChip(StageObjectType::Block, glm::ivec2(x * CELL, y * CELL), BlockSize, Block_sprite));
+		
 					}
 					break;
 
@@ -142,9 +146,10 @@ void Stage::LoadStage()
 					default:
 					{
 						mStage->push_back(MapChip(StageObjectType::None, glm::ivec2(x * CELL, y * CELL), glm::ivec2(0, 0), -1));
-					}
+					}break;
 
 				}
+				
 				
 			}
 		}
@@ -198,10 +203,18 @@ void Stage::Update()
 //描画
 void Stage::Draw()
 {
+	for (int i = 0;  i < mStage->size(); i++)
+	{
+		mStage->at(i).Draw();		
+	}
+
+
+	/*
 	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
 		itr->Draw();
 	}
+	*/
 }
 
 //プレイヤーとの当たり判定
@@ -209,9 +222,9 @@ void Stage::ColPlayer(std::shared_ptr<Player> player)
 {
 	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
-		if (Box_Collision::Intersect(itr->mCol, player->mCol) == true)
+		if (Box_Collision::Intersect(*itr->mCol, player->mCol) == true)
 		{
-			switch (itr->mCol.getObjectType())
+			switch (itr->mCol->getObjectType())
 			{
 				//ショップ
 			case StageObjectType::Shop:
@@ -226,17 +239,17 @@ void Stage::ColPlayer(std::shared_ptr<Player> player)
 				//printf("レンガと交差\n");
 
 
-				player->FixPos(itr->mCol.getPosition());
+				player->FixPos(itr->mCol->getPosition());
 				col += 1;
-				offsetCol = itr->mCol.getPosition();
+				offsetCol = itr->mCol->getPosition();
 			}
 			break;
 
 			//ブロックとの当たり判定
 			case StageObjectType::Block:
 			{
-				player->FixPos(itr->mCol.getPosition());
-				offsetCol = itr->mCol.getPosition();
+				player->FixPos(itr->mCol->getPosition());
+				offsetCol = itr->mCol->getPosition();
 				col += 1;
 
 //				printf("ブロックと交差\n");
@@ -272,17 +285,28 @@ std::shared_ptr<std::vector<std::vector<byte>>> Stage::getStage()
 //プレイヤーのバレットとの当たり判定
 void Stage::ColPlayer_Bullet(std::shared_ptr<Player> player)
 {
+
+
+	int n = GetNowCount();
+
 	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
 		for (std::vector<Bullet>::iterator b = player->getBullet()->begin(); b != player->getBullet()->end(); b++)
 		{
+			/*
 			//交差判定
-			if (Box_Collision::Intersect(itr->mCol,b->mCol) == true)
+			if (Box_Collision::Intersect(*itr->mCol,b->mCol) == true)
 			{
 				b->mIsMapHit = true;
 			}
+			*/
 		}
 	}
+
+	printf("time: %d\n", (GetNowCount() - n));
+
+
+
 }
 
 //画面スクロール
@@ -551,31 +575,33 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 //エネミーとの当たり判定
 void Stage::ColEnemy(std::shared_ptr<Enemy_Mng> enemy)
 {
+	//MapChip chip;
 	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 	{
-		MapChip chip = *itr;
-		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
+		 //chip = *itr;
+		for (std::vector<Enemy>::iterator it = enemy->getEnemy()->begin(); it != enemy->getEnemy()->end(); it++)
 		{
 			//交差判定
-			if (Box_Collision::Intersect(chip.mCol, itr->mCol) == true )
+			if (Box_Collision::Intersect(*itr->mCol, it->mCol) == true )
 			{
-				switch (chip.mCol.getObjectType())
+				switch (itr->mCol->getObjectType())
 				{
 					//ブロック
 				case StageObjectType::Block:
 				{
-					itr->FixPos(chip.mCol.getPosition());	//座標を修正
-					itr->setMove_Rand();					//乱数を再設定
-					itr->setMovePixel();					//移動量をリセット
+					glm::ivec2 pos = itr->mCol->getPosition();
+					it->FixPos(pos);	//座標を修正
+					it->setMove_Rand();					//乱数を再設定
+					it->setMovePixel();					//移動量をリセット
 				}break;
 
 					//レンガ
 				case StageObjectType::Brick:
 				{
-
-					itr->FixPos(chip.mCol.getPosition());	//座標を修正
-					itr->setMove_Rand();					//乱数を再設定
-					itr->setMovePixel();					//移動量をリセット
+					glm::ivec2 pos = itr->mCol->getPosition();
+					it->FixPos(pos);	//座標を修正
+					it->setMove_Rand();					//乱数を再設定
+					it->setMovePixel();					//移動量をリセット
 
 				}break;
 
@@ -602,7 +628,7 @@ void Stage::ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy)
 			for (std::vector<Bullet>::iterator b = itr->getBullet()->begin(); b != itr->getBullet()->end(); b++)
 			{
 				//交差判定
-				if (Box_Collision::Intersect(b->mCol, st->mCol) == true)
+				if (Box_Collision::Intersect(b->mCol, *st->mCol) == true)
 				{
 					b->setPosition(b->getPosition());
 					b->mIsMapHit = true;

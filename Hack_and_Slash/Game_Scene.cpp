@@ -45,7 +45,6 @@ void Game_Scene::Update()
 	stage->setStage(enemy_mng,player);	//ステージを読み込み
 	enemy_mng->setEnemy(stage);			//エネミーを出現
 
-	stage->Scroll(player, enemy_mng);	//画面スクロール
 
 
 	enemy_mng->Update();	//エネミー更新
@@ -56,23 +55,29 @@ void Game_Scene::Update()
 
 
 
-	//　#####　当たり判定 #####
 
+	//　#####　当たり判定 #####
+	
 	//エネミーとステージ
-	stage->ColEnemy(enemy_mng);			//　
-	stage->ColEnemy_Bullet(enemy_mng);	//
+	stage->ColEnemy(enemy_mng);			//　46	
+	stage->ColEnemy_Bullet(enemy_mng);	//46
 
 	//プレイヤーとステージ
-	stage->ColPlayer(player);			//
-	stage->ColPlayer_Bullet(player);	//
+	stage->ColPlayer_Bullet(player);	// 26
+	stage->ColPlayer(player);			// 16
+
 
 	//プレイヤーとエネミー
 	player->ColEnemy_Bullet(enemy_mng);		//
 
-	//エネミーとプレイヤー
+
+
 	enemy_mng->ColPlayer_Bullet(player);	//
+
 	//　##### #####	
 
+
+	stage->Scroll(player, enemy_mng);	//画面スクロール	//14
 
 
 }

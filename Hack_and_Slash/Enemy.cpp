@@ -161,7 +161,7 @@ void Enemy::setMovePixel()
 
 
 //ç¿ïWÇèCê≥
-void Enemy::FixPos(glm::ivec2 pos)
+void Enemy::FixPos(glm::ivec2 &pos)
 {
 	
 	if (mVector == VECTOR_UP)
