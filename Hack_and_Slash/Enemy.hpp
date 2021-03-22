@@ -53,27 +53,27 @@ public:
 	void Destroy();		//破壊する。
 	bool getIsDestroy();//破壊されたかどうか？		
 
-	Box_Collision mCol;	//当たり判定
+	BoxCollision mCol;	//当たり判定
 private:
 
 	//スプライト
-	int mEnemy_sprite;					//エネミー
-	int mEnemy_Bullet_sprite;			//バレット
-	int mStage_HitEffect_sprite[3];		//ステージ　ヒットエフェクト
-	int mPlayer_HitEffect_sprite[3];	//プレイヤー　ヒットエフェクト
+	int enemySprite;					//エネミー
+	int enemy_Bullet_sprite;			//バレット
+	int stageHitEffect_sprite[3];		//ステージ　ヒットエフェクト
+	int playerHitEffect_sprite[3];	//プレイヤー　ヒットエフェクト
 
 
 
 
-	int Rand_Action;		//行動の乱数
-	int Rand_Attack;		//攻撃するかどうか？
+	int randMove;		//行動の乱数
+	int randAttack;		//攻撃するかどうか？
 
-	int Prev_Rand_Action;	//前の行動の乱数
-	int mSpeed;				//移動速度
-	int MovePixel;			//移動量
+	int prevRandAction;	//前の行動の乱数
+	int speed;				//移動速度
+	int moveValue;			//移動量
 
 
-	bool islife; //生きているかどうか？
+	bool isLefe; //生きているかどうか？
 
 	std::shared_ptr<std::vector<Bullet>> bullet;	//バレット
 

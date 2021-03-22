@@ -43,20 +43,20 @@ public:
 
 	void FixPos(glm::ivec2 pos);	//座標を修正
 
-	Box_Collision mCol;	//当たり判定
+	BoxCollision mCol;	//当たり判定
 
-	bool mIsMapHit;		//マップとヒットしたかどうか？
-	bool mIsEnemyHit;	//エネミーとヒットしたかどうか？
-	bool mIsDelete;		//削除するかどうか？
-
+	
 private:
 	Animation anim;			//アニメーションクラス
-	int mSprite;			//スプライト
+	int sprite;			//スプライト
+	bool isMapHIt;			//マップとヒットしたかどうか？
+	bool isEenemyHit;		//エネミーとヒットしたかどうか？
+	bool isDelete;			//削除するかどうか？
 
-	int mMapEffect_Sprite[3];	// マップヒットのエフェクトスプライト
-	int mEnemyEffect_Sprite[3];	// エネミーヒットのエフェクトスプライト
+	int mapEffectSprite[3];	// マップヒットのエフェクトスプライト
+	int enemyEffectSprite[3];	// エネミーヒットのエフェクトスプライト
 
-	int mSpeed;				//バレットの速度
+	int speed;				//バレットの速度
 	
 };
 

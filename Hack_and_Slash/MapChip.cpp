@@ -1,31 +1,29 @@
 #include "MapChip.hpp"
 
 //コンストラクタ
-MapChip::MapChip(StageObjectType t, glm::ivec2 pos, glm::ivec2 size,int handle) : Actor(nullptr)
+MapChip::MapChip(Tag t, glm::ivec2 pos, glm::ivec2 size,int handle) : Actor(nullptr)
 {
 
-
-	//printf("size X : %d\n", mSize.x);
-	//printf("size Y : %d\n",mSize.y);
-
-
-	mPosition = pos;	//座標
-	mSize = size;		//サイズ
-	mSprite = handle;	//スプライト	
-	HP = 3;				//耐久値
+	position = pos;			//座標
+	worldPosition = position;	//ワールド座標
+	size = size;				//サイズ
+	mSprite = handle;			//スプライト	
 	
 
-	mCol = std::make_shared<Box_Collision>();
+	mCol = std::make_shared<BoxCollision>();
 
-	//当たり判定
-	mCol->setPosition(mPosition);
-	mCol->setSize(mSize);
-	mCol->setTrigger(true);
-	mCol->setStageObjectType(t);
+	
 
 
 
 }
+
+//ワールド座標を取得
+glm::ivec2 MapChip::getWorldPosition()
+{
+	return worldPosition;
+}
+
 
 //デフォルトコンストラクタ
 MapChip::MapChip() : Actor(nullptr)
@@ -35,19 +33,14 @@ MapChip::MapChip() : Actor(nullptr)
 
 void MapChip::Update()
 {
-	//printf("あああ\n");
-
-	//当たり判定
-	mCol->setPosition(mPosition);
-	mCol->setSize(mSize - 1);
-	mCol->setTrigger(true);
+	
 	
 
 }
 
 void MapChip::Draw()
 {
-	DrawGraph(mPosition.x, mPosition.y,mSprite,true);
+	DrawGraph(position.x, position.y,mSprite,true);
 }
 
 

@@ -20,10 +20,10 @@ public:
 	static int getElapsed();	//経過フレームを取得
 
 private:
-	int mStartTime;				//測定開始時刻
-	static int mCount;			//カウンタ
-	static int mStartCount;		//起動してからの経過フレーム
-	float mFps;					//fps
+	int startTime;				//測定開始時刻
+	static int count;			//カウンタ
+	static int startCount;		//起動してからの経過フレーム
+	float fps;					//fps
 	static const int N = 60;	//平均を取るサンプル数
 	static const int FPS = 60;	//設定したFPS
 

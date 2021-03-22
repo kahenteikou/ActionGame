@@ -30,14 +30,14 @@ void Window::setTitle(std::string name,unsigned int c)
 //座標
 void Window::setPosition(glm::ivec2 pos)	
 {
-	mPosition = pos;
+	position = pos;
 }
 
 //サイズ
 void Window::setSize(glm::ivec2 size)	
 {
-	mSize.x = mPosition.x + size.x;
-	mSize.y = mPosition.y + size.y;
+	size.x = position.x + size.x;
+	size.y = position.y + size.y;
 }
 
 //背景色
@@ -82,7 +82,7 @@ void Window::AddList_Down(Window_Scene s,std::string name,unsigned char num,unsi
 	
 	//座標
 	ItemPos.y += 20;
-	ItemPos.x = mPosition.x + 50;
+	ItemPos.x = position.x + 50;
 	item.pos = ItemPos;
 	
 
@@ -110,7 +110,7 @@ void Window::Update()
 	//mInput->Update(); // キー入力更新
 
 	//キー入力	
-	if (Owner->InputKey->getKeyDown(KEY_INPUT_UP) == true)
+	if (owner->InputKey->getKeyDown(KEY_INPUT_UP) == true)
 	{
 		Cursor += -1;
 		if (Cursor < 0)
@@ -118,7 +118,7 @@ void Window::Update()
 			Cursor = 0;
 		}
 	}
-	else if (Owner->InputKey->getKeyDown(KEY_INPUT_DOWN) == true)
+	else if (owner->InputKey->getKeyDown(KEY_INPUT_DOWN) == true)
 	{
 		Cursor += 1;
 		if (Cursor > lists.size() - 1)
@@ -126,7 +126,7 @@ void Window::Update()
 			Cursor = (int)lists.size() - 1;
 		}
 	}
-	else if (Owner->InputKey->getKeyDown(KEY_INPUT_SPACE) == true)
+	else if (owner->InputKey->getKeyDown(KEY_INPUT_SPACE) == true)
 	{	
 		Move_Scene = lists.at(Cursor).winScene;	//シーン推移
 		ID = lists.at(Cursor).ID;	//アイテムID
@@ -139,16 +139,16 @@ void Window::Draw()
 #define FRAME_COLOR GetColor(0,100,0)	//フレームの色
 #define CURSOR_COLOR GetColor(0,0,0)	//カーソルの色
 
-	DrawBox(mPosition.x, mPosition.y, mSize.x, mSize.y, BackGroundColor, true);	//背景
+	DrawBox(position.x, position.y, size.x, size.y, BackGroundColor, true);	//背景
 
-	DrawBox(mPosition.x, mPosition.y, mSize.x, mSize.y, FRAME_COLOR, false);	//枠
-	DrawBox(mPosition.x - 1, mPosition.y - 1, mSize.x + 1, mSize.y + 1, FRAME_COLOR, false);	//枠
-	DrawBox(mPosition.x - 2, mPosition.y - 2, mSize.x + 2, mSize.y + 2, FRAME_COLOR, false);	//枠
-	DrawBox(mPosition.x - 3, mPosition.y - 3, mSize.x + 3, mSize.y + 3, FRAME_COLOR, false);	//枠
-	DrawBox(mPosition.x - 4, mPosition.y - 4, mSize.x + 4, mSize.y + 4, FRAME_COLOR, false);	//枠
+	DrawBox(position.x, position.y, size.x, size.y, FRAME_COLOR, false);	//枠
+	DrawBox(position.x - 1, position.y - 1, size.x + 1, size.y + 1, FRAME_COLOR, false);	//枠
+	DrawBox(position.x - 2, position.y - 2, size.x + 2, size.y + 2, FRAME_COLOR, false);	//枠
+	DrawBox(position.x - 3, position.y - 3, size.x + 3, size.y + 3, FRAME_COLOR, false);	//枠
+	DrawBox(position.x - 4, position.y - 4, size.x + 4, size.y + 4, FRAME_COLOR, false);	//枠
 	
 
-	DrawFormatString(mPosition.x + 2, mPosition.y + 4, TitleColor,"%s",Title.c_str());	//タイトル
+	DrawFormatString(position.x + 2, position.y + 4, TitleColor,"%s",Title.c_str());	//タイトル
 
 
 	//項目を表示

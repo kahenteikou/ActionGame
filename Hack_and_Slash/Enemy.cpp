@@ -4,38 +4,38 @@
 //コンストラクタ
 Enemy::Enemy(glm::ivec2 pos ,int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_sprite[3], int Player_HitEffect_sprite[3]) : Actor(nullptr)
 {
-	mPosition = pos;	//初期座標
+	position = pos;	//初期座標
 
-	mEnemy_sprite = Enemy_sprite;	//エネミー
-	mEnemy_Bullet_sprite = Enemy_Bullet_sprite;	//バレット
+	enemySprite = Enemy_sprite;	//エネミー
+	enemy_Bullet_sprite = Enemy_Bullet_sprite;	//バレット
 
 	//ステージ　ヒットエフェクト
-	mStage_HitEffect_sprite[0] = Stage_HitEffect_sprite[0];
-	mStage_HitEffect_sprite[1] = Stage_HitEffect_sprite[1];
-	mStage_HitEffect_sprite[2] = Stage_HitEffect_sprite[2];
+	stageHitEffect_sprite[0] = Stage_HitEffect_sprite[0];
+	stageHitEffect_sprite[1] = Stage_HitEffect_sprite[1];
+	stageHitEffect_sprite[2] = Stage_HitEffect_sprite[2];
 	
 	//プレイヤー　ヒットフェクト
-	mPlayer_HitEffect_sprite[0] = Player_HitEffect_sprite[0];
-	mPlayer_HitEffect_sprite[1] = Player_HitEffect_sprite[1];
-	mPlayer_HitEffect_sprite[2] = Player_HitEffect_sprite[2];
+	playerHitEffect_sprite[0] = Player_HitEffect_sprite[0];
+	playerHitEffect_sprite[1] = Player_HitEffect_sprite[1];
+	playerHitEffect_sprite[2] = Player_HitEffect_sprite[2];
 
 
-	islife = true;	//生きているかどうか？
+	isLefe = true;	//生きているかどうか？
 
 
-//	Rand_Action = GetRand(3);		//乱数
-	Rand_Action = 0;		//乱数
-	//Rand_Action = 3; //GetRand(3);//乱数
+	randMove = GetRand(3);		//乱数
+	//randMove = 0;		//乱数
+	//randMove = 3; //GetRand(3);//乱数
 
-	//Prev_Rand_Action = Rand_Action;	//前の乱数
-	MovePixel = 0;					//移動した量
+	//Prev_randMove = randMove;	//前の乱数
+	moveValue = 0;					//移動した量
 
 	
-//	mSpeed = 10; //スピード
-//	mSpeed = 2; //スピード
+//	speed = 10; //スピード
+	speed = 2; //スピード
 
 	//当たり判定
-	mCol.setStageObjectType(StageObjectType::Enemy);
+	
 
 
 	bullet = std::make_shared<std::vector<Bullet>>();
@@ -51,13 +51,13 @@ std::shared_ptr<std::vector<Bullet>> Enemy::getBullet()
 //破壊する。		
 void Enemy::Destroy()
 {
-	islife = false;
+	isLefe = false;
 }
 
 //破壊されたかどうか？		
 bool Enemy::getIsDestroy()
 {
-	return islife;
+	return isLefe;
 }
 
 
@@ -65,87 +65,75 @@ bool Enemy::getIsDestroy()
 void Enemy::Update()
 {
 	
-	//当たり判定
-	glm::ivec2 pos = mPosition;
-	pos.y += -(CELL / 2);
-	pos.x += -(CELL / 2);
-	mCol.setPosition(pos);
-	mCol.setSize(glm::ivec2(CELL - 1, CELL - 1));
-
-
-	//方向
-	if (Rand_Action == 0)
-	{
-		mVector = VECTOR_UP;
-	}
-	else if (Rand_Action == 1)
-	{
-		mVector = VECTOR_RIGHT;
-	}
-	else if (Rand_Action == 2)
-	{
-		mVector = VECTOR_DOWN;
-	}
-	else if (Rand_Action == 3)
-	{
-		mVector = VECTOR_LEFT;
-	}
-	
-	//Rand_Attack = GetRand(50); //攻撃頻度
-	Rand_Attack = GetRand(10); //攻撃頻度
+	randAttack = GetRand(50); //攻撃頻度
 
 	//攻撃
-	if (Rand_Attack == 1)
+	if (randAttack == 1)
 	{
-	//	printf("エネミー攻撃\n");
-	//	bullet->push_back(Bullet(mPosition,mVector,mEnemy_Bullet_sprite,mStage_HitEffect_sprite, mPlayer_HitEffect_sprite));
+		//	printf("エネミー攻撃\n");
+		bullet->push_back(Bullet(position, vector, enemy_Bullet_sprite, stageHitEffect_sprite,playerHitEffect_sprite));
 	}
 
+	//方向
+	if (randMove == 0)
+	{
+		vector = VECTOR_UP;
+	}
+	else if (randMove == 1)
+	{
+		vector = VECTOR_RIGHT;
+	}
+	else if (randMove == 2)
+	{
+		vector = VECTOR_DOWN;
+	}
+	else if (randMove == 3)
+	{
+		vector = VECTOR_LEFT;
+	}
+	
+	//randAttack = GetRand(50); //攻撃頻度
+
+	
 
 
-	/*
-	//MovePixel += mSpeed;	//移動量に加算
-	if (MovePixel > CELL * 2)
+	//移動	
+	moveValue += speed;	//移動量に加算
+	if (moveValue > CELL * 2)
 	{
 		setMove_Rand();
-		MovePixel = 0;	//移動量をリセット
+		moveValue = 0;	//移動量をリセット
 	}
-	*/
+	
 
 
 	//移動
-//	mPosition.x += mVector.x * mSpeed;
-//	mPosition.y += mVector.y * mSpeed;
+	position.x += vector.x * speed;
+	position.y += vector.y * speed;
 
 
-	//バレット削除
-	for (std::vector<Bullet>::iterator itr = bullet->begin(); itr != bullet->end();)
-	{
-		if (itr->mIsDelete == true)
-		{
-			itr = bullet->erase(itr);
-		}
-		else 
-		{
-			itr->Update();
-			itr++;
-		}
-	}
+	
+
+
+
+
+
+	
 }
 
 //移動乱数を再設定
 void Enemy::setMove_Rand()
 {
-	Rand_Action = 0;
+	randMove = GetRand(3);
 
 	/*
 	//違う乱数を引くまで無限ループ
 	while (true) {
-		Rand_Action = GetRand(3);
+		randMove = GetRand(3);
 
 		//同じ乱数を引いてない時
-		if (Prev_Rand_Action != Rand_Action) {
-			Prev_Rand_Action = Rand_Action;
+		if (Prev_randMove != randMove) {
+			Prev_randMove = randMove;
 
 			break;
 		}
@@ -156,7 +144,7 @@ void Enemy::setMove_Rand()
 //移動量をリセット
 void Enemy::setMovePixel()
 {
-	MovePixel = 0;
+	moveValue = 0;
 }
 
 
@@ -164,21 +152,21 @@ void Enemy::setMovePixel()
 void Enemy::FixPos(glm::ivec2 &pos)
 {
 	
-	if (mVector == VECTOR_UP)
+	if (vector == VECTOR_UP)
 	{
-		mPosition.y = pos.y + CELL + CELL / 2;
+		position.y = pos.y + CELL + CELL / 2;
 	}
-	else if (mVector == VECTOR_DOWN)
+	else if (vector == VECTOR_DOWN)
 	{
-		mPosition.y = pos.y - (CELL / 2);
+		position.y = pos.y - (CELL / 2);
 	}
-	else if (mVector == VECTOR_LEFT)
+	else if (vector == VECTOR_LEFT)
 	{
-		mPosition.x = pos.x + (CELL + CELL / 2);
+		position.x = pos.x + (CELL + CELL / 2);
 	}
-	else if (mVector == VECTOR_RIGHT)
+	else if (vector == VECTOR_RIGHT)
 	{
-		mPosition.x = pos.x - (CELL / 2);
+		position.x = pos.x - (CELL / 2);
 	}
 
 }
@@ -186,7 +174,7 @@ void Enemy::FixPos(glm::ivec2 &pos)
 //描画
 void Enemy::Draw()
 {
-	DrawRotaGraph(mPosition.x, mPosition.y, 1.0, 0, mEnemy_sprite, true, false);
+	DrawRotaGraph(position.x, position.y, 1.0, 0, enemySprite, true, false);
 
 	for (std::vector<Bullet>::iterator itr = bullet->begin(); itr != bullet->end(); itr++)
 	{

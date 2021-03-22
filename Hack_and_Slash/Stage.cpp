@@ -53,7 +53,7 @@ Stage::Stage(Entry* e, int Block_Handle, int Brick_Handle, int Shop_Handle)
 	if (fs::exists(path) == false)
 	{
 		printf("Stage_Dataフォルダが存在しないため新規作成しました。\n");
-		fs::create_directory(path);
+	//	fs::create_directory(path);
 	}
 	else
 	{
@@ -82,11 +82,12 @@ void Stage::LoadStage()
 	glm::ivec2 StageSize = glm::ivec2(0, 0);	//画面サイズ
 	FILE* fp = NULL;		//ファイルポインタ
 
-	fopen_s(&fp, "Stage_Data/Debug_Stage.bin", "rb");	//読み込みモードでファイルを開く
+//	fopen_s(&fp, "Assets/Stage/Debug_AI.bin", "rb");	//読み込みモードでファイルを開く
+	fopen_s(&fp, "Assets/Stage/Debug.bin", "rb");	//読み込みモードでファイルを開く
 
 	if (fp != NULL)
 	{
-		//printf();
+		//printf("あああ\n");
 		//ステージサイズを読み込む(先頭８バイト)
 		fread(&StageSize.x, sizeof(int), 1, fp);
 		fread(&StageSize.y, sizeof(int), 1, fp);
@@ -119,33 +120,33 @@ void Stage::LoadStage()
 			{
 				switch (Stage_Grid->at(y).at(x))
 				{
-
 					//ブロック
 					case 0x01:
 					{
-						mStage->push_back(MapChip(StageObjectType::Block, glm::ivec2(x * CELL, y * CELL), BlockSize, Block_sprite));
-		
+						mStage->push_back(MapChip(Tag::Block, glm::ivec2(x * CELL, y * CELL), BlockSize, Block_sprite));
+						//printf("えええええ\n");
+
 					}
 					break;
 
 					//レンガ
 					case 0x02:
 					{
-						mStage->push_back(MapChip(StageObjectType::Brick, glm::ivec2(x * CELL, y * CELL), BrickSize, Brick_sprite));
+						mStage->push_back(MapChip(Tag::Brick, glm::ivec2(x * CELL, y * CELL), BrickSize, Brick_sprite));
 					}
 					break;
 
 					//ショップ
 					case 0x03:
 					{
-						mStage->push_back(MapChip(StageObjectType::Shop, glm::ivec2(x * CELL, y * CELL), ShopSize, Shop_sprite));
+						mStage->push_back(MapChip(Tag::Shop, glm::ivec2(x * CELL, y * CELL), ShopSize, Shop_sprite));
 					}
 					break;
 
 					//なし
 					default:
 					{
-						mStage->push_back(MapChip(StageObjectType::None, glm::ivec2(x * CELL, y * CELL), glm::ivec2(0, 0), -1));
+					//	mStage->push_back(MapChip(StageObjectType::None, glm::ivec2(x * CELL, y * CELL), glm::ivec2(0, 0), -1));
 					}break;
 
 				}
@@ -160,6 +161,8 @@ void Stage::LoadStage()
 		printf("ファイルを読み込めません。\n");
 	}
 
+
+//	printf("%d , %d\n", mStage->at(0).getPosition().x, mStage->at(0).getPosition().y);
 
 
 	//fclose(fp);
@@ -209,71 +212,13 @@ void Stage::Draw()
 	}
 
 
-	/*
-	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
-	{
-		itr->Draw();
-	}
-	*/
+	
 }
 
 //プレイヤーとの当たり判定
 void Stage::ColPlayer(std::shared_ptr<Player> player)
 {
-	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
-	{
-		if (Box_Collision::Intersect(*itr->mCol, player->mCol) == true)
-		{
-			switch (itr->mCol->getObjectType())
-			{
-				//ショップ
-			case StageObjectType::Shop:
-			{
-				
-			}
-			break;
-
-			//レンガとの当たり判定
-			case StageObjectType::Brick:
-			{
-				//printf("レンガと交差\n");
-
-
-				player->FixPos(itr->mCol->getPosition());
-				col += 1;
-				offsetCol = itr->mCol->getPosition();
-			}
-			break;
-
-			//ブロックとの当たり判定
-			case StageObjectType::Block:
-			{
-				player->FixPos(itr->mCol->getPosition());
-				offsetCol = itr->mCol->getPosition();
-				col += 1;
-
-//				printf("ブロックと交差\n");
-			}
-			break;
-			}
-		}
-		else if (col == 2)
-		{
-			col = 0;
-		//	printf("2つのセルに衝突\n");
-		}
-		else if (col == 1)
-		{
-			col = 0;
-			//printf("補正する。\n");
-			player->OffsetFixPos(offsetCol);	//オフセット修正
-			offsetCol = glm::ivec2(0,0);
-		}
-		else {
-			col = 0;
-			//printf("衝突なし。\n");
-		}
-	}
+	
 }
 
 //ステージを取得
@@ -286,27 +231,6 @@ std::shared_ptr<std::vector<std::vector<byte>>> Stage::getStage()
 void Stage::ColPlayer_Bullet(std::shared_ptr<Player> player)
 {
 
-
-	int n = GetNowCount();
-
-	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
-	{
-		for (std::vector<Bullet>::iterator b = player->getBullet()->begin(); b != player->getBullet()->end(); b++)
-		{
-			/*
-			//交差判定
-			if (Box_Collision::Intersect(*itr->mCol,b->mCol) == true)
-			{
-				b->mIsMapHit = true;
-			}
-			*/
-		}
-	}
-
-	printf("time: %d\n", (GetNowCount() - n));
-
-
-
 }
 
 //画面スクロール
@@ -315,16 +239,16 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 
 #define SCROLL_OFFSET_X ((int)200)
 #define SCROLL_OFFSET_Y ((int)200)
-
+	
 
 	//最初のフレームの時
 	if (mGameStart == false)
 	{
 		//X 補正
-		if (player->mStagePosition.x > (SCREEN_WIDTH - SCROLL_OFFSET_X))
+		if (player->stagePosition.x > (SCREEN_WIDTH - SCROLL_OFFSET_X))
 		{
-			int p = player->mStagePosition.x - (SCREEN_WIDTH - SCROLL_OFFSET_X);
-
+			int p = player->stagePosition.x - (SCREEN_WIDTH - SCROLL_OFFSET_X);
+			printf("X %d\n",p);
 			//プレイヤー補正
 			for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 			{
@@ -348,10 +272,11 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 		}
 
 		//Y 補正
-		if (player->mStagePosition.y > (SCREEN_HEIGHT - SCROLL_OFFSET_Y))
+		if (player->stagePosition.y > (SCREEN_HEIGHT - SCROLL_OFFSET_Y))
 		{
-			int p = player->mStagePosition.y - (SCREEN_HEIGHT - SCROLL_OFFSET_Y);
+			int p = player->stagePosition.y - (SCREEN_HEIGHT - SCROLL_OFFSET_Y);
 			//printf("%d\n",p);
+			printf("Y %d\n", p);
 
 			for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
 			{
@@ -575,41 +500,10 @@ void Stage::Scroll(std::shared_ptr<Player> player, std::shared_ptr<Enemy_Mng> en
 //エネミーとの当たり判定
 void Stage::ColEnemy(std::shared_ptr<Enemy_Mng> enemy)
 {
-	//MapChip chip;
-	for (std::vector<MapChip>::iterator itr = mStage->begin(); itr != mStage->end(); itr++)
-	{
-		 //chip = *itr;
-		for (std::vector<Enemy>::iterator it = enemy->getEnemy()->begin(); it != enemy->getEnemy()->end(); it++)
-		{
-			//交差判定
-			if (Box_Collision::Intersect(*itr->mCol, it->mCol) == true )
-			{
-				switch (itr->mCol->getObjectType())
-				{
-					//ブロック
-				case StageObjectType::Block:
-				{
-					glm::ivec2 pos = itr->mCol->getPosition();
-					it->FixPos(pos);	//座標を修正
-					it->setMove_Rand();					//乱数を再設定
-					it->setMovePixel();					//移動量をリセット
-				}break;
-
-					//レンガ
-				case StageObjectType::Brick:
-				{
-					glm::ivec2 pos = itr->mCol->getPosition();
-					it->FixPos(pos);	//座標を修正
-					it->setMove_Rand();					//乱数を再設定
-					it->setMovePixel();					//移動量をリセット
-
-				}break;
 
 
-				}
-			}
-		}
-	}
+
+
 }
 
 
@@ -618,24 +512,8 @@ void Stage::ColEnemy(std::shared_ptr<Enemy_Mng> enemy)
 //エネミーのバレットとの当たり判定
 void Stage::ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy)
 {
-	//ステージ
-	for (std::vector<MapChip>::iterator st = mStage->begin(); st != mStage->end(); st++) 
-	{
-		//エネミー
-		for (std::vector<Enemy>::iterator itr = enemy->getEnemy()->begin(); itr != enemy->getEnemy()->end(); itr++)
-		{
-			//バレット
-			for (std::vector<Bullet>::iterator b = itr->getBullet()->begin(); b != itr->getBullet()->end(); b++)
-			{
-				//交差判定
-				if (Box_Collision::Intersect(b->mCol, *st->mCol) == true)
-				{
-					b->setPosition(b->getPosition());
-					b->mIsMapHit = true;
-				}
-			}
-		}
-	}
+
+	
 }
 
 

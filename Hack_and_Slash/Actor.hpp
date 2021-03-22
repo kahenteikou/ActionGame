@@ -31,11 +31,11 @@ public:
 
 protected:
 
-	glm::ivec2 mPosition;	//座標
-	glm::ivec2 mVector;		//方向
-	glm::ivec2 mSize;		//スプライトのサイズ
+	glm::ivec2 position;	//座標
+	glm::ivec2 vector;		//方向
+	glm::ivec2 size;		//スプライトのサイズ
 
-	Entry* Owner;			//Entry クラス
+	Entry* owner;			//Entry クラス
 
 };
 

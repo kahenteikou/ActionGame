@@ -2,49 +2,125 @@
 #define ___COLLISION_HPP_
 
 #include "glm/glm.hpp"
-//#include "MapChip.hpp"
 
-//前方宣言
-enum class StageObjectType;	//オブジェクトタイプ
+//タグ
+typedef enum class Tag
+{
+	Player,
+	Enemy,
+	Wall,
+	Item,
+	None,		//未設定
+	Block,
+	Brick,
+	Shop,
+
+	Invalid,	//交差してない
+}Tag;
+
+
+//プリミティブ型
+
+//線
+typedef struct LineSegment
+{
+	glm::vec2 mStart;	
+	glm::vec2 mEnd;		
+
+
+}LineSegment;
+
+//AABB
+typedef struct AABB
+{
+	glm::vec2* mMin;	//最小値
+	glm::vec2* mMax;	//最大値
+
+}AABB;
+
+//円
+typedef struct Circle
+{
+	glm::vec2* mCenter;	//中心点
+	float* mRadius;		//半径
+}Circle;
+
+//線分
+typedef struct Segment {
+	glm::vec2* mStart;	//始点
+	glm::vec2* mEnd;	//終点
+}Segment;
+
+
 
 /*####################################################
-* 矩形同士の当たり判定 
+* 当たり判定の基底クラス
 ######################################################*/
-class Box_Collision
+class Collision
 {
 public:
-	Box_Collision();	//コンストラクタ
-	~Box_Collision();	//デストラクタ
+	Collision();	//コンストラクタ
+	~Collision();	//デストラクタ
 	
-	static bool Intersect(Box_Collision &a, Box_Collision &b);	//交差判定
-
-	//取得　関係
-	bool getTrigger();					//トリガータイプを取得
-	glm::ivec2 getPosition();			//座標を取得
-	glm::ivec2 getSize();				//サイズを取得
-	StageObjectType getObjectType();	//オブジェクトタイプを取得
-	glm::ivec2 getVector();				//方向を取得
+	//機能
+	
+	
 
 	//設定　関係
-	void setTrigger(bool tri);							//トリガータイプを設定
-	void setPosition(glm::ivec2 pos);					//座標を設定
-	void setSize(glm::ivec2 size);						//サイズを設定
-	void setStageObjectType(StageObjectType type);		//オブジェクトタイプを設定
-	void setVector(glm::ivec2 vec);						//方向設定
-	
-protected:
+	void setCol(bool b);				//当たったかどうか？
+	void setColTag(Tag type);			//取得したタイプ設定
+	void setVector(glm::vec2* vec);		//方向設定
+	void setTriggerType(bool tri);		//トリガータイプを設定
+	void setTag(Tag type);				//タグを設定
+	void setSpeed(glm::vec2 *spp);		//速度を設定
+
+	//取得　関係
+	Tag getMyTag();				//タイプを取得
+	bool getTriggerType();		//トリガータイプを取得
+	glm::vec2 getVector();		//方向を取得
+	bool getCol();				//当たったかどうか？
+	Tag getTag();				//取得したタイプを取得
+	glm::vec2 getSpeed();		//速度を取得
 
 private:
-
-	bool mIsTrigger;		//トリガータイプかどうか？
-	StageObjectType Type;	//オブジェクトタイプ
-	glm::ivec2 mPosition;	//座標
-	glm::ivec2 mSize;		//サイズ
-	glm::ivec2 mVector;		//方向
-
-
-
+	bool IsTrigger;		//トリガータイプかどうか？
+	Tag my_TagType;		//自身タグ
+	Tag col_TagType;	//取得タグ
+	glm::vec2 *Vector;	//方向
+	bool isCol;			//当たったかどうか？
+	glm::vec2 *Speed;	//速度
 };
+
+
+/*####################################################
+* 矩形の当たり判定
+######################################################*/
+
+class BoxCollision : public Collision
+{
+public:
+	BoxCollision();		//コンストラクタ
+	~BoxCollision();	//デストラクタ
+
+	void Intersect(BoxCollision &col);
+
+	//取得　関係
+	glm::vec2 getMax();
+	glm::vec2 getMin();
+
+
+	//設定　関係
+	void setMax(glm::vec2 *max);
+	void setMin(glm::vec2 *min);
+
+	void setMaxValue(glm::vec2 &max);
+	void setMinValue(glm::vec2 &min);
+
+private:
+	AABB box;
+};
+
+
 
 
 #endif

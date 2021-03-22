@@ -1,10 +1,11 @@
 #include "Animation.hpp"
+#include "Fps.hpp"
 
 //コンストラクタ
 Animation::Animation(int c)
 {
-	Clip = 0;		//現在の番号
-	max_Clip = c;	//番号の数
+	clip = 0;		//現在の番号
+	maxClip = c;	//番号の数
 	nextFrame = 1;	//次の番号になるフレーム数
 	first = false;	//フレームを再計算するかどうか？
 	isAnim = false;	//一回だけ再生したかどうか？
@@ -31,20 +32,20 @@ int Animation::getClip_loop(int speed)
 	
 	if (Fps::getElapsed() == nextFrame) {
 
-		Clip++;
+		clip++;
 
 		//最大クリップを超えた時
-		if (Clip > max_Clip) 
+		if (clip > maxClip) 
 		{
-			Clip = 0;
+			clip = 0;
 		}
 
 		first = false;
-		return Clip;
+		return clip;
 	}
 	else 
 	{
-		return Clip;
+		return clip;
 	}
 
 }
@@ -62,12 +63,12 @@ bool Animation::getClip(int& num, int speed)
 
 	if (Fps::getElapsed() >= nextFrame) {
 
-		Clip++;
+		clip++;
 
 		//最大クリップを超えた時
-		if (Clip > max_Clip)
+		if (clip > maxClip)
 		{
-			Clip = 0;
+			clip = 0;
 
 			isAnim = true;
 			first = false;
@@ -78,13 +79,13 @@ bool Animation::getClip(int& num, int speed)
 
 		first = false;
 
-		num = Clip;
+		num = clip;
 		return isAnim;
 	}
 	else
 	{
 		//printf("あああああ\n");
-		num = Clip;
+		num = clip;
 		return isAnim;
 	}
 

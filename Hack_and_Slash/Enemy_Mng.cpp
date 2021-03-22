@@ -10,16 +10,16 @@ Enemy_Mng::Enemy_Mng(int Enemy_Handle, int Enemy_Bullet_Hanlde, int Stage_HitEff
 	enemy->clear();
 	newStage = true;	//新しいステージになるかどうか？
 
-	mEnemy_sprite = Enemy_Handle;
-	mEnemy_Bullet_sprite = Enemy_Bullet_Hanlde;
+	enemySprite = Enemy_Handle;
+	enemyBulletSprite = Enemy_Bullet_Hanlde;
 
-	mStage_HitEffect_sprite[0] = Stage_HitEffect_Handle[0];
-	mStage_HitEffect_sprite[1] = Stage_HitEffect_Handle[1];
-	mStage_HitEffect_sprite[2] = Stage_HitEffect_Handle[2];
+	stageHitEffectSprite[0] = Stage_HitEffect_Handle[0];
+	stageHitEffectSprite[1] = Stage_HitEffect_Handle[1];
+	stageHitEffectSprite[2] = Stage_HitEffect_Handle[2];
 
-	mPlayer_HitEffect_sprite[0] = Player_HitEffect_Handle[0];
-	mPlayer_HitEffect_sprite[1] = Player_HitEffect_Handle[1];
-	mPlayer_HitEffect_sprite[2] = Player_HitEffect_Handle[2];
+	playerHitEffectSprite[0] = Player_HitEffect_Handle[0];
+	playerHitEffectSprite[1] = Player_HitEffect_Handle[1];
+	playerHitEffectSprite[2] = Player_HitEffect_Handle[2];
 }
 
 
@@ -34,35 +34,7 @@ std::shared_ptr<std::vector<Enemy>> Enemy_Mng::getEnemy()
 //プレイヤーとバレットとの当たり判定
 void Enemy_Mng::ColPlayer_Bullet(std::shared_ptr<Player> player)
 {
-	//printf("あああ\n");
 
-	//エネミー
-	for (std::vector<Enemy>::iterator itr = enemy->begin(); itr != enemy->end();)
-	{
-		//バレット
-		for (std::vector<Bullet>::iterator b = player->getBullet()->begin(); b != player->getBullet()->end(); b++)
-		{
-			//交差判定
-			if (Box_Collision::Intersect(itr->mCol, b->mCol) == true)
-			{
-				itr = enemy->erase(itr);
-				if (itr == enemy->end())
-				{
-					break;
-				}
-				b->mIsEnemyHit = true;				//ヒットエフェクトを再生
-				//b->setPosition(itr->getPosition());	//座標を修正
-			}	
-		}	
-
-		if (itr != enemy->end())
-		{
-			itr++;
-		}
-
-	}
-
-	//printf("いいいい");
 
 }
 
@@ -84,7 +56,7 @@ void Enemy_Mng::setEnemy(std::shared_ptr<Stage> stage)
 	{
 		int x, y;
 		x = y = 0;
-			enemy->push_back(Enemy(glm::ivec2(0,0),mEnemy_sprite, mEnemy_Bullet_sprite, mStage_HitEffect_sprite, mPlayer_HitEffect_sprite));	//追加
+			enemy->push_back(Enemy(glm::ivec2(760,530),enemySprite, enemyBulletSprite, stageHitEffectSprite,playerHitEffectSprite));	//追加
 
 		newStage = false;
 	}

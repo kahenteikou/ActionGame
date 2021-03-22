@@ -1,6 +1,5 @@
 #ifndef ___ANIMATION_HPP_
 #define ___ANIMATION_HPP_
-#include "Fps.hpp"
 
 /*####################################################
 * アニメーション
@@ -24,8 +23,8 @@ private:
 
 
 	bool first;
-	int Clip;		//現在の番号
-	int max_Clip;	//番号の数
+	int clip;		//現在の番号
+	int maxClip;	//番号の数
 	int nextFrame;	//次の番号までのフレーム
 	bool isAnim;	//一回だけ再生したかどうか？
 };

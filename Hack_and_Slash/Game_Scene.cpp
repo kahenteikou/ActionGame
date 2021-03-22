@@ -11,24 +11,24 @@ Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 //	int Player_Handle = Owner->LoadSprite("Assets/Player/Player_0.png");	//プレイヤー
 
 	int Player_Handle[8];
-	LoadDivGraph("Sprite_Data/Player.png", 8, 8, 1, CELL, CELL, Player_Handle);	//プレイヤー
+	LoadDivGraph("Assets/Sprite/Player.png", 8, 8, 1, CELL, CELL, Player_Handle);	//プレイヤー
 
-	int Enemy_Handle = Owner->LoadSprite("Assets/Enemy.png");					//エネミー		
+	int Enemy_Handle = Owner->LoadSprite("Assets/Sprite/Enemy.png");					//エネミー		
 
-	int Player_Bullet_Handle = Owner->LoadSprite("Assets/Player_Bullet.png");	//プレイヤーのバレット
-	int Enemy_Bullet_Handle = Owner->LoadSprite("Assets/Enemy_Bullet.png");		//エネミーのバレット
+	int Player_Bullet_Handle = Owner->LoadSprite("Assets/Sprite/Player_Bullet.png");	//プレイヤーのバレット
+	int Enemy_Bullet_Handle = Owner->LoadSprite("Assets/Sprite/Enemy_Bullet.png");		//エネミーのバレット
 
-	int Block_Handle = Owner->LoadSprite("Assets/Block.png");	//ブロック	
-	int Brick_Handle = Owner->LoadSprite("Assets/Brick.png");	//レンガ
-	int Shop_Handle = Owner->LoadSprite("Assets/Shop.png");		//ショップ
+	int Block_Handle = Owner->LoadSprite("Assets/Sprite/Block.png");	//ブロック	
+	int Brick_Handle = Owner->LoadSprite("Assets/Sprite/Brick.png");	//レンガ
+	int Shop_Handle = Owner->LoadSprite("Assets/Sprite/Shop.png");		//ショップ
 	
 	//ヒットエフェクト
 	int Enemy_HitEffect_Handle[3];	//エネミー
 	int Stage_HitEffect_Handle[3];	//ステージ
 	int Player_HitEffect_Handle[3];	//プレイヤー
-	LoadDivGraph("Assets/Enemy_Explosion.png", 3, 3, 1, CELL, CELL, Enemy_HitEffect_Handle);	//エネミー
-	LoadDivGraph("Assets/Stage_Explosion.png", 3, 3, 1, CELL, CELL, Stage_HitEffect_Handle);	//ステージ
-	LoadDivGraph("Assets/Player_Explosion.png", 3, 3, 1, CELL, CELL,Player_HitEffect_Handle);	//プレイヤー
+	LoadDivGraph("Assets/Sprite/Enemy_Explosion.png", 3, 3, 1, CELL, CELL, Enemy_HitEffect_Handle);	//エネミー
+	LoadDivGraph("Assets/Sprite/Stage_Explosion.png", 3, 3, 1, CELL, CELL, Stage_HitEffect_Handle);	//ステージ
+	LoadDivGraph("Assets/Sprite/Player_Explosion.png", 3, 3, 1, CELL, CELL,Player_HitEffect_Handle);	//プレイヤー
 	
 
 	player = std::make_shared<Player>(Owner,Player_Handle, Player_Bullet_Handle,Enemy_HitEffect_Handle, Stage_HitEffect_Handle);	//プレイヤー
@@ -59,25 +59,34 @@ void Game_Scene::Update()
 	//　#####　当たり判定 #####
 	
 	//エネミーとステージ
-	stage->ColEnemy(enemy_mng);			//　46	
-	stage->ColEnemy_Bullet(enemy_mng);	//46
+
+
+	//stage->ColEnemy(enemy_mng);			//　5
+
+	int n = GetNowCount();
+//
+	stage->ColEnemy_Bullet(enemy_mng);	//0
+
 
 	//プレイヤーとステージ
-	stage->ColPlayer_Bullet(player);	// 26
+//	stage->ColPlayer_Bullet(player);	// 26
+	// 
 	stage->ColPlayer(player);			// 16
+
+	//printf("time: %d\n", (GetNowCount() - n));
 
 
 	//プレイヤーとエネミー
-	player->ColEnemy_Bullet(enemy_mng);		//
+//	player->ColEnemy_Bullet(enemy_mng);		//
 
 
 
-	enemy_mng->ColPlayer_Bullet(player);	//
+//	enemy_mng->ColPlayer_Bullet(player);	//
 
 	//　##### #####	
 
 
-	stage->Scroll(player, enemy_mng);	//画面スクロール	//14
+//	stage->Scroll(player, enemy_mng);	//画面スクロール	//14
 
 
 }

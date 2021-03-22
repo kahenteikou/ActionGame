@@ -39,11 +39,10 @@ public:
 
 private:
 	
-
-	int mEnemy_sprite;
-	int mEnemy_Bullet_sprite;
-	int mStage_HitEffect_sprite[3];
-	int mPlayer_HitEffect_sprite[3];
+	int enemySprite;
+	int enemyBulletSprite;
+	int stageHitEffectSprite[3];
+	int playerHitEffectSprite[3];
 
 
 
