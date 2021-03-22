@@ -119,15 +119,19 @@ BoxCollision::BoxCollision()
 
 
 //交差判定
-void BoxCollision::Intersect(std::shared_ptr<BoxCollision> col)
+//void BoxCollision::Intersect(std::shared_ptr<BoxCollision> col)
+void BoxCollision::Intersect(BoxCollision *col)
 //void BoxCollision::Intersect(BoxCollision& col)
 {
 	//printf("えええ\n");
 	//printf("%f , %f \n",box.mMin->x,box.mMin->y);
 	//printf("%f , %f \n",box.mMax->x,box.mMax->y);
 	// 
-	printf("%f , %f \n", col->getMin().x, col->getMin().y);
-	printf("%f , %f \n", col->getMax().x, col->getMax().y);
+
+	//printf("%f , %f \n", col->getMin().x, col->getMin().y);
+	//printf("%f , %f \n", col->getMax().x, col->getMax().y);
+
+//	printf("col->getMin()");
 	printf("\n\n");
 
 
@@ -220,12 +224,17 @@ void BoxCollision::Intersect(std::shared_ptr<BoxCollision> col)
 //最大値を取得
 glm::vec2 BoxCollision::getMax()
 {
+	
+	printf("getMax address %x\n", box.mMax);
+
 	return *box.mMax;
 }
 
 //最小値を取得
 glm::vec2 BoxCollision::getMin()
 {
+	printf("getMin address %x\n", box.mMin);
+
 	return *box.mMin;
 }
 
@@ -238,12 +247,15 @@ glm::vec2 BoxCollision::getMin()
 void BoxCollision::setMax(glm::vec2 *max)
 {
 	box.mMax = max;
+	printf("setMax address %x\n", box.mMax);
+
 }
 
 //最小値を設定
 void BoxCollision::setMin(glm::vec2 *min)
 {
 	box.mMin = min;
+	printf("setMin address %x\n",box.mMin);
 }
 
 //最大値の値を設定

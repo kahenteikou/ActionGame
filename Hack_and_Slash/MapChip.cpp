@@ -17,16 +17,25 @@ MapChip::MapChip(Tag t, glm::vec2  pos, glm::vec2  colsize,int handle) : Actor(n
 	size.y = CELL;
 
 
-	mCol = std::make_shared<BoxCollision>();
+//	mCol = std::make_shared<BoxCollision>();
+//	mCol = std::make_shared<BoxCollision>();
 
 	minValue = position;
 	maxValue = position + size;
 	
+
+	mCol.setTag(t);			//タグ
+	mCol.setMin(&minValue);	//最小値
+	mCol.setMax(&maxValue);	//最大値
+
+
+/*
 	mCol->setTag(t);			//タグ
 	mCol->setMin(&minValue);	//最小値
 	mCol->setMax(&maxValue);	//最大値
-
-	printf("ああああ　%f %f\n", mCol->getMax().x, mCol->getMax().y);
+	*/
+	//printf("ああああ　%f %f\n", mCol->getMax().x, mCol->getMax().y);
+//	printf("ああああ　%f %f\n", mCol->getMin().x, mCol->getMin().y);
 
 }
 

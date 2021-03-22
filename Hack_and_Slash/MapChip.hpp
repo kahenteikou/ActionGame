@@ -34,7 +34,8 @@ public:
 
 
 
-	std::shared_ptr<BoxCollision> mCol;
+	//std::shared_ptr<BoxCollision> mCol;
+	BoxCollision mCol;
 private:
 	int sprite;			//スプライト
 	glm::vec2  worldPosition;	//ワールド座標

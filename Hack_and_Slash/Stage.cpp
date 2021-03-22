@@ -212,7 +212,7 @@ void Stage::ColPlayer(std::shared_ptr<Player> player)
 	for (int i = 0; i < mStage->size(); i++)
 	{
 		
-		player->mCol->Intersect(mStage->at(i).mCol);
+		player->mCol->Intersect(&mStage->at(i).mCol);
 		
 	}
 }
