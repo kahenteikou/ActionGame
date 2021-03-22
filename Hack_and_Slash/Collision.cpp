@@ -119,19 +119,25 @@ BoxCollision::BoxCollision()
 
 
 //交差判定
-void BoxCollision::Intersect(BoxCollision& col)
+void BoxCollision::Intersect(std::shared_ptr<BoxCollision> col)
+//void BoxCollision::Intersect(BoxCollision& col)
 {
-	
+	//printf("えええ\n");
+	//printf("%f , %f \n",box.mMin->x,box.mMin->y);
+	//printf("%f , %f \n",box.mMax->x,box.mMax->y);
+	// 
+	printf("%f , %f \n", col->getMin().x, col->getMin().y);
+	printf("%f , %f \n", col->getMax().x, col->getMax().y);
+	printf("\n\n");
 
 
-
-	if ((col.getMax().x > box.mMin->x && box.mMax->x > col.getMin().x)
-		&& (col.getMax().y > box.mMin->y && box.mMax->y > col.getMin().y))
+	if ((col->getMax().x > box.mMin->x && box.mMax->x > col->getMin().x)
+		&& (col->getMax().y > box.mMin->y && box.mMax->y > col->getMin().y))
 	{
-
+		printf("true \n");
 		setCol(true);				//当たり判定を設定
-		setColTag(col.getMyTag());	//タグを取得
-		col.setColTag(getMyTag());	//タグを設定
+		setColTag(col->getMyTag());	//タグを取得
+		col->setColTag(getMyTag());	//タグを設定
 
 	
 		if(getTriggerType() == false)
@@ -140,7 +146,7 @@ void BoxCollision::Intersect(BoxCollision& col)
 			//サイズを取得
 			 
 			//相手
-			glm::vec2 colSize = col.getMax() - col.getMin();
+			glm::vec2 colSize = col->getMax() - col->getMin();
 			colSize.x = colSize.x / 2;
 			colSize.y = colSize.y / 2;
 
@@ -149,8 +155,8 @@ void BoxCollision::Intersect(BoxCollision& col)
 			boxSize.x = boxSize.x / 2;
 			boxSize.y = boxSize.y / 2;
 
-			float colCenterX = (col.getMin().x + colSize.x);
-			float colCenterY = (col.getMin().y + colSize.y);
+			float colCenterX = (col->getMin().x + colSize.x);
+			float colCenterY = (col->getMin().y + colSize.y);
 			float boxCenterX = (box.mMin->x + boxSize.x);
 			float boxCenterY = (box.mMin->y + boxSize.y);
 
@@ -164,11 +170,11 @@ void BoxCollision::Intersect(BoxCollision& col)
 			//	printf(", Y adjust \n");
 				if (deltaY > 0)
 				{
-					adjust = col.getMax().y - box.mMin->y + 0.001f; // +する
+					adjust = col->getMax().y - box.mMin->y + 0.001f; // +する
 				}
 				else
 				{
-					adjust = -(box.mMax->y - col.getMin().y + 0.001f); // -する
+					adjust = -(box.mMax->y - col->getMin().y + 0.001f); // -する
 				}
 				box.mMin->y += adjust;
 				box.mMax->y += adjust;
@@ -178,12 +184,12 @@ void BoxCollision::Intersect(BoxCollision& col)
 			//	printf(", X adjust \n");
 				if (deltaX > 0)
 				{
-					adjust = col.getMax().x - box.mMin->x + 0.001f; // +する
+					adjust = col->getMax().x - box.mMin->x + 0.001f; // +する
 
 				}
 				else
 				{
-					adjust = -(box.mMax->x - col.getMin().x + 0.001f); // -する
+					adjust = -(box.mMax->x - col->getMin().x + 0.001f); // -する
 				}
 				box.mMin->x += adjust;
 				box.mMax->x += adjust;
@@ -199,7 +205,7 @@ void BoxCollision::Intersect(BoxCollision& col)
 		//当たってない時
 		setCol(false);
 		setColTag(Tag::Invalid);
-		col.setColTag(Tag::Invalid);
+		col->setColTag(Tag::Invalid);
 
 	}
 

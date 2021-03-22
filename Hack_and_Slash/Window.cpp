@@ -1,7 +1,7 @@
 #include "Window.hpp"
 
 //コンストラクタ
-Window::Window(Entry * e,Window_Scene s, glm::ivec2 pos, glm::ivec2 size) : Actor(e)
+Window::Window(Entry * e,Window_Scene s, glm::vec2  pos, glm::vec2  size) : Actor(e)
 {
 	Scene = s;							//ウインドウ種別
 	Move_Scene = Window_Scene::Invalid;	//移動するシーン
@@ -28,13 +28,13 @@ void Window::setTitle(std::string name,unsigned int c)
 }
 
 //座標
-void Window::setPosition(glm::ivec2 pos)	
+void Window::setPosition(glm::vec2  pos)	
 {
 	position = pos;
 }
 
 //サイズ
-void Window::setSize(glm::ivec2 size)	
+void Window::setSize(glm::vec2  size)	
 {
 	size.x = position.x + size.x;
 	size.y = position.y + size.y;

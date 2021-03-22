@@ -53,14 +53,14 @@ public:
 private:
 
 	std::shared_ptr<std::vector<MapChip>> mStage;	//マップデータ
-	glm::ivec2 mStageSize;			//画面に描画するセル数
-	glm::ivec2 mScroll_Vec;			//スクロールしている向き
+	glm::vec2  mStageSize;			//画面に描画するセル数
+	glm::vec2  mScroll_Vec;			//スクロールしている向き
 
 	
 
 	void LoadStage();	//ステージを読み込む
 	std::shared_ptr<std::vector<std::vector<byte>>> Stage_Grid;	//ステージ
-	glm::ivec2 offsetCol;
+	glm::vec2  offsetCol;
 	int col = 0;
 	bool mGameStart;	//ゲームが始まって最初のフレームかかどうか？
 	bool mIsShop;	//ショップが終わったかどうか？
@@ -69,9 +69,9 @@ private:
 	std::vector<std::string> FileNameList;	//ステージファイルのリスト
 
 	//サイズ関係
-	glm::ivec2 BlockSize;
-	glm::ivec2 BrickSize;
-	glm::ivec2 ShopSize;
+	glm::vec2  BlockSize;
+	glm::vec2  BrickSize;
+	glm::vec2  ShopSize;
 
 	//スプライト
 	int Block_sprite;	

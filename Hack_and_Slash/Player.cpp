@@ -8,6 +8,7 @@
 #include "Enemy_Mng.hpp"
 #include "ItemID.hpp"
 #include "MapChip.hpp"
+#include "Collision.hpp"
 
 
 
@@ -46,10 +47,6 @@ Player::Player(Entry* e, int Player_Handle[8], int Player_Bullet_Handle, int Ene
 	
 	bullet = std::make_shared<std::vector<Bullet>>();
 
-	GetGraphSize(playerSpriteUp[0], &size.x, &size.y);	//サイズを設定
-	//printf("size X: %d\n", size.x);
-	//printf("size Y: %d\n", size.y);
-
 	speed = 0;
 	
 
@@ -65,11 +62,26 @@ Player::Player(Entry* e, int Player_Handle[8], int Player_Bullet_Handle, int Ene
 	stagePosition.y = STAGE_HEIGHT / 50 * 20;
 
 
-	worldPosition.x = position.x +120;		//ワールド座標
+	worldPosition.x = position.x +120;	//ワールド座標
 	worldPosition.y = position.y + 440;	//ワールド座標
 
 	vector = VECTOR_UP;	//初期方向
-	mMenu = false;			//ショップを開くかどうか？
+	mMenu = false;		//ショップを開くかどうか？
+
+
+	//当たり判定	
+	mCol = std::make_shared<BoxCollision>();
+	size.x = CELL;
+	size.y = CELL;
+
+	mCol->setTag(Tag::Player);
+	mCol->setMin(&minValue);
+	mCol->setMax(&maxValue);
+
+
+
+
+
 }
 
 //座標を修正
@@ -96,7 +108,7 @@ void Player::setReset()
 }
 
 //位置のオフセット座標を修正
-void Player::OffsetFixPos(glm::ivec2 pos)
+void Player::OffsetFixPos(glm::vec2  pos)
 {
 #define OFFSET 20
 
@@ -191,24 +203,10 @@ void Player::ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy)
 //バレット　更新
 void Player::Bullet_Update()
 {
-	// 攻撃　バレット
-	if (owner->InputKey->getKeyDown(KEY_INPUT_SPACE) == true)
-	{
-		//printf("攻撃\n");
-		bullet->push_back(Bullet(position, vector, playerBulletSprite, stageHitEffectSprite, enemyHitEffectSprite));
-	}
-
-	//バレットを更新
-	for (std::vector<Bullet>::iterator itr = bullet->begin(); itr != bullet->end(); itr++)
-	{
-		//printf("バレット更新\n");
-
-		itr->Update();
-	}
 }
 
 
-int Player::getSpeed()
+float Player::getSpeed()
 {
 	return speed;
 }
@@ -216,12 +214,6 @@ int Player::getSpeed()
 //更新
 void Player::Update()
 {
-	DrawFormatString(0, 0, GetColor(0, 255, 0), "world lPosition: %d , %d ", worldPosition.x, worldPosition.y);
-//	DrawFormatString(0,0,GetColor(0,255,0),"Position: %d , %d ",position.x,position.y);
-
-
-
-	//printf("%d\n",speed_Max);
 
 	Player_Update();	//プレイヤー更新
 	Bullet_Update();	//バレットを更新
@@ -242,7 +234,6 @@ void Player::set_Bulid(ItemData data)
 //プレイヤー　更新
 void Player::Player_Update()
 {
-	//printf("いいいい\n");
 
 	
 	speed = 10;
@@ -276,15 +267,17 @@ void Player::Player_Update()
 	}
 
 
-
+	//座標更新
 	position += vector * speed;
 
+	minValue.x = position.x - (CELL / 2);
+	minValue.y = position.y - (CELL / 2);
+
+	maxValue.x = minValue.x + CELL;
+	maxValue.y = minValue.y + CELL;
 
 	//当たり判定
-
-
-
-
+	
 }
 
 //描画
@@ -376,6 +369,11 @@ void Player::Player_Draw()
 
 	//DrawPixel(position.x, position.y,GetColor(0,255,0));
 
+
+	DrawCircle(maxValue.x, maxValue.y, 5, GetColor(0, 255, 0), true);
+	DrawCircle(minValue.x, minValue.y, 5, GetColor(255, 0, 0), true);
+
+
 #undef ANIMETION_SPEED
 }
 
@@ -412,13 +410,13 @@ std::shared_ptr<std::vector<Bullet>> Player::getBullet()
 
 
 //ステージ座標を設定
-void Player::setWorldPosition(glm::ivec2 pos)
+void Player::setWorldPosition(glm::vec2  pos)
 {
 	worldPosition = pos;
 }
 
 //ステージ座標を取得
-glm::ivec2 Player::getWorldPosition()
+glm::vec2  Player::getWorldPosition()
 {
 	return worldPosition;
 }

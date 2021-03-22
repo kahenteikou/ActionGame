@@ -15,7 +15,7 @@
 
 
 
-class Entry;
+
 class Bullet;
 /*####################################################
 * エネミー
@@ -37,14 +37,14 @@ public:
 	*/
 
 
-	Enemy(glm::ivec2 pos, int Enemy_sprite,int Enemy_Bullet_sprite,int Stage_HitEffect_sprite[3],int Player_HitEffect_sprite[3]);	//コンストラクタ
+	Enemy(glm::vec2  pos, int Enemy_sprite,int Enemy_Bullet_sprite,int Stage_HitEffect_sprite[3],int Player_HitEffect_sprite[3]);	//コンストラクタ
 	~Enemy();			//デストラクタ
 
 	void Update();	//更新
 	void Draw();	//描画
 
 	// ### 設定　関係
-	void FixPos(glm::ivec2 &pos);	//座標を修正
+	void FixPos(glm::vec2  &pos);	//座標を修正
 	void setMove_Rand();			//移動乱数を再設定
 	void setMovePixel();			//移動量をリセット
 

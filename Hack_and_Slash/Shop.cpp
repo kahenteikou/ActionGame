@@ -11,7 +11,7 @@ Shop::Shop(Entry* e)
 #define BACK_COLOR GetColor(255, 255, 255)	//ウインドウの背景色
 
 	//メインメニュー
-	MainMenu = std::make_shared<Window>(Owner,Window_Scene::Main,glm::ivec2(100,100),glm::ivec2(200,200));
+	MainMenu = std::make_shared<Window>(Owner,Window_Scene::Main,glm::vec2 (100,100),glm::vec2 (200,200));
 	MainMenu->setBackColor(BACK_COLOR);
 	MainMenu->setTitle("ショップメニュー", TITLE_COLOR);
 	MainMenu->AddList_Down(Window_Scene::Buy_Menu, "Buy", 0, ITEM_COLOR);
@@ -19,7 +19,7 @@ Shop::Shop(Entry* e)
 	MainMenu->AddList_Down(Window_Scene::End, "もどる", 0, ITEM_COLOR);
 
 	//買うメニュー
-	BuyMenu = std::make_shared<Window>(Owner, Window_Scene::Buy_Menu, glm::ivec2(120, 120), glm::ivec2(220, 220));
+	BuyMenu = std::make_shared<Window>(Owner, Window_Scene::Buy_Menu, glm::vec2 (120, 120), glm::vec2 (220, 220));
 	BuyMenu->setBackColor(BACK_COLOR);
 	BuyMenu->setTitle("かう", TITLE_COLOR);
 	BuyMenu->AddList_Down(Window_Scene::Buy_Conf, "Item_A", 1, ITEM_COLOR);
@@ -27,11 +27,11 @@ Shop::Shop(Entry* e)
 	BuyMenu->AddList_Down(Window_Scene::Main, "もどる", 0, ITEM_COLOR);
 
 	//売るメニュー
-	SellMenu = std::make_shared<Window>(Owner, Window_Scene::Sell_Menu, glm::ivec2(120, 120), glm::ivec2(220, 220));
+	SellMenu = std::make_shared<Window>(Owner, Window_Scene::Sell_Menu, glm::vec2 (120, 120), glm::vec2 (220, 220));
 	SellMenu->setBackColor(BACK_COLOR);
 
 	//買う確認
-	CheckMenu_Buy = std::make_shared<Window>(Owner, Window_Scene::Buy_Conf, glm::ivec2(140, 140), glm::ivec2(240, 240));
+	CheckMenu_Buy = std::make_shared<Window>(Owner, Window_Scene::Buy_Conf, glm::vec2 (140, 140), glm::vec2 (240, 240));
 	CheckMenu_Buy->setBackColor(BACK_COLOR);
 	CheckMenu_Buy->AddList_Down(Window_Scene::Yes, "Yes", 1, ITEM_COLOR);
 	CheckMenu_Buy->AddList_Down(Window_Scene::Buy_Menu,"No", 1, ITEM_COLOR);

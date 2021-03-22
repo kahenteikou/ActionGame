@@ -56,7 +56,7 @@ void Enemy_Mng::setEnemy(std::shared_ptr<Stage> stage)
 	{
 		int x, y;
 		x = y = 0;
-			enemy->push_back(Enemy(glm::ivec2(760,530),enemySprite, enemyBulletSprite, stageHitEffectSprite,playerHitEffectSprite));	//’Ç‰Á
+			enemy->push_back(Enemy(glm::vec2 (760,530),enemySprite, enemyBulletSprite, stageHitEffectSprite,playerHitEffectSprite));	//’Ç‰Á
 
 		newStage = false;
 	}

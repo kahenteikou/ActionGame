@@ -22,10 +22,10 @@
 
 
 //•ûŒü
-#define VECTOR_UP glm::ivec2(0,-1)
-#define VECTOR_DOWN glm::ivec2(0,1)
-#define VECTOR_LEFT glm::ivec2(-1,0)
-#define VECTOR_RIGHT glm::ivec2(1,0)
+#define VECTOR_UP glm::vec2 (0,-1)
+#define VECTOR_DOWN glm::vec2 (0,1)
+#define VECTOR_LEFT glm::vec2 (-1,0)
+#define VECTOR_RIGHT glm::vec2 (1,0)
 
 #define PI ((float)3.14159265359)	//PI
 

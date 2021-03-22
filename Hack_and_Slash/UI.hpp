@@ -10,11 +10,11 @@
 //ƒEƒCƒ“ƒhƒE‚Ìî•ñ
 typedef struct RectangleData
 {
-	glm::ivec2 pos;		//À•W
-	glm::ivec2 size;	//ƒTƒCƒY
+	glm::vec2  pos;		//À•W
+	glm::vec2  size;	//ƒTƒCƒY
 }RectangleData;
 
-void GetRectangleData(RectangleData& data, glm::ivec2 pos, glm::ivec2 size);	//‹éŒ`ƒTƒCƒY‚ğİ’è
+void GetRectangleData(RectangleData& data, glm::vec2  pos, glm::vec2  size);	//‹éŒ`ƒTƒCƒY‚ğİ’è
 
 
 /*####################################################
@@ -27,20 +27,20 @@ void GetRectangleData(RectangleData& data, glm::ivec2 pos, glm::ivec2 size);	//‹
 class UI
 {
 public:
-	UI(glm::ivec2 pos = glm::ivec2(0, 0), glm::ivec2 vec = glm::ivec2(0, 0));	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	UI(glm::vec2  pos = glm::vec2 (0, 0), glm::vec2  vec = glm::vec2 (0, 0));	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 	~UI();	//ƒfƒXƒgƒ‰ƒNƒ^
 
 	void virtual Update() = 0;	//ŒvZ
 	void virtual Draw() = 0;	//•`‰æ
 
 	//æ“¾ŠÖŒW
-	glm::ivec2 getVector();		//•ûŒü
-	glm::ivec2 getPosition();	//À•W
+	glm::vec2  getVector();		//•ûŒü
+	glm::vec2  getPosition();	//À•W
 protected:
 
-	glm::ivec2 mPosition;	//À•W
-	glm::ivec2 mVector;		//•ûŒü
-	glm::ivec2 mSize;		//ƒXƒvƒ‰ƒCƒg‚ÌƒTƒCƒY
+	glm::vec2  mPosition;	//À•W
+	glm::vec2  mVector;		//•ûŒü
+	glm::vec2  mSize;		//ƒXƒvƒ‰ƒCƒg‚ÌƒTƒCƒY
 
 
 };

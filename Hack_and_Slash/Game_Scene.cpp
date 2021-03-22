@@ -42,12 +42,8 @@ Game_Scene::Game_Scene(Scene_Type t,Entry *e) : Scene_base(t,e)
 void Game_Scene::Update()
 {
 
-	stage->setStage(enemy_mng,player);	//ステージを読み込み
-	enemy_mng->setEnemy(stage);			//エネミーを出現
-
-
-
-	enemy_mng->Update();	//エネミー更新
+	
+//	enemy_mng->Update();	//エネミー更新
 	stage->Update();		//ステージ更新
 	player->Update();		//プレイヤー更新
 
@@ -65,7 +61,7 @@ void Game_Scene::Update()
 
 	int n = GetNowCount();
 //
-	stage->ColEnemy_Bullet(enemy_mng);	//0
+	//stage->ColEnemy_Bullet(enemy_mng);	//0
 
 
 	//プレイヤーとステージ

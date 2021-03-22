@@ -35,13 +35,13 @@ public:
 	*/
 
 
-	Bullet(glm::ivec2 pos, glm::ivec2 vec, int handle, int MapEffect_Handle[3], int EnemyEffect_Handle[3]);	//コンストラクタ
+	Bullet(glm::vec2 pos, glm::vec2 vec, int handle, int MapEffect_Handle[3], int EnemyEffect_Handle[3]);	//コンストラクタ
 	~Bullet();																								//デストラクタ
 
 	void Update();	//更新
 	void Draw();	//描画
 
-	void FixPos(glm::ivec2 pos);	//座標を修正
+	void FixPos(glm::vec2 pos);	//座標を修正
 
 	BoxCollision mCol;	//当たり判定
 

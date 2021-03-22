@@ -2,7 +2,7 @@
 #define ___COLLISION_HPP_
 
 #include "glm/glm.hpp"
-
+#include <iostream>
 //タグ
 typedef enum class Tag
 {
@@ -102,8 +102,8 @@ public:
 	BoxCollision();		//コンストラクタ
 	~BoxCollision();	//デストラクタ
 
-	void Intersect(BoxCollision &col);
-
+//	void Intersect(BoxCollision &col);
+	void Intersect(std::shared_ptr<BoxCollision> col);
 	//取得　関係
 	glm::vec2 getMax();
 	glm::vec2 getMin();

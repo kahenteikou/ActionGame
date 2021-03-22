@@ -7,7 +7,6 @@
 
 #include "Actor.hpp"
 #include "Bullet.hpp"
-#include "Collision.hpp"
 #include "Animation.hpp"
 
 
@@ -20,12 +19,11 @@
 ######################################################*/
 
 //前方宣言
+
 class Bullet;
-class Enemy;
-class Enemy_Mng;
-class Actor;
-class Box_Collision;
 class Animaiton;
+class BoxCollision;
+class Enemy_Mng;
 class MapChip;
 struct ItemData;
 
@@ -52,19 +50,19 @@ public:
 
 	bool getIsMenu();	//ショップ画面を開いているかどうか？	
 	std::shared_ptr<std::vector<Bullet>> getBullet();	//バレット
-	int getSpeed();		//速度を取得
+	float getSpeed();		//速度を取得
 
 	// ####################　設定　関係
 
 	void set_Bulid(ItemData data);			//ステータスを設定
-	void FixPos(MapChip m);			//当たり判定で座標を修正
-	void OffsetFixPos(glm::ivec2 pos);		//座標のオフセットを修正
+	void FixPos(MapChip m);					//当たり判定で座標を修正
+	void OffsetFixPos(glm::vec2  pos);		//座標のオフセットを修正
 	void setIsMenu(bool b);					//メニューを開くかどうか設定
 	void setSpeed(int speed);				//速度を設定
 	void setReset();						//座標をリセット
 
-	void setWorldPosition(glm::ivec2 pos);			//ステージ座標を設定
-	glm::ivec2 getWorldPosition();	//ステージ座標を取得
+	void setWorldPosition(glm::vec2  pos);			//ステージ座標を設定
+	glm::vec2  getWorldPosition();	//ステージ座標を取得
 
 
 
@@ -73,9 +71,10 @@ public:
 	void ColEnemy_Bullet(std::shared_ptr<Enemy_Mng> enemy);	//エネミーのバレットとの当たり判定
 
 
-	glm::ivec2 stagePosition;	//ステージ内の座標
+	glm::vec2  stagePosition;	//ステージ内の座標
 
-	BoxCollision mCol;	//当たり判定
+
+	std::shared_ptr<BoxCollision> mCol;	//当たり判定
 private:
 
 	
@@ -90,12 +89,13 @@ private:
 	int stageHitEffectSprite[3];
 	int playerBulletSprite;
 
+	glm::vec2 minValue;	//最小値
+	glm::vec2 maxValue;	//最大値
 
-
-	glm::ivec2 worldPosition;	//ワールド座標
+	glm::vec2  worldPosition;	//ワールド座標
 	//mPosition //ステージ座標
 
-//	glm::ivec2 stagePosition;	//ステージ内の座標
+//	glm::vec2  stagePosition;	//ステージ内の座標
 	std::shared_ptr<std::vector<Bullet>> bullet;	//バレット
 
 	bool mMenu;	//ショップ画面を開くかどうか？
@@ -105,7 +105,7 @@ private:
 
 // ステータス
 
-	int speed;			//速度
+	float speed;			//速度
 
 
 

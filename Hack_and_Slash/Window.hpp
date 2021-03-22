@@ -43,8 +43,8 @@ enum class Window_Scene
 //ウインドウの項目
 typedef struct List_Item
 {
-	glm::ivec2 pos;			// 座標
-	glm::ivec2 size;		//サイズ
+	glm::vec2  pos;			// 座標
+	glm::vec2  size;		//サイズ
 	std::string name;		// 名前
 	Window_Scene winScene;	// メニュー推移
 	unsigned char ID;		// アイテムID
@@ -69,7 +69,7 @@ class Window : public Actor
 public:
 
 
-	Window(Entry* e,Window_Scene s,glm::ivec2 pos ,glm::ivec2 size);	//コンストラクタ
+	Window(Entry* e,Window_Scene s,glm::vec2  pos ,glm::vec2  size);	//コンストラクタ
 	~Window();							//デストラクタ
 
 
@@ -78,8 +78,8 @@ public:
 
 	// ################## 設定　関係
 	void setTitle(std::string name, unsigned int c);	//タイトル
-	void setPosition(glm::ivec2 pos);					//座標
-	void setSize(glm::ivec2 size);						//サイズ
+	void setPosition(glm::vec2  pos);					//座標
+	void setSize(glm::vec2  size);						//サイズ
 	void setBackColor(unsigned int c);					//背景色
 
 	void AddList_Down(Window_Scene s, std::string name, unsigned char num, unsigned int c); //ウインドウに項目を追加
@@ -121,7 +121,7 @@ private:
 	unsigned char ID;			//アイテムを選択
 	
 
-	glm::ivec2 ItemPos;	//項目の座標を調整
+	glm::vec2  ItemPos;	//項目の座標を調整
 
 
 

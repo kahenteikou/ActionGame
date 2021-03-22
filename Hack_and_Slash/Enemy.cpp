@@ -2,7 +2,7 @@
 
 
 //コンストラクタ
-Enemy::Enemy(glm::ivec2 pos ,int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_sprite[3], int Player_HitEffect_sprite[3]) : Actor(nullptr)
+Enemy::Enemy(glm::vec2  pos ,int Enemy_sprite, int Enemy_Bullet_sprite, int Stage_HitEffect_sprite[3], int Player_HitEffect_sprite[3]) : Actor(nullptr)
 {
 	position = pos;	//初期座標
 
@@ -149,7 +149,7 @@ void Enemy::setMovePixel()
 
 
 //座標を修正
-void Enemy::FixPos(glm::ivec2 &pos)
+void Enemy::FixPos(glm::vec2  &pos)
 {
 	
 	if (vector == VECTOR_UP)

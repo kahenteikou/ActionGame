@@ -18,26 +18,31 @@
 class MapChip : public Actor
 {
 public:
-	MapChip(Tag t, glm::ivec2 pos, glm::ivec2 size, int handle);	//コンストラクタ
+	MapChip(Tag t, glm::vec2  pos, glm::vec2  colsize, int handle);	//コンストラクタ
 	MapChip();	//デフォルトコンストラクタ
 
 	~MapChip();																//デストラクタ
 
 
-	glm::ivec2 getWorldPosition();	//ワールド座標を取得
+	glm::vec2  getWorldPosition();	//ワールド座標を取得
 	void Update();	//計算
 	void Draw();	//描画
 	
-	//void setObjectType(StageObjectType type);	//オブジェクトタイプを設定
-	void setSize(glm::ivec2 size);				//サイズを設定
+	
+	void setSize(glm::vec2  size);				//サイズを設定
 	void setHandle(int handle);					//ハンドルを設定
 
 
 
-	glm::ivec2 worldPosition;	//ワールド座標
 	std::shared_ptr<BoxCollision> mCol;
 private:
-	int mSprite;			//スプライト
+	int sprite;			//スプライト
+	glm::vec2  worldPosition;	//ワールド座標
+
+	glm::vec2 minValue;	//
+	glm::vec2 maxValue;	//
+
+
 
 };
 

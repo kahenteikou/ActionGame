@@ -1,9 +1,9 @@
 #include "Bullet.hpp"
 
 //コンストラクタ
-Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int MapEffect_Handle[3], int EnemyEffect_Handle[3]) : Actor(nullptr,pos,vec),anim(2)
+Bullet::Bullet(glm::vec2 pos , glm::vec2 vec, int handle,int MapEffect_Handle[3], int EnemyEffect_Handle[3]) : Actor(nullptr,pos,vec),anim(2)
 {
-	GetGraphSize(handle,&size.x, &size.y);	//スプライトの大きさ
+	//GetGraphSize(handle,&(int)size.x, &(int)size.y);	//スプライトの大きさ
 
 	speed = 8;		//バレットの速度
 	sprite = handle;	//スプライト
@@ -28,7 +28,7 @@ Bullet::Bullet(glm::ivec2 pos , glm::ivec2 vec, int handle,int MapEffect_Handle[
 
 
 //座標を修正
-void Bullet::FixPos(glm::ivec2 pos)
+void Bullet::FixPos(glm::vec2 pos)
 {
 	if (vector == VECTOR_UP)
 	{
